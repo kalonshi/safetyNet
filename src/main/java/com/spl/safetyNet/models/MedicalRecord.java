@@ -37,13 +37,24 @@ public class MedicalRecord {
 	public void setMedications(List<String> medications) {
 		this.medications = medications;
 	}
+	public MedicalRecord addMedication(String medication) {
+		medications.add(medication);
+		
+		return this;
+	}
+	
+	
 	public List<String> getAllergies() {
 		return allergies;
 	}
 	public void setAllergies(List<String> allergies) {
 		this.allergies = allergies;
 	}
-	
+	public MedicalRecord addAllergie(String allergy) {
+		allergies.add(allergy);
+		
+		return this;
+	}
 	
 		
 	

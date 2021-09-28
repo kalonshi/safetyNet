@@ -5,8 +5,7 @@ import java.io.IOException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.spl.safetyNet.service.JsonFileData;
-import com.spl.safetyNet.service.JsonFileData2;
+
 import com.spl.safetyNet.service.JsonFileData3;
 
 @SpringBootApplication

@@ -3,12 +3,13 @@ package com.spl.safetyNet.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spl.safetyNet.models.FireStation;
+import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person2;
 @Service
 
@@ -43,6 +44,21 @@ private JsonFileData3 jSonFile;
 	@Override
 	public FireStation getFireStation(String fireStationNumber) {
 		// TODO Auto-generated method stub
+		try {
+			List<FireStation> fireStations=jSonFile.loadStations();
+			for (FireStation f:fireStations) {
+				if( f.getStationNumber().equals(fireStationNumber) ) {
+					return f;
+				}
+			}
+			
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 
