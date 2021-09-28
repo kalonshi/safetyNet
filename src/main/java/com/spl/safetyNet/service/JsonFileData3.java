@@ -11,12 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person2;
-
+@Service
 public class JsonFileData3 {
 
 	public JsonFileData3() {
