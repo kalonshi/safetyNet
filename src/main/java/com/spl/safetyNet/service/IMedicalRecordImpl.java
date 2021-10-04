@@ -22,7 +22,17 @@ public class IMedicalRecordImpl implements IMedicalRecord{
 	public void deleteMedicalRecord(String firstName, String lastName) {
 		// TODO Auto-generated method stub
 		MedicalRecord medicalRecordSelected= getMedicalRecord(firstName, lastName);
-
+		try {
+			List<MedicalRecord> medicalRecords=jSonFile.loadMedicalRecords();
+			medicalRecords.remove(medicalRecordSelected);
+		
+		
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		medicalRecordSelected=null;
 	
 	}
 

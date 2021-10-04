@@ -8,8 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.MedicalRecord;
-import com.spl.safetyNet.models.Person2;
+import com.spl.safetyNet.models.Person;
 @Service
 public class JsonFileData3 {
 
@@ -49,14 +51,14 @@ public class JsonFileData3 {
 	}
 
 	// Creation convertion Json to Person sans Medical Record et Station et date
-	public List<Person2> loadJsonPersons() throws IOException {
+	public List<Person> loadJsonPersons() throws IOException {
 		String filePath = "src/main/resources/data.json";
 		byte[] bytesFile = Files.readAllBytes(new File(filePath).toPath());
 		JsonIterator iter = JsonIterator.parse(bytesFile);
 		Any any = iter.readAny();
 		Any personAny = any.get("persons");
 		Any medicalAny = any.get("medicalrecords");
-		List<Person2> persons = new ArrayList<>();
+		List<Person> persons = new ArrayList<>();
 		personAny.forEach(a ->{ 
 		medicalAny.forEach(medicalRecord ->{ 
 			if((medicalRecord.get("firstName").toString().equals(a.get("firstName").toString())
@@ -65,7 +67,7 @@ public class JsonFileData3 {
 			Date date = null;
 			try {
 				date = formatSortie.parse(medicalRecord.get("birthdate").toString());
-				persons.add(new Person2(a.get("firstName").toString(), a.get("lastName").toString(),
+				persons.add(new Person(a.get("firstName").toString(), a.get("lastName").toString(),
 						a.get("phone").toString(), a.get("zip").toString(), a.get("address").toString(),
 						a.get("city").toString(), a.get("email").toString(),date));
 			} catch (ParseException e) {
@@ -111,10 +113,10 @@ public class JsonFileData3 {
 
 //Creation Liste de Person complete avec  dépendances
 
-	public List<Person2> loadPersons() throws IOException {
+	public List<Person> loadPersons() throws IOException {
 
 // Creation du dossier medical par personne
-		List<Person2> personsList=loadJsonPersons();
+		List<Person> personsList=loadJsonPersons();
 		List<MedicalRecord> medicalRecordList=loadJsonMedicalRecords();
 		for (int i = 0; i<personsList.size();i++) {
 			personsList.get(i).setMedicalRecord(medicalRecordList.get(i));
@@ -127,7 +129,7 @@ public class JsonFileData3 {
 				List<FireStation> stations;
 				try {
 					stations = loadStationsWithOutListPerson();
-					List<FireStation> FireStationByPersonAdresse = new ArrayList<>();
+					Set<FireStation> FireStationByPersonAdresse = new HashSet<>();
 					for (FireStation fireStation : stations) {
 
 						if (fireStation.getAddresses().contains(p.getAddress())) {
@@ -154,11 +156,11 @@ public class JsonFileData3 {
 // Methode pour créer une liste de stations avec dépendances***********
 	public List<FireStation> loadStations() throws IOException {
 		// Ajout de la Liste des personnes dépend d'une station
-		List<Person2> persons = loadPersons();
+		List<Person> persons = loadPersons();
 		List<FireStation> fireStations = loadStationsWithOutListPerson();
 		for (FireStation fireStation : fireStations) {
-			List<Person2> FireStationPersonAdresse = new ArrayList<>();
-			for (Person2 p : persons) {
+			Set<Person> FireStationPersonAdresse = new HashSet<>();
+			for (Person p : persons) {
 
 				if (fireStation.getAddresses().contains(p.getAddress())) {
 					FireStationPersonAdresse.add(p);
