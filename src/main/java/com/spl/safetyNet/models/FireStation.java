@@ -11,7 +11,7 @@ public class FireStation {
 
 	private Set<String> addresses = new HashSet<>();
 	private String stationNumber;
-	private List<Person2> listOfPersons; 
+	private Set<Person> listOfPersons; 
 	
 	public FireStation() {
 		super();
@@ -43,13 +43,13 @@ public class FireStation {
 
 
 
-	public List<Person2> getListOfPersons() {
+	public Set<Person> getListOfPersons() {
 		return listOfPersons;
 	}
 
 
 
-	public void setListOfPersons(List<Person2> listOfPersons) {
+	public void setListOfPersons(Set<Person> listOfPersons) {
 		this.listOfPersons = listOfPersons;
 	}
 

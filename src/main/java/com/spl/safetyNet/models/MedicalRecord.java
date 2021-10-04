@@ -7,14 +7,14 @@ import java.util.List;
 
 
 public class MedicalRecord {
-	private Person2 person;
+	private Person person;
 	private List<String>medications ;
 	private List<String> allergies ;
 	public MedicalRecord() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public MedicalRecord(Person2 person, List<String> medications, List<String> allergies) {
+	public MedicalRecord(Person person, List<String> medications, List<String> allergies) {
 		super();
 		this.person = person;
 		this.medications = medications;
@@ -25,10 +25,10 @@ public class MedicalRecord {
 		this.medications = medications;
 		this.allergies = allergies;
 	}
-	public Person2 getPerson() {
+	public Person getPerson() {
 		return person;
 	}
-	public void setPerson(Person2 person) {
+	public void setPerson(Person person) {
 		this.person = person;
 	}
 	public List<String> getMedications() {
