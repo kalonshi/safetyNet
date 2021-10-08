@@ -9,7 +9,8 @@ import com.spl.safetyNet.models.Person;
 public interface IPerson {
 	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
 			String email, Date birthDate);
-
+	public Person updatePerson(String firstName, String lastName, String phone, String zip, String address, String city,
+			String email, Date birthDate);
 	public Person getPerson(String firstName, String lastName);
 
 	public Set<Person> getListPersons(String firstName, String lastName);
@@ -30,11 +31,12 @@ public interface IPerson {
 
 	public int getNumberMinorsByAddress(String address);
 
-	public Set<String> printlistPersons(String firstName, String lastName);
+	public List<String[]> printlistPersons(String firstName, String lastName);
 
-	public Set<String> printlistPersonByadress(String adress);
+	public List<String[]> printlistPersonByadress(String adress);
 
-	public Set<String> printlistMinorsByAddress(String adress);
+	public List<String[]> printlistMinorsByAddress(String adress);
 	
 	public Set<String> getPersonInfo(String firstName, String lastName);
+	public List<String[]> listPersonsLinkToStationSelected(String fireStationNumber);
 }

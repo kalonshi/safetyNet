@@ -17,7 +17,7 @@ import com.spl.safetyNet.models.Person;
 
 public class IFirestationImpl implements IFirestation {
 	@Autowired
-	private JsonFileData3 jSonFile;
+	private JsonFileData4 jSonFile;
 
 	@Override
 	public FireStation addFireStation(String fireStationNumber, String addresse) {
@@ -36,7 +36,7 @@ public class IFirestationImpl implements IFirestation {
 			FireStation newFireStation = new FireStation(fireStationNumber);
 			newFireStation.addAddress(addresse);
 			newFireStation.setListOfPersons(fireStationByPersonAdresse);
-			fireStationByPersonAdresse.forEach(p -> p.addFireStation(newFireStation));
+			fireStationByPersonAdresse.forEach(p -> p.setFireStation(newFireStation));
 			return newFireStation;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -104,7 +104,7 @@ public class IFirestationImpl implements IFirestation {
 		FireStation fireStationContactPhoneList = getFireStation(fireStationNumber);
 		Set<Person> personsToContact = fireStationContactPhoneList.getListOfPersons();
 		for (Person p : personsToContact) {
-			phoneList.add(p.getPhone());
+			phoneList.add("phone Number : "+p.getPhone());
 		}
 
 		return phoneList;
@@ -157,7 +157,7 @@ public class IFirestationImpl implements IFirestation {
 			List<FireStation> fireStations = jSonFile.loadStations();
 			Set<Person> personsLinkWithStation = fireStationSelected.getListOfPersons();
 			for (Person p : personsLinkWithStation) {
-				p.getFireStation().remove(fireStationSelected);
+				p.setFireStation(null);
 			}
 			fireStations.remove(fireStationSelected);
 		} catch (IOException e) {
@@ -186,8 +186,8 @@ public class IFirestationImpl implements IFirestation {
 				}
 				List<Person> persons = jSonFile.loadPersons();
 				for (Person p : persons) {
-					if (p.getFireStation().contains(f)) {
-						p.getFireStation().remove(f);
+					if (p.getFireStation().equals(f)) {
+						p.setFireStation(null);
 					}
 				}
 
@@ -206,39 +206,44 @@ public class IFirestationImpl implements IFirestation {
 		Set<String> ListOfPhoneNumbers = new HashSet<String>();
 		Set<Person> listPersons = getFireStation(fireStationNumber).getListOfPersons();
 		for (Person p : listPersons) {
-			ListOfPhoneNumbers.add(p.getPhone());
+			ListOfPhoneNumbers.add("phone Number : "+p.getPhone());
 		}
 		return ListOfPhoneNumbers;
 	}
 //http://localhost:8080/firestation?stationNumber=<station_number>
 
 	@Override
-	public Set<String> ListOfPersonLinkWithSelectedStation(String fireStationNumber) {
+	public List<String[]>  ListOfPersonLinkWithSelectedStation(String fireStationNumber) {
 		// TODO Auto-generated method stub
-		Set<String> listOfPersonLinkWithSelectedStation = new HashSet<String>();
-		Set<Person> listPersonsLinkWithSelectedStation = new HashSet<>();
-		List<String> totaux=new ArrayList<String>();
+		List<String[]> listOfPersonLinkWithSelectedStation = new ArrayList<String[]>(); 
+		Set<Person> listPersonsLink = new HashSet<>();
+		String[] totaux= new String[2];
 		int nbMinors=0;
 		
-		listPersonsLinkWithSelectedStation=getListPersonByFireStation(fireStationNumber);
-		int nbTotalPerson=listPersonsLinkWithSelectedStation.size();
-		for (Person psws:listPersonsLinkWithSelectedStation) {
+		listPersonsLink=getListPersonByFireStation(fireStationNumber);
+		int nbTotalPerson=listPersonsLink.size();
+		for (Person psws:listPersonsLink) {
 		
 			if(psws.isMinor()){
 				nbMinors++;
 			}
-			List<String> infosPersons = new ArrayList<String>();
-			infosPersons.add(psws.getFirstName());
-			infosPersons.add(psws.getLastName());
-			infosPersons.add(psws.getAddress());
-			infosPersons.add(psws.getPhone());
-				
-			listOfPersonLinkWithSelectedStation.addAll(infosPersons);
+			/*
+			 * List<String> infosPersons = new ArrayList<String>();
+			 * infosPersons.add(psws.getFirstName()); infosPersons.add(psws.getLastName());
+			 * infosPersons.add(psws.getAddress()); infosPersons.add(psws.getPhone());
+			 */
+			
+			String[] infosPersons = new String[4];
+			infosPersons[0]=("FirstName :"+psws.getFirstName());
+			infosPersons[1]=("LastName :"+psws.getLastName());
+			infosPersons[2]=("Address :"+psws.getAddress()+"  "+psws.getCity()+"  "+psws.getZip());
+			infosPersons[3]=("PhoneNumber:" +psws.getPhone());
+			listOfPersonLinkWithSelectedStation.add(infosPersons);
 		}
 		
-		totaux.add(String.valueOf(nbMinors));
-		totaux.add(String.valueOf((nbTotalPerson-nbMinors)));
-		listOfPersonLinkWithSelectedStation.addAll(totaux);
+		totaux[0]=("Number of Minors :  "+String.valueOf(nbMinors));
+		totaux[1]=("Number of Adults :  "+String.valueOf((nbTotalPerson-nbMinors)));
+		listOfPersonLinkWithSelectedStation.add(totaux);
 		return listOfPersonLinkWithSelectedStation;
 	}
 
@@ -246,21 +251,28 @@ public class IFirestationImpl implements IFirestation {
 	//http://localhost:8080/flood/stations?stations=<a list of station_numbers>
 
 	@Override
-	public Set<String> ListOfPersonLinkWithSelectedStations(List<String> fireStations) {
+	public Set<String[]> ListOfPersonLinkWithSelectedStations(List<String> fireStations) {
 		Set<Person> listOfPersonLinkWithSelectedStations=getListPersonByFireStations(fireStations); 
-		Set<String> listOfPersonLinkWithSelectedStationsToPrint = new HashSet<String>();
+		Set<String[]> listOfPersonLinkWithSelectedStationsToPrint = new HashSet<String[]>();
 		
 		for(Person p :listOfPersonLinkWithSelectedStations) {
-			List<String> infosPersonsToPrint = new ArrayList<String>();
-			infosPersonsToPrint.add(p.getAddress());
-			infosPersonsToPrint.add(p.getLastName());
-			infosPersonsToPrint.add(p.getPhone());
-			infosPersonsToPrint.add(String.valueOf( p.age()) );
-			infosPersonsToPrint.add(p.getMedicalRecord().getMedications().toString());
-			infosPersonsToPrint.add(p.getMedicalRecord().getAllergies().toString());
-			listOfPersonLinkWithSelectedStationsToPrint.addAll(infosPersonsToPrint);
+			String[] infosPersonsToPrint = new String[6];
+			infosPersonsToPrint[0]=(p.getAddress());
+			infosPersonsToPrint[1]=(p.getLastName());
+			infosPersonsToPrint[2]=(p.getPhone());
+			infosPersonsToPrint[3]=(String.valueOf( p.age()) );
+			infosPersonsToPrint[4]=(p.getMedicalRecord().getMedications().toString());
+			infosPersonsToPrint[5]=(p.getMedicalRecord().getAllergies().toString());
+			listOfPersonLinkWithSelectedStationsToPrint.add(infosPersonsToPrint);
 		
 		}
 		return listOfPersonLinkWithSelectedStationsToPrint;
+	}
+
+	@Override
+	public FireStation updateFireStationNumber(String fireStationNumber,String newStationNumber) {
+		FireStation updateFireStationNumber= getFireStation(fireStationNumber);
+		updateFireStationNumber.setStationNumber(newStationNumber);
+		return updateFireStationNumber;
 	}
 }

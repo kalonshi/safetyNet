@@ -38,8 +38,10 @@ public class FireStation {
 	}
 
 
-
-	
+	public String setStationNumber(String stationNumber) {
+		this.stationNumber=stationNumber;
+		return stationNumber;
+	}
 
 
 

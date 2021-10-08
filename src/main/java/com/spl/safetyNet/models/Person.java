@@ -3,6 +3,10 @@ package com.spl.safetyNet.models;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.time.LocalDate;
+import java.time.Period;
+
+
 
 public class Person {
 	private String firstName;
@@ -14,7 +18,7 @@ public class Person {
 	private String email;
 	private Date birthDate;
 	private MedicalRecord medicalRecord;
-	private Set<FireStation>fireStations;
+	private FireStation fireStation;
 	
 	public Person() {
 		super();
@@ -105,12 +109,12 @@ public class Person {
 		this.medicalRecord = medicalRecord;
 	}
 
-	public Set<FireStation> getFireStation() {
-		return fireStations;
+	public FireStation getFireStation() {
+		return fireStation;
 	}
 
-	public void setFireStation(Set<FireStation> fireStations) {
-		this.fireStations = fireStations;
+	public void setFireStation(FireStation fireStation) {
+		this.fireStation = fireStation;
 	}
 
 	public Person(String firstName, String lastName, String phone, String zip, String address, String city,
@@ -126,30 +130,34 @@ public class Person {
 		this.birthDate = birthDate;
 	}
 
-	public void addFireStation(FireStation firestation) {
-		fireStations.add(firestation);
-				
-	}
+	/*
+	 * public void addFireStation(FireStation firestation) {
+	 * fireStations.add(firestation);
+	 * 
+	 * }
+	 */
 	
 	
 	public Boolean isMinor( ) {
-		if (!this.birthDate.equals(null)) {
-			Date inTime = new Date();
-			if (((inTime.getDay()/365)-(this.birthDate.getDay()/365))<365*18){
+		if (age()<=18) {
+			
 				
 				return true;
 			}
-		}
+		
 		return false;
 	}
 	public int age() {
+		int age=0;
+		
 		
 		if (!this.birthDate.equals(null)) {
 			Date inTime = new Date();
-			int age=((inTime.getDay()/365)-(this.birthDate.getDay()/365));
-		}
+			age=((inTime.getYear())-(this.birthDate.getYear()));
 		
-		return 0;
+			 return age;}
+		
+		return age;
 	}
 	@Override
 	public int hashCode() {

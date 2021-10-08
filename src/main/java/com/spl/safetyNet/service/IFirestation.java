@@ -27,7 +27,7 @@ public interface IFirestation {
 
 	public Set<String> getListOfPhoneNumbersFromPersonLinkWithSelectedStation(String fireStationNumber);
 
-	public Set<String> ListOfPersonLinkWithSelectedStation(String fireStationNumber);
-	public Set<String> ListOfPersonLinkWithSelectedStations(List<String> fireStations);
-
+	public List<String[]> ListOfPersonLinkWithSelectedStation(String fireStationNumber);
+	public Set<String[]> ListOfPersonLinkWithSelectedStations(List<String> fireStations);
+	public FireStation updateFireStationNumber(String fireStationNumber,String newStationNumber);
 }
