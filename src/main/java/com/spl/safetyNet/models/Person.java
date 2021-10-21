@@ -1,12 +1,6 @@
 package com.spl.safetyNet.models;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.time.LocalDate;
-import java.time.Period;
-
-
 
 public class Person {
 	private String firstName;
@@ -19,7 +13,7 @@ public class Person {
 	private Date birthDate;
 	private MedicalRecord medicalRecord;
 	private FireStation fireStation;
-	
+
 	public Person() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -136,29 +130,29 @@ public class Person {
 	 * 
 	 * }
 	 */
-	
-	
-	public Boolean isMinor( ) {
-		if (age()<=18) {
-			
-				
-				return true;
-			}
-		
+
+	public Boolean isMinor() {
+		if (age() <= 18) {
+
+			return true;
+		}
+
 		return false;
 	}
+
 	public int age() {
-		int age=0;
-		
-		
+		int age = 0;
+
 		if (!this.birthDate.equals(null)) {
 			Date inTime = new Date();
-			age=((inTime.getYear())-(this.birthDate.getYear()));
-		
-			 return age;}
-		
+			age = ((inTime.getYear()) - (this.birthDate.getYear()));
+
+			return age;
+		}
+
 		return age;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -190,6 +184,4 @@ public class Person {
 		return true;
 	}
 
-	
-	
 }

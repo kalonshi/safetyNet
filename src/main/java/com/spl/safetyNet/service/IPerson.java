@@ -1,42 +1,53 @@
 package com.spl.safetyNet.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
+import com.spl.safetyNet.Views.InfoPerson;
+import com.spl.safetyNet.Views.ListPerson;
+import com.spl.safetyNet.Views.PersonEmail;
+import com.spl.safetyNet.Views.PersonFire;
+import com.spl.safetyNet.Views.PersonPrint;
+import com.spl.safetyNet.Views.Personchild;
 import com.spl.safetyNet.models.Person;
 
 public interface IPerson {
 	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
 			String email, Date birthDate);
+
 	public Person updatePerson(String firstName, String lastName, String phone, String zip, String address, String city,
 			String email, Date birthDate);
+
+	public InfoPerson getInfoPerson(String firstName, String lastName);
 	public Person getPerson(String firstName, String lastName);
-
-	public Set<Person> getListPersons(String firstName, String lastName);
-
+	public List<Person> getListPersons(String firstName, String lastName);
+	public List<InfoPerson> getListInfoPerson(String firstName, String lastName);
 	public void delete(String firstName, String lastName);
 
-	public Set<Person> getResidentsByAddress(String address);
+	public List<Person> getResidentsByAddress(String address);
 
-	public Set<String> getListEmail(String city);
-
-	public Set<Person> getfamilyMenbers(String lastName);
-
-	public Set<Person> getMinorsByAddress(String address);
-
-	public Set<Person> getAdultsByAddress(String address);
-
-	public int getNumberAdultsByAddress(String address);
-
-	public int getNumberMinorsByAddress(String address);
-
-	public List<String[]> printlistPersons(String firstName, String lastName);
-
-	public List<String[]> printlistPersonByadress(String adress);
-
-	public List<String[]> printlistMinorsByAddress(String adress);
+	public List<PersonFire> listResidentsByAddress(String address);
 	
-	public Set<String> getPersonInfo(String firstName, String lastName);
-	public List<String[]> listPersonsLinkToStationSelected(String fireStationNumber);
-}
+	public List<PersonEmail> listEmail(String city);
+	
+	public List<Person> getfamilyMenbers(String lastName);
+
+	
+	  public List<Person> getMinorsByAddress(String address);
+	  
+	  public List<Person> getAdultsByAddress(String address);
+	 
+
+	
+	
+	public List<Person> printlistPersonByadress(String adress);
+
+	 public List<Personchild> printlistMinorsByAddress(String adress); 
+
+	
+	  public ListPerson listPersonsLinkToStationSelected(String
+	  fireStationNumber);
+	 }

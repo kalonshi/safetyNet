@@ -3,20 +3,32 @@ package com.spl.safetyNet.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spl.safetyNet.controller.PersonController;
 import com.spl.safetyNet.models.MedicalRecord;
 
 @Service
 
 public class IMedicalRecordImpl implements IMedicalRecord {
 	@Autowired
-	private JsonFileData4 jSonFile;
+	private JsonFileData jSonFile;
+	private static final Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
 
 	@Override
 	public MedicalRecord addMedicalRecord(List<String> medications, List<String> allergies) {
 		MedicalRecord newMedicalRecord = new MedicalRecord(medications, allergies);
+		try {
+			jSonFile.loadJsonMedicalRecords().add(newMedicalRecord);
+			return newMedicalRecord;
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return newMedicalRecord;
 	}
 
@@ -25,7 +37,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		// TODO Auto-generated method stub
 		MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
 		try {
-			List<MedicalRecord> medicalRecords = jSonFile.loadMedicalRecords();
+			List<MedicalRecord> medicalRecords = jSonFile.loadJsonMedicalRecords();
 			medicalRecords.remove(medicalRecordSelected);
 
 		} catch (IOException e) {

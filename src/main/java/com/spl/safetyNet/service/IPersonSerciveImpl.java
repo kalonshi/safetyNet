@@ -3,69 +3,99 @@ package com.spl.safetyNet.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spl.safetyNet.models.FireStation;
+import com.spl.safetyNet.Views.Family;
+import com.spl.safetyNet.Views.InfoPerson;
+import com.spl.safetyNet.Views.ListPerson;
+import com.spl.safetyNet.Views.PersonEmail;
+import com.spl.safetyNet.Views.PersonFire;
+import com.spl.safetyNet.Views.PersonPrint;
+import com.spl.safetyNet.Views.Personchild;
+
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person;
 
 @Service
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
-	private JsonFileData4 jSonFile;
-	private String stationNum;
+	private JsonFileData jSonFile;
+	private static final Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
 
 	@Override
 	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
 			String email, Date birthDate) {
+		Person newPerson = new Person();
+
 		// TODO Auto-generated method stub
-		Person newPerson = new Person(firstName, lastName, phone, zip, address, city, email);
-
+		logger.info("Entering the addPerson() method");
+		if (firstName.isEmpty() && lastName.isEmpty() && phone.isEmpty() && zip.isEmpty() && address.isEmpty()
+				&& city.isEmpty() && email.isEmpty() && birthDate.equals(null)) {
+			return null;
+		} else
+			newPerson = new Person(firstName, lastName, phone, zip, address, city, email, birthDate);
 		try {
-			List<FireStation> stations = jSonFile.loadStations();
-			/* stations.contains(address); */
-			for (FireStation f : stations) {
-				f.getAddresses().forEach(ad -> {
-					if (newPerson.getAddress().contains(ad)) {
-						newPerson.setFireStation(f);
-					}
-				});
-			}
-
 			jSonFile.loadJsonPersons().add(newPerson);
-
+			return newPerson;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return newPerson;
 	}
+	
+	@Override
+	public InfoPerson getInfoPerson(String firstName, String lastName) {
+		// TODO Auto-generated method stub
+		logger.info("Entering the getPerson() method");
+		InfoPerson personInfo = new InfoPerson();
+		List<Person> personList;
+		try {
+			personList = jSonFile.loadPersons();
+			if (!firstName.isEmpty() && !lastName.isEmpty()) {
+				for (Person p : personList) {
+					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName))) {
+						personInfo = new InfoPerson(p.getFirstName(), p.getLastName(), p.getAddress(), p.getZip(),
+								p.getCity(), p.age(), p.getEmail(), p.getMedicalRecord().getMedications(),
+								p.getMedicalRecord().getAllergies());
+						logger.info("Success find Person with firstName  and lastName");
+						return (personInfo);
+
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.info("Failed to  find Person with firstName  and lastName");
+
+			e.printStackTrace();
+		}
+
+		return personInfo;
+	}
 
 	@Override
 	public Person getPerson(String firstName, String lastName) {
 		// TODO Auto-generated method stub
-		Set<Person> getPersons = new HashSet<Person>();
+		logger.info("Entering the getPerson() method");
+
 		List<Person> personList;
 		try {
-			personList = jSonFile.loadJsonPersons();
+			personList = jSonFile.loadPersons();
 			if (!firstName.isEmpty() && !lastName.isEmpty())
 				for (Person p : personList) {
 					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName)))
-						getPersons.add(p);
+						logger.info("Success get Person " + p.getFirstName() + " " + p.getLastName());
+					return p;
 				}
-			if (firstName.isEmpty())
-				for (Person p : personList) {
-					if (p.getLastName().equals(lastName))
-						getPersons.add(p);
-				}
-			return null;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
+		} catch (IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -75,18 +105,13 @@ public class IPersonSerciveImpl implements IPerson {
 	@Override
 	public void delete(String firstName, String lastName) {
 		// TODO Auto-generated method stub
+		logger.info("Entering the delete() method");
 		Person person = getPerson(firstName, lastName);
 
 		try {
-			List<FireStation> listFireStations = jSonFile.loadStations();
-			FireStation FireStationsToDelete = person.getFireStation();
 
-			FireStationsToDelete.getListOfPersons().remove(person);
-
-			
-			List<MedicalRecord> listMedicalRecords = jSonFile.loadMedicalRecords();
 			MedicalRecord medicalRecordToDelete = person.getMedicalRecord();
-			jSonFile.loadMedicalRecords().remove(medicalRecordToDelete);
+			jSonFile.loadJsonMedicalRecords().remove(medicalRecordToDelete);
 			jSonFile.loadJsonPersons().remove(person);
 
 		} catch (IOException e) {
@@ -96,31 +121,11 @@ public class IPersonSerciveImpl implements IPerson {
 		person = null;
 	}
 
-	// http://localhost:8080/communityEmail?city=<city>
 	@Override
-	public Set<String> getListEmail(String city) {
+	public List<Person> getfamilyMenbers(String lastName) {
 		// TODO Auto-generated method stub
-		Set<String> listEmail = new HashSet<>();
-		try {
-			List<Person> persons = jSonFile.loadPersons();
-			listEmail.add("List of emails to contact : " );
-			for (Person p : persons) {
-				if (p.getCity().equals(city)) {
-					listEmail.add("Email :  "+p.getEmail());
-				}
-			}
-			return listEmail;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return listEmail;
-	}
-
-	@Override
-	public Set<Person> getfamilyMenbers(String lastName) {
-		// TODO Auto-generated method stub
-		Set<Person> familyMenbers = new HashSet<>();
+		logger.info("Entering the getfamilyMenbers() method");
+		List<Person> familyMenbers = new ArrayList<Person>();
 		try {
 			List<Person> persons = jSonFile.loadPersons();
 			for (Person p : persons) {
@@ -138,10 +143,10 @@ public class IPersonSerciveImpl implements IPerson {
 	}
 
 	@Override
-	public Set<Person> getMinorsByAddress(String address) {
+	public List<Person> getMinorsByAddress(String address) {
 		// TODO Auto-generated method stub
-
-		Set<Person> minors = new HashSet<>();
+		logger.info("Entering getMinorsByAddress() method");
+		List<Person> minors = new ArrayList<>();
 		try {
 			List<Person> persons = jSonFile.loadPersons();
 			for (Person p : persons) {
@@ -159,29 +164,9 @@ public class IPersonSerciveImpl implements IPerson {
 	}
 
 	@Override
-	public int getNumberMinorsByAddress(String address) {
+	public List<Person> getAdultsByAddress(String address) {
 		// TODO Auto-generated method stub
-
-		int NumberMinorsByAddress = getMinorsByAddress(address).size();
-		return NumberMinorsByAddress;
-	}
-
-	@Override
-	public int getNumberAdultsByAddress(String address) {
-		// TODO Auto-generated method stub
-
-		int NumberAdultsByAddress = 0;
-		if (!address.isEmpty()) {
-			NumberAdultsByAddress = getAdultsByAddress(address).size();
-			return NumberAdultsByAddress;
-		}
-		return NumberAdultsByAddress;
-	}
-
-	@Override
-	public Set<Person> getAdultsByAddress(String address) {
-		// TODO Auto-generated method stub
-		Set<Person> adults = new HashSet<>();
+		List<Person> adults = new ArrayList<>();
 		try {
 			List<Person> persons = jSonFile.loadPersons();
 			for (Person p : persons) {
@@ -200,11 +185,11 @@ public class IPersonSerciveImpl implements IPerson {
 	}
 
 	@Override
-	public Set<Person> getResidentsByAddress(String address) {
+	public List<Person> getResidentsByAddress(String address) {
 		// TODO Auto-generated method stub
 
-		
-		Set<Person> residents = new HashSet<>();
+		logger.info("Entering getResidentsByAddress(String address) method");
+		List<Person> residents = new ArrayList<>();
 		try {
 			List<Person> persons = jSonFile.loadPersons();
 			for (Person p : persons) {
@@ -212,38 +197,44 @@ public class IPersonSerciveImpl implements IPerson {
 					residents.add(p);
 				}
 			}
-			System.out.println("residents");
-			System.out.println(residents.size());
+
 			return residents;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return residents;
+
 	}
 
+// http://localhost:8080/personInfo?firstName=%3CfirstName%3E&lastName=%3ClastName
 	@Override
-	public Set<Person> getListPersons(String firstName, String lastName) {
+	public List<InfoPerson> getListInfoPerson(String firstName, String lastName) {
 		// TODO Auto-generated method stub
-		Set<Person> getPersons = new HashSet<Person>();
+		logger.info("Entering getListPersons() method");
+		List<InfoPerson> getPersons = new ArrayList<InfoPerson>();
 		List<Person> personList;
 		if (!firstName.isEmpty() && !lastName.isEmpty()) {
 			try {
 				personList = jSonFile.loadPersons();
 
+				getPersons.add(getInfoPerson(firstName, lastName));
 				for (Person p : personList) {
-					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName)))
-						getPersons.add(p);
+					InfoPerson info = new InfoPerson();
+					if (p.getLastName().equals(lastName) && !p.getFirstName().equals(firstName)) {
+
+						info = new InfoPerson(p.getFirstName(), p.getLastName(), p.getAddress(), p.getZip(),
+								p.getCity(), p.age(), p.getEmail(), p.getMedicalRecord().getMedications(),
+								p.getMedicalRecord().getAllergies());
+						getPersons.add(info);
+						}
+					logger.info("Success add list person with   lastName " + getPersons.size());
 				}
-				if (!lastName.isEmpty())
-					for (Person p : personList) {
-						if (p.getLastName().equals(lastName))
-							getPersons.add(p);
-					}
 				return getPersons;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				logger.error("Failed add person with   lastName ");
+
 				e.printStackTrace();
 			}
 
@@ -253,236 +244,235 @@ public class IPersonSerciveImpl implements IPerson {
 	}
 
 	@Override
-	public List<String[]> printlistPersons(String firstName, String lastName) {
-		// TODO Auto-generated method stub
-		Set<Person> getInfoPersons = new HashSet<Person>();
-		Set<String> listInfoPersons = new HashSet<String>();
-		getInfoPersons = getListPersons(firstName, lastName);
-		for (Person pf : getInfoPersons) {
-			List<String> infos = new ArrayList<String>();
-			infos.add("FirstName :" +pf.getFirstName());
-			infos.add("LastName :" +pf.getLastName());
-			infos.add("Address  :" +pf.getAddress());
-			infos.add("Age : "+String.valueOf(pf.age()));
-			infos.add("Email : "+pf.getEmail());
-			infos.add("Medications :" +pf.getMedicalRecord().getMedications().toString());
-			infos.add("Allergies :"+pf.getMedicalRecord().getAllergies().toString());
 
-			listInfoPersons.addAll(infos);
+	public List<Person> printlistPersonByadress(String adress) {
+		logger.info("Entering printlistPersonByadress() method");
+		List<Person> getInfoPersons = new ArrayList<Person>();
+		if (adress.isEmpty()) {
+			return getInfoPersons;
 		}
-
-		return null;
-	}
-
-//    http://localhost:8080/fire?address=<address> Test OK
-	@Override
-	public List<String[]> printlistPersonByadress(String adress) {
-		Set<Person> getInfoPersons = new HashSet<Person>();
-		List<String[]> listInfoPersonsByAdress = new ArrayList<String[]>();
 		getInfoPersons = getResidentsByAddress(adress);
-		
-		for (Person pf : getInfoPersons) {
-			String[] infos = new String[8];
-			 
-			infos[0]=("Adress: "+pf.getAddress() +" "+pf.getCity()+ "  "+pf.getZip());
-			
-			 infos[1]=("FireStation Number :" +pf.getFireStation().getStationNumber().toString()); 
-			infos[2]=("FirstName :" +pf.getFirstName());
-			infos[3]=("LastName :" +pf.getLastName());
-			infos[4]=("Phone Number :"+pf.getPhone());
-			infos[5]=("Age : "+String.valueOf(pf.age()));
-			 infos[6]=("Medications :"+pf.getMedicalRecord().getMedications().toString());
-			  infos[7]=("Allergies :"+pf.getMedicalRecord().getAllergies().toString());
-			 
 
-			listInfoPersonsByAdress.add(infos);
-		}
-	
-		return listInfoPersonsByAdress;
+		return getInfoPersons;
 	}
-	/*
-	 * ChildAlert: Liste des personnes <18 avec liste des parents associés 
-	 * Cette url doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
-La liste doit comprendre le prénom et le nom de famille de chaque enfant, son âge et une liste des autres
-membres du foyer. S'il n'y a pas d'enfant, cette url peut renvoyer une chaîne vide.
-OK , Probleme de Mise en page !!!
-	 */
+
 	// http://localhost:8080/childAlert?address=<address>
+
 	@Override
-	public List<String[]>printlistMinorsByAddress(String adress) {
-		Set<Person> getInfoPersonsMinor = new HashSet<Person>();
-		Set<Person> getInfoPersonsAdult = new HashSet<Person>();
-		 List<String[]> listInfoPersonsByAdress = new ArrayList<String[]>(); 
-		
-		getInfoPersonsMinor = getResidentsByAddress(adress);
-System.out.println("Test mineur");
-		for (Person pf : getInfoPersonsMinor) {
-			
-			String[] infos = new String[4];
-			
-			List<String[]> familyMenbers = new ArrayList<String[]>();
+	public List<Personchild> printlistMinorsByAddress(String adress) {
+		logger.info("Entering printlistMinorsByAddress() method");
+		List<Person> getInfoPersons = new ArrayList<Person>();
+		List<Person> getInfoPersonsAdult = new ArrayList<Person>();
+
+		List<Personchild> childAlertList = new ArrayList<Personchild>();
+		getInfoPersons = getResidentsByAddress(adress);
+
+		for (Person pf : getInfoPersons) {
+
+			// ******TEST ajout ChildClass***************************
+
+			List<Family> familyMenbers = new ArrayList<Family>();
 			if (pf.isMinor()) {
-				infos[0]=("Minor:");
-				infos[1]=("FirstName :"+pf.getFirstName());
-				infos[2]=("LastName :"+pf.getLastName());
-				infos[3]=("Age :" +String.valueOf(pf.age()));
-				 listInfoPersonsByAdress.add(infos); 
-				
+				Personchild newChild = new Personchild(pf.getFirstName(), pf.getLastName(), pf.age());
 				getInfoPersonsAdult = getfamilyMenbers(pf.getLastName());
 				if (!getInfoPersonsAdult.isEmpty()) {
 					for (Person pa : getInfoPersonsAdult) {
 						if (!(pa.getFirstName().equals(pf.getFirstName()))
 								&& (pa.getAddress().equals(pf.getAddress()))) {
-							String[] familyMenber = new String[4];
-							familyMenber[0]=("familyMenber :");
-							familyMenber[1]=(" FirstName :"+pa.getFirstName());
-							familyMenber[2]=(" LastName :"+pa.getLastName());
-							familyMenber[3]=("Age :" +String.valueOf(pa.age()));
-							listInfoPersonsByAdress.add(familyMenber);	
-						
+
+							Family relative = new Family(pa.getFirstName(), pa.getLastName(), pa.age());
+
+							familyMenbers.add(relative);
 						}
 					}
-					 }
-
+				}
+				newChild.setFamilyMenber(familyMenbers);
+				childAlertList.add(newChild);
 			}
-			
+
 		}
 
-		 return listInfoPersonsByAdress; 
-	}
-
-//http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
-	@Override
-	public Set<String> getPersonInfo(String firstName, String lastName) {
-		Set<Person> personsInfo = getListPersons(firstName, lastName);
-		Set<String> personInfoForPrinting = new HashSet<String>();
-		for (Person p : personsInfo) {
-			List<String> personInfos = new ArrayList<String>();
-			personInfos.add(p.getLastName());
-			personInfos.add(p.getAddress());
-			personInfos.add(String.valueOf(p.age()));
-			personInfos.add(p.getEmail());
-			personInfos.add(p.getMedicalRecord().getMedications().toString());
-			personInfos.add(p.getMedicalRecord().getAllergies().toString());
-			personInfoForPrinting.addAll(personInfos);
-		}
-
-		return personInfoForPrinting;
+		return childAlertList;
 	}
 
 	@Override
 	public Person updatePerson(String firstName, String lastName, String newPhone, String newZip, String newAddress,
 			String newCity, String newEmail, Date newBirthDate) {
+		logger.info("Entering updatePersonInfo method");
 		Person personSelectedToUpdate = getPerson(firstName, lastName);
-		if(!personSelectedToUpdate.equals(null)) {
-		if (!newPhone.isEmpty() && !newZip.isEmpty() && !newAddress.isEmpty() && !newCity.isEmpty() && !newZip.isEmpty()
-				&& !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-			personSelectedToUpdate.setAddress(newAddress);
-			personSelectedToUpdate.setBirthDate(newBirthDate);
-			personSelectedToUpdate.setCity(newCity);
-			personSelectedToUpdate.setEmail(newEmail);
-			personSelectedToUpdate.setPhone(newPhone);
-			personSelectedToUpdate.setZip(newZip);
-			return personSelectedToUpdate;
-		} else if (!newZip.isEmpty() && !newAddress.isEmpty() && !newCity.isEmpty() && !newZip.isEmpty()
-				&& !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-			personSelectedToUpdate.setAddress(newAddress);
-			personSelectedToUpdate.setBirthDate(newBirthDate);
-			personSelectedToUpdate.setCity(newCity);
-			personSelectedToUpdate.setEmail(newEmail);
-			personSelectedToUpdate.setZip(newZip);
-			return personSelectedToUpdate;
-		} else if (!newAddress.isEmpty() && !newCity.isEmpty() && !newZip.isEmpty() && newEmail.isEmpty()
-				&& !newBirthDate.equals(null)) {
-			personSelectedToUpdate.setAddress(newAddress);
-			personSelectedToUpdate.setBirthDate(newBirthDate);
-			personSelectedToUpdate.setCity(newCity);
-			personSelectedToUpdate.setEmail(newEmail);
-			personSelectedToUpdate.setZip(newZip);
-			return personSelectedToUpdate;
+		if (!personSelectedToUpdate.equals(null)) {
+			if (!newPhone.isEmpty() && !newZip.isEmpty() && !newAddress.isEmpty() && !newCity.isEmpty()
+					&& !newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
+				personSelectedToUpdate.setAddress(newAddress);
+				personSelectedToUpdate.setBirthDate(newBirthDate);
+				personSelectedToUpdate.setCity(newCity);
+				personSelectedToUpdate.setEmail(newEmail);
+				personSelectedToUpdate.setPhone(newPhone);
+				personSelectedToUpdate.setZip(newZip);
+				return personSelectedToUpdate;
+			} else if (!newZip.isEmpty() && !newAddress.isEmpty() && !newCity.isEmpty() && !newZip.isEmpty()
+					&& !newEmail.isEmpty() && !newBirthDate.equals(null)) {
+				personSelectedToUpdate.setAddress(newAddress);
+				personSelectedToUpdate.setBirthDate(newBirthDate);
+				personSelectedToUpdate.setCity(newCity);
+				personSelectedToUpdate.setEmail(newEmail);
+				personSelectedToUpdate.setZip(newZip);
+				return personSelectedToUpdate;
+			} else if (!newAddress.isEmpty() && !newCity.isEmpty() && !newZip.isEmpty() && newEmail.isEmpty()
+					&& !newBirthDate.equals(null)) {
+				personSelectedToUpdate.setAddress(newAddress);
+				personSelectedToUpdate.setBirthDate(newBirthDate);
+				personSelectedToUpdate.setCity(newCity);
+				personSelectedToUpdate.setEmail(newEmail);
+				personSelectedToUpdate.setZip(newZip);
+				return personSelectedToUpdate;
 
-		}
-
-		else if (!newCity.isEmpty() && !newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-
-			personSelectedToUpdate.setBirthDate(newBirthDate);
-			personSelectedToUpdate.setCity(newCity);
-			personSelectedToUpdate.setEmail(newEmail);
-			personSelectedToUpdate.setZip(newZip);
-			return personSelectedToUpdate;
-		} else if (!newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-			personSelectedToUpdate.setBirthDate(newBirthDate);
-personSelectedToUpdate.setEmail(newEmail);
-			personSelectedToUpdate.setZip(newZip);
-			return personSelectedToUpdate;
-		} else if (!newEmail.isEmpty() && !newBirthDate.equals(null)) {
-			personSelectedToUpdate.setBirthDate(newBirthDate);
-
-			personSelectedToUpdate.setEmail(newEmail);
-
-			return personSelectedToUpdate;
-
-		} else if (newBirthDate.equals(null)) {
-			personSelectedToUpdate.setBirthDate(newBirthDate);
-
-			personSelectedToUpdate.setEmail(newEmail);
-
-			return personSelectedToUpdate;
-
-		}
-		
-			return personSelectedToUpdate;
-			
-
-
-	}
-		else return null;
-}
-
-	@Override
-	public List<String[]> listPersonsLinkToStationSelected(String fireStationNumber) {
-		// TODO Auto-generated method stub
-		
-		try {
-			
-			List<Person >personDatSource = jSonFile.loadPersons();
-		
-		
-			
-		
-		
-		List<String[]> listPersonsLink= new ArrayList<String[]>();
-		int qtMinors =0;
-		int qtAdults=0;	
-		String[] totaux= new String[2];
-		for(Person personStation:personDatSource) {
-			
-				System.out.println("test");	
-			if(personStation.getFireStation().getStationNumber().equals(fireStationNumber)) {
-				//prénom, nom, adresse, numéro de téléphone
-				if(personStation.isMinor()) {
-					qtMinors++;
-				}
-				String[] infosPerso = new String[4];
-				infosPerso[0]=("FirstName :"+personStation.getFirstName());
-				infosPerso[1]=("LastName :" +personStation.getFirstName());
-				infosPerso[2]=("Adress :"+personStation.getAddress()+"  "+personStation.getCity()+"  "+personStation.getZip());
-				infosPerso[3]=("Phone Number:"+personStation.getPhone());
-				listPersonsLink.add(infosPerso);	
 			}
-			
-			
-		}
-		totaux[0]="number Of Minors: "+String.valueOf(qtMinors);
-				totaux[1]="number Of Adults: "+String.valueOf(listPersonsLink.size()-qtMinors);
-		listPersonsLink.add(totaux);
-		return listPersonsLink;
-		
-		
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
+			else if (!newCity.isEmpty() && !newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
+
+				personSelectedToUpdate.setBirthDate(newBirthDate);
+				personSelectedToUpdate.setCity(newCity);
+				personSelectedToUpdate.setEmail(newEmail);
+				personSelectedToUpdate.setZip(newZip);
+				return personSelectedToUpdate;
+			} else if (!newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
+				personSelectedToUpdate.setBirthDate(newBirthDate);
+				personSelectedToUpdate.setEmail(newEmail);
+				personSelectedToUpdate.setZip(newZip);
+				return personSelectedToUpdate;
+			} else if (!newEmail.isEmpty() && !newBirthDate.equals(null)) {
+				personSelectedToUpdate.setBirthDate(newBirthDate);
+
+				personSelectedToUpdate.setEmail(newEmail);
+
+				return personSelectedToUpdate;
+
+			} else if (newBirthDate.equals(null)) {
+				personSelectedToUpdate.setBirthDate(newBirthDate);
+
+				personSelectedToUpdate.setEmail(newEmail);
+
+				return personSelectedToUpdate;
+
+			}
+
+			return personSelectedToUpdate;
+
+		} else
+			return null;
+	}
+
+// http://localhost:8080/firestation?stationNumber=%3Cstation_number OK 14 10
+	@Override
+	public ListPerson listPersonsLinkToStationSelected(String fireStationNumber) { // TODO Auto-generated method
+		logger.info("Entering listPersonsLinkToStationSelected method");
+		ListPerson list = new ListPerson(); // stub
+		List<PersonPrint> listPersonsLinkTest = new ArrayList<PersonPrint>();
+		try {
+
+			List<Person> personDatSource = jSonFile.loadPersons();
+			int qtMinors = 0;
+			for (Person personStation : personDatSource) {
+
+				if (personStation.getFireStation().getStationNumber().equals(fireStationNumber)) {
+					// prénom, nom, adresse, numéro de téléphone
+					if (personStation.isMinor()) {
+
+						qtMinors++;
+					}
+					PersonPrint infoPerso = new PersonPrint(personStation.getFirstName(), personStation.getLastName(),
+							personStation.getAddress(), personStation.getCity(), personStation.getZip(),
+							personStation.getPhone());
+					listPersonsLinkTest.add(infoPerso);
+				}
+
+			}
+			list.setContactsList(listPersonsLinkTest);
+			list.setNbMinors(qtMinors);
+			list.setNbAdults(listPersonsLinkTest.size() - qtMinors);
+			logger.info(" Creation de la list firestation?stationNumber ");
+			return list;
+		} catch (IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
+
+	@Override
+	public List<Person> getListPersons(String firstName, String lastName) {
+		logger.info("Entering getListPersons() method");
+		List<Person> getPersons = new ArrayList<Person>();
+		List<Person> personList;
+		if (!firstName.isEmpty() && !lastName.isEmpty()) {
+			try {
+				personList = jSonFile.loadPersons();
+
+				getPersons.add(getPerson(firstName, lastName));
+				logger.info("Success add person with  firstName, lastName ");
+				for (Person p : personList) {
+					if (p.getLastName().equals(lastName))
+
+						getPersons.add(p);
+					logger.info(
+							"Success add  family menber with   lastName " + p.getLastName() + " " + p.getFirstName());
+				}
+				logger.info("Success add list person with   lastName ");
+
+				return getPersons;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				logger.error("Failed add person with   lastName ");
+
+				e.printStackTrace();
+			}
+
+		}
+
+		return getPersons;
+	}
+
+	@Override
+	public List<PersonEmail> listEmail(String city) {
+		List<PersonEmail> listEmail = new ArrayList<PersonEmail>();
+		try {
+			List<Person> persons = jSonFile.loadPersons();
+
+			for (Person p : persons) {
+				if (p.getCity().equals(city)) {
+					PersonEmail newEmail = new PersonEmail(p.getEmail());
+					listEmail.add(newEmail);
+				}
+			}
+			return listEmail;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listEmail;
+
+	}
+//http://localhost:8080/fire?address=1509%20Culver%20St
+	@Override
+	public List<PersonFire> listResidentsByAddress(String address) {
+		logger.info("Entering getResidentsByAddress(String address) method");
+		List<PersonFire> residents = new ArrayList<>();
+		try {
+			List<Person> persons = jSonFile.loadPersons();
+			for (Person p : persons) {
+				if ((p.getAddress().contains(address))) {
+
+				}
+			}
+			
+			return residents;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error("Pbl import JsonFile!!");
+			e.printStackTrace();
+		}
+
+		return residents;
+	}
+
 }

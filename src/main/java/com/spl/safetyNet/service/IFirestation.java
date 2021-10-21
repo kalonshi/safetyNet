@@ -1,8 +1,12 @@
 package com.spl.safetyNet.service;
 
 import java.util.List;
-import java.util.Set;
 
+import java.util.TreeMap;
+
+import com.spl.safetyNet.Views.ListContactsForFire;
+import com.spl.safetyNet.Views.PersonFire;
+import com.spl.safetyNet.Views.PersonPhone;
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.Person;
 
@@ -11,23 +15,29 @@ public interface IFirestation {
 
 	public FireStation getFireStation(String fireStationNumber);
 
-	public Set<FireStation> getFireStationForPerson(String adresse);
+	public FireStation getFireStationForPerson(String adresse);
 
-	public Set<Person> getListPersonByFireStation(String fireStationNumber);
+	public ListContactsForFire getlistContactsByAddressAndStation(String adresse);
 
-	public Set<String> getPhoneList(String fireStationNumber);
+	public List<Person> getListPersonByFireStation(String fireStationNumber);
 
-	public Set<Person> getListPersonByAdresse(String adresse);
+	public List<PersonPhone> phoneList(String fireStationNumber);
 
-	public Set<Person> getListPersonByFireStations(List<String> fireStations);
+	public List<Person> getListPersonByAdresse(String adresse);
+
+	public List<PersonFire> getListPersonFireByAdresse(String adresse);
+
+	public List<Person> getListPersonByFireStations(List<String> fireStations);
+
+	public List<PersonFire> getListPersonFireByFireStations(List<String> fireStations);
+
+	public List<ListContactsForFire> listFlood(List<String> fireStations);
 
 	public void deleteStation(String fireStationNumber);
 
 	public void deleteStationAdresse(String adresse);
 
-	public Set<String> getListOfPhoneNumbersFromPersonLinkWithSelectedStation(String fireStationNumber);
+	public List<Person> ListOfPersonLinkWithSelectedStations(List<String> fireStations);
 
-	public List<String[]> ListOfPersonLinkWithSelectedStation(String fireStationNumber);
-	public Set<String[]> ListOfPersonLinkWithSelectedStations(List<String> fireStations);
-	public FireStation updateFireStationNumber(String fireStationNumber,String newStationNumber);
+	public FireStation updateFireStationNumber(String fireStationNumber, String newStationNumber);
 }
