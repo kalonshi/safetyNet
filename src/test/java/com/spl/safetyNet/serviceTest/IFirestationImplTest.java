@@ -5,72 +5,46 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.jsoniter.JsonIterator;
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.Person;
 import com.spl.safetyNet.service.IFirestationImpl;
 import com.spl.safetyNet.service.JsonFileData;
+@SpringBootTest
 
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
+  @ExtendWith(MockitoExtension.class)
+  
+  @MockitoSettings(strictness = Strictness.LENIENT)
+ 
 public class IFirestationImplTest {
-	
-	
-	private static IFirestationImpl iFirestationImpl;
-	@Mock
-	private static JsonFileData jSonFile;
-	/*
-	 * @Mock private static JsonFileData jSonFile;
-	 */
-	
-	
+	@Autowired
+	private  IFirestationImpl iFirestationImpl;
+	@Autowired
+	private  JsonFileData jSonFile;
+
 	private static Logger logger = LogManager.getLogger(IFirestationImpl.class);
-	
-	/* @Autowired private ResourceLoader resourceLoader = null; */
-	
-	/*
-	 * @BeforeEach
-	 * 
-	 * void init() throws IOException { File dataFile =
-	 * resourceLoader.getResource("classpath:src/main/resources/data.json").getFile(
-	 * ); }
-	 */
-	 
-	/*
-	 * private static void setUp() throws Exception { jSonFile= new JsonFileData();
-	 * file=new File();
-	 * 
-	 * }
-	 */
 
 	@Test
 	public void getFireStationstationByNumber() {
-		
+
 		try {
 			logger.info("Entering test getFireStationNumber");
-			
+
 			jSonFile.loadStations();
 			String fireStationNumber = "1";
 			FireStation fireStation = iFirestationImpl.getFireStation(fireStationNumber);
@@ -89,9 +63,11 @@ public class IFirestationImplTest {
 		try {
 			System.out.println("getFireStationByAddress()2");
 			jSonFile.loadStations();
+			
 			String address = "29 15th St";
-			System.out.println("getFireStationByAddress()3");
+			
 			FireStation firestationSelected = iFirestationImpl.getFireStationForPerson(address);
+		
 			assertEquals("2", firestationSelected.getStationNumber());
 
 		} catch (IOException e) {
@@ -108,7 +84,7 @@ public class IFirestationImplTest {
 		try {
 			jSonFile.loadPersons();
 			jSonFile.loadStations();
-			
+
 			System.out.println(jSonFile.loadStations().size());
 			System.out.println(jSonFile.loadPersons().size());
 			String fireStationNumber = "1";
@@ -124,7 +100,7 @@ public class IFirestationImplTest {
 				lastNameList.add(lastName);
 			}
 
-			assertEquals(5, listContactsFire.size());
+			assertEquals(6, listContactsFire.size());
 
 			assertEquals(true, firstNameList.contains(firstName));
 			assertEquals(true, lastNameList.contains(lastName));
