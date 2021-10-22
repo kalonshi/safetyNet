@@ -84,22 +84,31 @@ public class IPersonSerciveImpl implements IPerson {
 	public Person getPerson(String firstName, String lastName) {
 		// TODO Auto-generated method stub
 		logger.info("Entering the getPerson() method");
-
+Person personSearch=new Person();
 		List<Person> personList;
 		try {
+			logger.info("Entering the getPerson() method2");
+		
 			personList = jSonFile.loadPersons();
-			if (!firstName.isEmpty() && !lastName.isEmpty())
+			logger.info("Entering the getPerson() method3");
+			if (!firstName.isEmpty() && !lastName.isEmpty()) {
+				logger.info("Entering the getPerson() method4");
 				for (Person p : personList) {
-					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName)))
+					logger.info("Entering the getPerson() method5");
+					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName))) {
 						logger.info("Success get Person " + p.getFirstName() + " " + p.getLastName());
-					return p;
+					
+					personSearch=p;
+					return personSearch;
 				}
-
-		} catch (IOException e) { // TODO Auto-generated catch block
+				}
+			}
+		}
+		 catch (IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return null;
+		return personSearch;
 	}
 
 	@Override
@@ -160,7 +169,7 @@ public class IPersonSerciveImpl implements IPerson {
 			e.printStackTrace();
 		}
 
-		return null;
+		return minors;
 	}
 
 	@Override

@@ -124,13 +124,6 @@ public class Person {
 		this.birthDate = birthDate;
 	}
 
-	/*
-	 * public void addFireStation(FireStation firestation) {
-	 * fireStations.add(firestation);
-	 * 
-	 * }
-	 */
-
 	public Boolean isMinor() {
 		if (age() <= 18) {
 
@@ -144,6 +137,7 @@ public class Person {
 		int age = 0;
 
 		if (!this.birthDate.equals(null)) {
+
 			Date inTime = new Date();
 			age = ((inTime.getYear()) - (this.birthDate.getYear()));
 
@@ -153,14 +147,7 @@ public class Person {
 		return age;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		return result;
-	}
+	
 
 	@Override
 	public boolean equals(Object obj) {

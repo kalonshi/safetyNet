@@ -3,6 +3,7 @@ package com.spl.safetyNet.serviceTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
@@ -25,17 +26,18 @@ import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.Person;
 import com.spl.safetyNet.service.IFirestationImpl;
 import com.spl.safetyNet.service.JsonFileData;
+
 @SpringBootTest
 
-  @ExtendWith(MockitoExtension.class)
-  
-  @MockitoSettings(strictness = Strictness.LENIENT)
- 
+@ExtendWith(MockitoExtension.class)
+
+@MockitoSettings(strictness = Strictness.LENIENT)
+
 public class IFirestationImplTest {
 	@Autowired
-	private  IFirestationImpl iFirestationImpl;
+	private IFirestationImpl iFirestationImpl;
 	@Autowired
-	private  JsonFileData jSonFile;
+	private JsonFileData jSonFile;
 
 	private static Logger logger = LogManager.getLogger(IFirestationImpl.class);
 
@@ -59,40 +61,26 @@ public class IFirestationImplTest {
 
 	@Test
 	public void getFireStationByAddress() {
-		System.out.println("getFireStationByAddress()");
-		try {
-			System.out.println("getFireStationByAddress()2");
-			jSonFile.loadStations();
-			
-			String address = "29 15th St";
-			
-			FireStation firestationSelected = iFirestationImpl.getFireStationForPerson(address);
 		
+			String address = "29 15th St";
+
+			FireStation firestationSelected = iFirestationImpl.getFireStationForPerson(address);
+
 			assertEquals("2", firestationSelected.getStationNumber());
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Error getFireStationByAddress()");
-			e.printStackTrace();
-		}
+		
 	}
 
+	
 	@Test
 
 	public void getListPersonByFireStationTest() {
-		logger.info("getList************************");
-		try {
-			jSonFile.loadPersons();
-			jSonFile.loadStations();
-
-			System.out.println(jSonFile.loadStations().size());
-			System.out.println(jSonFile.loadPersons().size());
-			String fireStationNumber = "1";
+String fireStationNumber = "1";
 			String firstName = "Jamie";
 			String lastName = "Peters";
 
 			List<Person> listContactsFire = iFirestationImpl.getListPersonByFireStation(fireStationNumber);
-			System.out.println(listContactsFire.size());
+			
 			List<String> firstNameList = new ArrayList<String>();
 			List<String> lastNameList = new ArrayList<String>();
 			for (Person p : listContactsFire) {
@@ -105,11 +93,47 @@ public class IFirestationImplTest {
 			assertEquals(true, firstNameList.contains(firstName));
 			assertEquals(true, lastNameList.contains(lastName));
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 
 	}
+	@Test
+	public void getListPersonByAdresseTest() throws IOException {
+		
+		String address = "892 Downing Ct";
+		String firstName = "Warren";
+		String lastName = "Zemicks";
+		List<Person> listPersonByAdresse = iFirestationImpl.getListPersonByAdresse(address);
+		List<String> firstNameList = new ArrayList<String>();
+		List<String> lastNameList = new ArrayList<String>();
+		listPersonByAdresse.forEach(p -> {
+			firstNameList.add(p.getFirstName());
+			lastNameList.add(p.getLastName());
+		});
+		
+		assertEquals(3, listPersonByAdresse.size());
+		assertEquals(true, firstNameList.contains(firstName));
+		assertEquals(true, lastNameList.contains(lastName));
+	}
+	
+@Test
+public void deleteStationTest() throws IOException {
+	
+	String numberStation="1";
+	iFirestationImpl.deleteStation(numberStation);
+		
+		/*
+		 * List<FireStation> stations=jSonFile.loadStations(); List<String>
+		 * stationNumbers=new ArrayList<String>(); stations.forEach(f->{
+		 * stationNumbers.add(f.getStationNumber()); });
+		 */
+		 
+		/* assertEquals(true,iFirestationImpl.deleteStation(numberStation)); */
+}
+
+
+
+
+
+
 
 }

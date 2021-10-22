@@ -15,12 +15,12 @@ public class SafetyNetApplication {
 		SpringApplication.run(SafetyNetApplication.class, args);
 		
 		JsonFileData jsonFileData = new JsonFileData();
-		jsonFileData.loadJsonPersons();
-		jsonFileData.loadJsonMedicalRecords();
-		jsonFileData.loadStationsWithOutListPerson();
-		jsonFileData.loadMedicalRecords();
-		jsonFileData.loadPersons();
-		jsonFileData.loadStations();
+		/*
+		 * jsonFileData.loadJsonPersons(); jsonFileData.loadJsonMedicalRecords();
+		 * jsonFileData.loadStationsWithOutListPerson();
+		 * jsonFileData.loadMedicalRecords(); jsonFileData.loadPersons();
+		 * jsonFileData.loadStations();
+		 */
 		
 	}
 

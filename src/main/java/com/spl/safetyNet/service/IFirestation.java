@@ -33,7 +33,7 @@ public interface IFirestation {
 
 	public List<ListContactsForFire> listFlood(List<String> fireStations);
 
-	public void deleteStation(String fireStationNumber);
+	public boolean deleteStation(String fireStationNumber);
 
 	public void deleteStationAdresse(String adresse);
 

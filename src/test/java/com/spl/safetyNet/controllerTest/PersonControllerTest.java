@@ -9,9 +9,7 @@ import com.spl.safetyNet.controller.PersonController;
 @WebMvcTest(controllers = PersonController.class)
 class PersonControllerTest {
 
-	@Test
-	void test() {
-		fail("Not yet implemented");
-	}
-
+	/*
+	 * @Test void test() { fail("Not yet implemented"); }
+	 */
 }

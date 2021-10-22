@@ -9,9 +9,8 @@ import com.spl.safetyNet.controller.MedicalRecordController;
 @WebMvcTest(controllers = MedicalRecordController.class)
 class MedicalRecordControllerTest {
 
-	@Test
-	void test() {
-		fail("Not yet implemented");
-	}
+	/*
+	 * @Test void test() { fail("Not yet implemented"); }
+	 */
 
 }

@@ -135,13 +135,19 @@ public class IFirestationImpl implements IFirestation {
 	@Override
 	public List<Person> getListPersonByAdresse(String adresse) {
 		// TODO Auto-generated method stub
+		List<Person> listPersonsByAdresse=new ArrayList<Person>();
 		if (!adresse.isEmpty()) {
 			FireStation f = getFireStationForPerson(adresse);
-			List<Person> ListPersonByStation = f.getListOfPersons();
+			List<Person> listPersonByStation = f.getListOfPersons();
+			listPersonByStation.forEach(p->{
+				if(p.getAddress().equals(adresse)) {
+					listPersonsByAdresse.add(p);
+				}
+			});
 
-			return ListPersonByStation;
+			return listPersonsByAdresse;
 		}
-		return null;
+		return listPersonsByAdresse;
 	}
 
 //:http://localhost:8080/flood/stations?stations=<a list of station_numbers>
@@ -174,24 +180,58 @@ public class IFirestationImpl implements IFirestation {
 		return null;
 	}
 
-	@Override
-	public void deleteStation(String fireStationNumber) {
-		// TODO Auto-generated method stub
-		FireStation fireStationSelected = getFireStation(fireStationNumber);
-		try {
-			List<FireStation> fireStations = jSonFile.loadStations();
-			List<Person> personsLinkWithStation = fireStationSelected.getListOfPersons();
-			for (Person p : personsLinkWithStation) {
-				p.setFireStation(null);
-			}
-			fireStations.remove(fireStationSelected);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		fireStationSelected = null;
+	
+	
+	  @Override
+	  public boolean deleteStation(String fireStationNumber) { 
+		  // TODO Auto-generated
+	  
+		 
+	  FireStation fireStationSelected = getFireStation(fireStationNumber);
+	  System.out.println("fireStationSelected :"+
+	  fireStationSelected.getStationNumber()); 
+	   try {
+		List<FireStation> fireStations = jSonFile.loadStationsWithOutListPerson();
+			
+			  System.out.println("fireStations Size");
+			  System.out.println(fireStations.size());
+			 
+		List<Person> personsLinkWithStation = fireStationSelected.getListOfPersons();
+			/*
+			 * System.out.println("personsLinkWithStation Size");
+			 * System.out.println(personsLinkWithStation.size());
+			 */
+			/*
+			 * for (Person p : personsLinkWithStation) { p.setFireStation(null); }
+			 */ fireStations.remove(fireStationSelected);
+		  jSonFile.loadStationsWithOutListPerson().remove(fireStationSelected);
+			
+			  System.out.println(
+			  "jSonFile.loadStationsWithOutListPerson().remove(fireStationSelected)");
+			  System.out.println(jSonFile.loadStationsWithOutListPerson().remove(
+			  fireStationSelected));
+			 
+		  jSonFile.loadStations().remove(fireStationSelected); 
+		  
+			/*
+			 * System.out.println(
+			 * "jSonFile.loadStationsWithOutListPerson().remove(fireStationSelected)");
+			 * System.out.println( jSonFile.loadStations().remove(fireStationSelected));
+			 * 
+			 */
+	   return jSonFile.loadStations().remove(fireStationSelected);
+	   
+	   } catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
+	return false;
+	  
+	 
+	  
+	  
+	  }
+	 
 
 	@Override
 	public void deleteStationAdresse(String adresse) {
