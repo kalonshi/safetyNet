@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.spl.safetyNet.Views.InfoPerson;
+import com.spl.safetyNet.Views.ListPerson;
+import com.spl.safetyNet.Views.PersonPrint;
 import com.spl.safetyNet.Views.Personchild;
 import com.spl.safetyNet.models.Person;
 import com.spl.safetyNet.service.IFirestationImpl;
@@ -139,30 +141,74 @@ public class IPersonSerciveImplTest {
 		assertEquals("908 73rd St",personSelected.getAddress());
 		
 	}
+	
 	@Test
-	public void printlistMinorsByAddressTest() {
+	public void printlistMinorsByExistingAddressTest() {
 		
 		String address="1509 Culver St";
 		String lastName="Boyd";
         String firstName="Roger";
-        String age="4";
+        int age=4;
+        String lastNameFamilyMenber="Boyd";
+        String firstNameFamilyMenber="John";
         List<Personchild> listMinorsByAddressTest=iPersonSerciveImpl.printlistMinorsByAddress(address);
-
-
-	}
+ assertEquals("Boyd",listMinorsByAddressTest.get(1).getLastName());
+        assertEquals("Roger", listMinorsByAddressTest.get(1).getFirstName());
+        assertEquals(age,listMinorsByAddressTest.get(1).getAge());
+        assertEquals(2,listMinorsByAddressTest.size());
+        assertEquals("John",listMinorsByAddressTest.get(1).getFamilyMenber().get(0).getFirstName());
+        assertEquals(4,listMinorsByAddressTest.get(1).getFamilyMenber().size());
+    }
+	
 	
 	@Test
-	public void getInfoPersonTest() {
+	public void printEmptylistMinorsByNonExistingAddressTest() {
 		
-	}
+		String address="unknow";
+		List<Personchild> listMinorsByAddressTest=iPersonSerciveImpl.printlistMinorsByAddress(address);
+        
+        assertEquals(true,listMinorsByAddressTest.isEmpty());
+   }
+	
 	
 	
 	@Test
 	public void listPersonsLinkToStationSelectedTest() {
+		String stationNumber="1";
+		int qtMinors=1;
+		int qtAdult=5;
+		List<PersonPrint> PersonsLinkToStationSelectedTest= new ArrayList<PersonPrint>();
+		String firstName="Peter";
+		String lastName="Duncan";
+		String zip="97451";
+		String address="644 Gershwin Cir";
+		String city="Culver"; 
+		String phone="841-874-6512";
+		ListPerson personsLinkToStationSelectedTest= iPersonSerciveImpl.listPersonsLinkToStationSelected(stationNumber);
+		 List<PersonPrint> liste=personsLinkToStationSelectedTest.getContactsList();
 		
+		 assertEquals(1,personsLinkToStationSelectedTest.getNbMinors());
+		 assertEquals(5,personsLinkToStationSelectedTest.getNbAdults());
+		 assertEquals(6,personsLinkToStationSelectedTest.getContactsList().size());
+		 assertEquals(firstName	,liste.get(0).getFirstName());	
+		 assertEquals(lastName	,liste.get(0).getLastName());
+		 assertEquals(address	,liste.get(0).getAddress());
+		 assertEquals(zip	,liste.get(0).getZip());
+		 assertEquals(city	,liste.get(0).getCity());
+		 assertEquals(phone	,liste.get(0).getPhone());
+	
 	}
 	
-	
+	@Test
+	public void listNullPersonsLinkToUnknownStationSelectedTest() {
+		String stationNumber="unknown";
+		
+		ListPerson personsLinkToStationSelectedTest= iPersonSerciveImpl.listPersonsLinkToStationSelected(stationNumber);
+		 
+		 assertEquals(0,personsLinkToStationSelectedTest.getContactsList().size());
+
+		 
+	}
 	
 	@Test
 	public void listEmailTest() {

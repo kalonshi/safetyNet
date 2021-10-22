@@ -405,7 +405,7 @@ Person personSearch=new Person();
 		} catch (IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return list;
 	}
 
 	@Override
