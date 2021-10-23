@@ -9,8 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 
 import java.util.ArrayList;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +23,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.spl.safetyNet.Views.ListContactsForFire;
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.Person;
 import com.spl.safetyNet.service.IFirestationImpl;
@@ -40,9 +42,25 @@ public class IFirestationImplTest {
 	private JsonFileData jSonFile;
 
 	private static Logger logger = LogManager.getLogger(IFirestationImpl.class);
-
 	@Test
-	public void getFireStationstationByNumber() {
+	public void addFireStationTest() {
+		String addStationNumber = "6";
+		String addAdress = "17 av Jules Guesdes";
+		FireStation newFireStation=iFirestationImpl.addFireStation(addStationNumber, addAdress);
+		assertEquals(true, newFireStation.getAddresses().contains(addAdress));
+		assertEquals("6", newFireStation.getStationNumber());
+	}
+	@Test
+	public void addEmptyFireStationTest() {
+		String addStationNumber = "";
+		String addAdress = "";
+		FireStation newFireStation=iFirestationImpl.addFireStation(addStationNumber, addAdress);
+		assertEquals(null, iFirestationImpl.addFireStation(addStationNumber, addAdress));
+		
+	}
+	
+	@Test
+	public void getFireStationstationByNumberTest() {
 
 		try {
 			logger.info("Entering test getFireStationNumber");
@@ -60,7 +78,7 @@ public class IFirestationImplTest {
 	}
 
 	@Test
-	public void getFireStationByAddress() {
+	public void getFireStationForPersonByAddress() {
 		
 			String address = "29 15th St";
 
@@ -70,32 +88,77 @@ public class IFirestationImplTest {
 
 		
 	}
-
 	
 	@Test
-
-	public void getListPersonByFireStationTest() {
-String fireStationNumber = "1";
-			String firstName = "Jamie";
-			String lastName = "Peters";
-
-			List<Person> listContactsFire = iFirestationImpl.getListPersonByFireStation(fireStationNumber);
-			
-			List<String> firstNameList = new ArrayList<String>();
-			List<String> lastNameList = new ArrayList<String>();
-			for (Person p : listContactsFire) {
-				firstNameList.add(p.getFirstName());
-				lastNameList.add(lastName);
-			}
-
-			assertEquals(6, listContactsFire.size());
-
-			assertEquals(true, firstNameList.contains(firstName));
-			assertEquals(true, lastNameList.contains(lastName));
-
-		
-
+	public void phoneListTest() {
+		List<FireStation> fireStationWithPersons;
 	}
+	
+	@Test
+	public void getlistContactsByAddressAndStation() {
+		String address = "29 15th St";
+		String stationNumber = "2";
+		String firstName="Jonanathan";
+		String lastName="Marrack";
+		String phone="841-874-6513";
+		int age=32;
+		ListContactsForFire listContactsByAddressAndStation= iFirestationImpl.getlistContactsByAddressAndStation(address);
+	
+	assertEquals(true, listContactsByAddressAndStation.getAddress().equals(address));
+	assertEquals(stationNumber,listContactsByAddressAndStation.getStationNumber());
+	assertEquals(1,listContactsByAddressAndStation.getListcontactsFire().size());
+	assertEquals(firstName,listContactsByAddressAndStation.getListcontactsFire().get(0).getFirstName());
+	assertEquals(lastName,listContactsByAddressAndStation.getListcontactsFire().get(0).getLastName());
+	assertEquals(phone,listContactsByAddressAndStation.getListcontactsFire().get(0).getPhone());
+	assertEquals(age,listContactsByAddressAndStation.getListcontactsFire().get(0).getAge());
+	assertEquals(true,listContactsByAddressAndStation.getListcontactsFire().get(0).getAllergies().isEmpty());
+	assertEquals(true,listContactsByAddressAndStation.getListcontactsFire().get(0).getMedications().isEmpty());
+	
+	}
+	
+	
+	@Test
+	public void getListPersonFireByAdresseTest() {
+		
+	}
+	
+	
+	
+	@Test
+	public void listFloodTest() {
+		
+	}
+	
+	
+	
+	
+	
+
+	
+	
+	/*
+	 * @Test
+	 * 
+	 * public void getListPersonByFireStationTest() { String fireStationNumber =
+	 * "1"; String firstName = "Jamie"; String lastName = "Peters";
+	 * 
+	 * List<Person> listContactsFire =
+	 * iFirestationImpl.getListPersonByFireStation(fireStationNumber);
+	 * 
+	 * List<String> firstNameList = new ArrayList<String>(); List<String>
+	 * lastNameList = new ArrayList<String>(); for (Person p : listContactsFire) {
+	 * firstNameList.add(p.getFirstName()); lastNameList.add(lastName); }
+	 * 
+	 * assertEquals(6, listContactsFire.size());
+	 * 
+	 * assertEquals(true, firstNameList.contains(firstName)); assertEquals(true,
+	 * lastNameList.contains(lastName));
+	 * 
+	 * 
+	 * 
+	 * }
+	 */
+	 
 	@Test
 	public void getListPersonByAdresseTest() throws IOException {
 		

@@ -19,8 +19,9 @@ public interface IFirestation {
 
 	public ListContactsForFire getlistContactsByAddressAndStation(String adresse);
 
-	public List<Person> getListPersonByFireStation(String fireStationNumber);
-
+	/*
+	 * public List<Person> getListPersonByFireStation(String fireStationNumber);
+	 */
 	public List<PersonPhone> phoneList(String fireStationNumber);
 
 	public List<Person> getListPersonByAdresse(String adresse);
@@ -37,7 +38,9 @@ public interface IFirestation {
 
 	public void deleteStationAdresse(String adresse);
 
-	public List<Person> ListOfPersonLinkWithSelectedStations(List<String> fireStations);
-
+	/*
+	 * public List<Person> listOfPersonLinkWithSelectedStations(List<String>
+	 * fireStations);
+	 */
 	public FireStation updateFireStationNumber(String fireStationNumber, String newStationNumber);
 }

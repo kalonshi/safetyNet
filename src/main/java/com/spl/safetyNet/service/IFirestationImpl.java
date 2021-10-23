@@ -34,17 +34,23 @@ public class IFirestationImpl implements IFirestation {
 	public FireStation addFireStation(String fireStationNumber, String addresse) {
 		// TODO Auto-generated method stub
 		logger.info("Entering the addFireStation() method");
-		FireStation newFireStation = new FireStation(fireStationNumber);
-		newFireStation.addAddress(addresse);
-		try {
-			jSonFile.loadStationsWithOutListPerson().add(newFireStation);
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return newFireStation;
-
+		FireStation newFireStation = new FireStation();
+		
+		if(!(fireStationNumber.isEmpty())&&!(addresse.isEmpty())) {
+			 newFireStation = new FireStation(fireStationNumber);
+				
+				newFireStation.addAddress(addresse);
+				try {
+					jSonFile.loadStationsWithOutListPerson().add(newFireStation);
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return newFireStation;
+		} 
+		
+		return null;
 	}
 	/*
 	 * @Override public FireStation addFireStation(String fireStationNumber, String
@@ -123,14 +129,13 @@ public class IFirestationImpl implements IFirestation {
 		return fireStationSelected;
 	}
 
-	@Override
-	public List<Person> getListPersonByFireStation(String fireStationNumber) {
-		// TODO Auto-generated method stub
-		FireStation fireStationSelected = getFireStation(fireStationNumber);
-		List<Person> listPersonByStation = new ArrayList<Person>();
-		listPersonByStation = fireStationSelected.getListOfPersons();
-		return listPersonByStation;
-	}
+	/*
+	 * @Override public List<Person> getListPersonByFireStation(String
+	 * fireStationNumber) { // TODO Auto-generated method stub FireStation
+	 * fireStationSelected = getFireStation(fireStationNumber); List<Person>
+	 * listPersonByStation = new ArrayList<Person>(); listPersonByStation =
+	 * fireStationSelected.getListOfPersons(); return listPersonByStation; }
+	 */
 
 	@Override
 	public List<Person> getListPersonByAdresse(String adresse) {
@@ -267,11 +272,13 @@ public class IFirestationImpl implements IFirestation {
 
 	// http://localhost:8080/flood/stations?stations=<a list of station_numbers>
 
-	@Override
-	public List<Person> ListOfPersonLinkWithSelectedStations(List<String> fireStations) {
-		List<Person> listOfPersonLinkWithSelectedStations = getListPersonByFireStations(fireStations);
-		return listOfPersonLinkWithSelectedStations;
-	}
+	/*
+	 * @Override public List<Person>
+	 * listOfPersonLinkWithSelectedStations(List<String> fireStations) {
+	 * List<Person> listOfPersonLinkWithSelectedStations =
+	 * getListPersonByFireStations(fireStations); return
+	 * listOfPersonLinkWithSelectedStations; }
+	 */
 
 	@Override
 	public FireStation updateFireStationNumber(String fireStationNumber, String newStationNumber) {

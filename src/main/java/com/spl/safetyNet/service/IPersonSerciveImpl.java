@@ -151,47 +151,29 @@ Person personSearch=new Person();
 		return familyMenbers;
 	}
 
-	@Override
-	public List<Person> getMinorsByAddress(String address) {
-		// TODO Auto-generated method stub
-		logger.info("Entering getMinorsByAddress() method");
-		List<Person> minors = new ArrayList<>();
-		try {
-			List<Person> persons = jSonFile.loadPersons();
-			for (Person p : persons) {
-				if ((p.getAddress().contains(address)) && (p.isMinor())) {
-					minors.add(p);
-				}
-			}
-			return minors;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return minors;
-	}
-
-	@Override
-	public List<Person> getAdultsByAddress(String address) {
-		// TODO Auto-generated method stub
-		List<Person> adults = new ArrayList<>();
-		try {
-			List<Person> persons = jSonFile.loadPersons();
-			for (Person p : persons) {
-				if ((p.getAddress().contains(address)) && (!p.isMinor())) {
-					adults.add(p);
-				}
-			}
-			return adults;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return null;
-
-	}
+	/*
+	 * @Override public List<Person> getMinorsByAddress(String address) { // TODO
+	 * Auto-generated method stub
+	 * logger.info("Entering getMinorsByAddress() method"); List<Person> minors =
+	 * new ArrayList<>(); try { List<Person> persons = jSonFile.loadPersons(); for
+	 * (Person p : persons) { if ((p.getAddress().contains(address)) &&
+	 * (p.isMinor())) { minors.add(p); } } return minors; } catch (IOException e) {
+	 * // TODO Auto-generated catch block e.printStackTrace(); }
+	 * 
+	 * return minors; }
+	 */
+	/*
+	 * @Override public List<Person> getAdultsByAddress(String address) { // TODO
+	 * Auto-generated method stub List<Person> adults = new ArrayList<>(); try {
+	 * List<Person> persons = jSonFile.loadPersons(); for (Person p : persons) { if
+	 * ((p.getAddress().contains(address)) && (!p.isMinor())) { adults.add(p); } }
+	 * return adults; } catch (IOException e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); }
+	 * 
+	 * return null;
+	 * 
+	 * }
+	 */
 
 	@Override
 	public List<Person> getResidentsByAddress(String address) {
@@ -252,19 +234,16 @@ Person personSearch=new Person();
 		return getPersons;
 	}
 
-	@Override
-
-	public List<Person> printlistPersonByadress(String adress) {
-		logger.info("Entering printlistPersonByadress() method");
-		List<Person> getInfoPersons = new ArrayList<Person>();
-		if (adress.isEmpty()) {
-			return getInfoPersons;
-		}
-		getInfoPersons = getResidentsByAddress(adress);
-
-		return getInfoPersons;
-	}
-
+	/*
+	 * @Override
+	 * 
+	 * public List<Person> printlistPersonByadress(String adress) {
+	 * logger.info("Entering printlistPersonByadress() method"); List<Person>
+	 * getInfoPersons = new ArrayList<Person>(); if (adress.isEmpty()) { return
+	 * getInfoPersons; } getInfoPersons = getResidentsByAddress(adress);
+	 * 
+	 * return getInfoPersons; }
+	 */
 	// http://localhost:8080/childAlert?address=<address>
 
 	@Override
@@ -408,38 +387,30 @@ Person personSearch=new Person();
 		return list;
 	}
 
-	@Override
-	public List<Person> getListPersons(String firstName, String lastName) {
-		logger.info("Entering getListPersons() method");
-		List<Person> getPersons = new ArrayList<Person>();
-		List<Person> personList;
-		if (!firstName.isEmpty() && !lastName.isEmpty()) {
-			try {
-				personList = jSonFile.loadPersons();
-
-				getPersons.add(getPerson(firstName, lastName));
-				logger.info("Success add person with  firstName, lastName ");
-				for (Person p : personList) {
-					if (p.getLastName().equals(lastName))
-
-						getPersons.add(p);
-					logger.info(
-							"Success add  family menber with   lastName " + p.getLastName() + " " + p.getFirstName());
-				}
-				logger.info("Success add list person with   lastName ");
-
-				return getPersons;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				logger.error("Failed add person with   lastName ");
-
-				e.printStackTrace();
-			}
-
-		}
-
-		return getPersons;
-	}
+	/*
+	 * @Override public List<Person> getListPersons(String firstName, String
+	 * lastName) { logger.info("Entering getListPersons() method"); List<Person>
+	 * getPersons = new ArrayList<Person>(); List<Person> personList; if
+	 * (!firstName.isEmpty() && !lastName.isEmpty()) { try { personList =
+	 * jSonFile.loadPersons();
+	 * 
+	 * getPersons.add(getPerson(firstName, lastName));
+	 * logger.info("Success add person with  firstName, lastName "); for (Person p :
+	 * personList) { if (p.getLastName().equals(lastName))
+	 * 
+	 * getPersons.add(p); logger.info( "Success add  family menber with   lastName "
+	 * + p.getLastName() + " " + p.getFirstName()); }
+	 * logger.info("Success add list person with   lastName ");
+	 * 
+	 * return getPersons; } catch (IOException e) { // TODO Auto-generated catch
+	 * block logger.error("Failed add person with   lastName ");
+	 * 
+	 * e.printStackTrace(); }
+	 * 
+	 * }
+	 * 
+	 * return getPersons; }
+	 */
 
 	@Override
 	public List<PersonEmail> listEmail(String city) {
@@ -461,27 +432,22 @@ Person personSearch=new Person();
 		return listEmail;
 
 	}
-//http://localhost:8080/fire?address=1509%20Culver%20St
-	@Override
-	public List<PersonFire> listResidentsByAddress(String address) {
-		logger.info("Entering getResidentsByAddress(String address) method");
-		List<PersonFire> residents = new ArrayList<>();
-		try {
-			List<Person> persons = jSonFile.loadPersons();
-			for (Person p : persons) {
-				if ((p.getAddress().contains(address))) {
+//http://localhost:8080/fire?address=1509%20Culver%20St unused!!!!!
+	/*
+	 * @Override public List<PersonFire> listResidentsByAddress(String address) {
+	 * logger.info("Entering getResidentsByAddress(String address) method");
+	 * List<PersonFire> residents = new ArrayList<>(); try { List<Person> persons =
+	 * jSonFile.loadPersons(); for (Person p : persons) { if
+	 * ((p.getAddress().contains(address))) {
+	 * 
+	 * } }
+	 * 
+	 * return residents; } catch (IOException e) { // TODO Auto-generated catch
+	 * block logger.error("Pbl import JsonFile!!"); e.printStackTrace(); }
+	 * 
+	 * return residents; }
+	 */
 
-				}
-			}
-			
-			return residents;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.error("Pbl import JsonFile!!");
-			e.printStackTrace();
-		}
-
-		return residents;
-	}
+	
 
 }
