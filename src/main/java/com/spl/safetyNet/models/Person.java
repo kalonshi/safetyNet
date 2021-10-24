@@ -2,7 +2,7 @@ package com.spl.safetyNet.models;
 
 import java.util.Date;
 
-public class Person {
+public class Person  implements Comparable{
 	private String firstName;
 	private String lastName;
 	private String phone;
@@ -171,4 +171,12 @@ public class Person {
 		return true;
 	}
 
+	@Override
+	public int compareTo(Object arg0) {
+		// TODO Auto-generated method stub
+		Person person = (Person) arg0;
+
+		return getAddress().compareTo(person.getAddress());
+	}
+ 
 }

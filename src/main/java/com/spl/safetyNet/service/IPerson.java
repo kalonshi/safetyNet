@@ -23,32 +23,27 @@ public interface IPerson {
 
 	public InfoPerson getInfoPerson(String firstName, String lastName);
 
-	 public Person getPerson(String firstName, String lastName); 
+	public Person getPerson(String firstName, String lastName);
 
 	public List<InfoPerson> getListInfoPerson(String firstName, String lastName);
+
 	public void delete(String firstName, String lastName);
 
 	public List<Person> getResidentsByAddress(String address);
 
 	/* public List<PersonFire> listResidentsByAddress(String address); */
-	
+
 	public List<PersonEmail> listEmail(String city);
-	
+
 	public List<Person> getfamilyMenbers(String lastName);
 
-	
 	/* public List<Person> getMinorsByAddress(String address); */
-	  
-	/* public List<Person> getAdultsByAddress(String address); */
-	 
 
-	
-	
+	/* public List<Person> getAdultsByAddress(String address); */
+
 	/* public List<Person> printlistPersonByadress(String adress); */
 
-	 public List<Personchild> printlistMinorsByAddress(String adress); 
+	public List<Personchild> printlistMinorsByAddress(String adress);
 
-	
-	  public ListPerson listPersonsLinkToStationSelected(String
-	  fireStationNumber);
-	 }
+	public ListPerson listPersonsLinkToStationSelected(String fireStationNumber);
+}

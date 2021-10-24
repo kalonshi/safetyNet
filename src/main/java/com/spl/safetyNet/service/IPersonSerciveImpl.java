@@ -2,6 +2,8 @@ package com.spl.safetyNet.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import java.util.List;
@@ -21,7 +23,7 @@ import com.spl.safetyNet.Views.Personchild;
 
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person;
-
+ 
 @Service
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
@@ -376,6 +378,8 @@ Person personSearch=new Person();
 				}
 
 			}
+			Collections.sort(listPersonsLinkTest);
+			/* listPersonsLinkTest.sort(PersonPrint); */
 			list.setContactsList(listPersonsLinkTest);
 			list.setNbMinors(qtMinors);
 			list.setNbAdults(listPersonsLinkTest.size() - qtMinors);

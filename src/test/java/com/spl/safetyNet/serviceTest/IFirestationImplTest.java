@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.spl.safetyNet.Views.ListContactsForFire;
+import com.spl.safetyNet.Views.PersonFire;
+import com.spl.safetyNet.Views.PersonPhone;
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.Person;
 import com.spl.safetyNet.service.IFirestationImpl;
@@ -91,7 +93,27 @@ public class IFirestationImplTest {
 	
 	@Test
 	public void phoneListTest() {
-		List<FireStation> fireStationWithPersons;
+		String stationNumber = "2";
+		String phone="841-874-6513";
+		String unknownPhone="unknown";
+		List<PersonPhone> phoneList = iFirestationImpl.phoneList(stationNumber);
+	List<String> contactsPhone=new ArrayList<>();
+	phoneList.forEach(p->{
+		contactsPhone.add(p.getPhone());
+	});
+		assertEquals(true, contactsPhone.contains(phone));
+	assertEquals(false, contactsPhone.contains(unknownPhone));
+	assertEquals(5, contactsPhone.size());
+	}
+	
+	@Test
+	public void phoneListUnknowStationTest() {
+		String stationNumber = "unknown";
+		
+		List<PersonPhone> phoneList = iFirestationImpl.phoneList(stationNumber);
+	
+		assertEquals(true, phoneList.isEmpty());	
+	
 	}
 	
 	@Test
@@ -116,10 +138,32 @@ public class IFirestationImplTest {
 	
 	}
 	
+	@Test
+	public void getListPersonFireByFireStationsTest() {
+		List<String> fireStations=new ArrayList<String>();
+			fireStations.add("1");
+			fireStations.add("2");
+			List<PersonFire> listPersonFireByFireStations=iFirestationImpl.getListPersonFireByFireStations(fireStations);	
+	
+	}
+	
+	
+	
+	
+	
 	
 	@Test
 	public void getListPersonFireByAdresseTest() {
-		
+		String address = "892 Downing Ct";
+		String firstName = "Warren";
+		String lastName = "Zemicks";
+		List<Person> listPersonByAdresse = iFirestationImpl.getListPersonByAdresse(address);
+		List<String> firstNameList = new ArrayList<String>();
+		List<String> lastNameList = new ArrayList<String>();
+		listPersonByAdresse.forEach(p -> {
+			firstNameList.add(p.getFirstName());
+			lastNameList.add(p.getLastName());
+		});	
 	}
 	
 	

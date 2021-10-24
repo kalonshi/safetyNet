@@ -4,44 +4,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListPerson {
- private List<PersonPrint> contactsList= new ArrayList<PersonPrint>();
- private int nbMinors;
- private int nbAdults;
- 
-public ListPerson() {
-	super();
-	// TODO Auto-generated constructor stub
-}
+	private List<PersonPrint> contactsList = new ArrayList<PersonPrint>();
+	private int nbMinors;
+	private int nbAdults;
 
-public ListPerson(List<PersonPrint> listToPrint, int nbMinors, int nbAdults) {
-	super();
-	this.contactsList = listToPrint;
-	this.nbMinors = nbMinors;
-	this.nbAdults = nbAdults;
-}
+	public ListPerson() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-public List<PersonPrint> getContactsList() {
-	return contactsList;
-}
+	public ListPerson(List<PersonPrint> listToPrint, int nbMinors, int nbAdults) {
+		super();
+		this.contactsList = listToPrint;
+		this.nbMinors = nbMinors;
+		this.nbAdults = nbAdults;
+	}
 
-public void setContactsList(List<PersonPrint> listPersonsLinkTest) {
-	this.contactsList = listPersonsLinkTest;
-}
+	public List<PersonPrint> getContactsList() {
+		return contactsList;
+	}
 
-public int getNbMinors() {
-	return nbMinors;
-}
+	public void setContactsList(List<PersonPrint> listPersonsLinkTest) {
+		this.contactsList = listPersonsLinkTest;
+	}
 
-public void setNbMinors(int nbMinors) {
-	this.nbMinors = nbMinors;
-}
+	public int getNbMinors() {
+		return nbMinors;
+	}
 
-public int getNbAdults() {
-	return nbAdults;
-}
+	public void setNbMinors(int nbMinors) {
+		this.nbMinors = nbMinors;
+	}
 
-public void setNbAdults(int nbAdults) {
-	this.nbAdults = nbAdults;
-}
- 
+	public int getNbAdults() {
+		return nbAdults;
+	}
+
+	public void setNbAdults(int nbAdults) {
+		this.nbAdults = nbAdults;
+	}
+
 }

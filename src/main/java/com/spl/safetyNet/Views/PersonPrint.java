@@ -1,6 +1,8 @@
 package com.spl.safetyNet.Views;
 
-public class PersonPrint {
+import com.spl.safetyNet.models.Person;
+
+public class PersonPrint implements Comparable{
 	private String firstName;
 	private String lastName;
 	
@@ -58,6 +60,13 @@ public class PersonPrint {
 	}
 	public void setCity(String city) {
 		this.city = city;
+	}
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+	PersonPrint person= (PersonPrint) o;
+	
+		return getAddress().compareTo(person.getAddress());
 	}
 
 	
