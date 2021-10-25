@@ -13,12 +13,11 @@ public class ListPerson {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ListPerson(List<PersonPrint> listToPrint, int nbMinors, int nbAdults) {
-		super();
-		this.contactsList = listToPrint;
-		this.nbMinors = nbMinors;
-		this.nbAdults = nbAdults;
-	}
+	/*
+	 * public ListPerson(List<PersonPrint> listToPrint, int nbMinors, int nbAdults)
+	 * { super(); this.contactsList = listToPrint; this.nbMinors = nbMinors;
+	 * this.nbAdults = nbAdults; }
+	 */
 
 	public List<PersonPrint> getContactsList() {
 		return contactsList;

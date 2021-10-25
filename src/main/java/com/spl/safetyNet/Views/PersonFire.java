@@ -48,10 +48,9 @@ public class PersonFire {
 
 
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
+	/*
+	 * public void setFirstName(String firstName) { this.firstName = firstName; }
+	 */
 
 
 
@@ -61,11 +60,9 @@ public class PersonFire {
 
 
 
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
+	/*
+	 * public void setLastName(String lastName) { this.lastName = lastName; }
+	 */
 
 
 
@@ -75,10 +72,9 @@ public class PersonFire {
 
 
 
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+	/*
+	 * public void setPhone(String phone) { this.phone = phone; }
+	 */
 
 
 
@@ -89,11 +85,9 @@ public class PersonFire {
 
 
 
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
+	/*
+	 * public void setAge(int age) { this.age = age; }
+	 */
 
 
 
@@ -104,9 +98,10 @@ public class PersonFire {
 
 
 
-	public void setMedications(List<String> medications) {
-		this.medications = medications;
-	}
+	/*
+	 * public void setMedications(List<String> medications) { this.medications =
+	 * medications; }
+	 */
 
 
 
@@ -117,9 +112,9 @@ public class PersonFire {
 
 
 
-
-	public void setAllergies(List<String> allergies) {
-		this.allergies = allergies;
-	}
+	/*
+	 * public void setAllergies(List<String> allergies) { this.allergies =
+	 * allergies; }
+	 */
 	
 }
