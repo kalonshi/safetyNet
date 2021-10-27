@@ -100,6 +100,40 @@ public class InfoPerson {
 		return allergies;
 	}
 
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setMedications(List<String> medications) {
+		this.medications = medications;
+	}
+
+	public void setAllergies(List<String> allergies) {
+		this.allergies = allergies;
+	}
+
+	
+
 	/*
 	 * public void setAllergies(List<String> allergies) { this.allergies =
 	 * allergies; }

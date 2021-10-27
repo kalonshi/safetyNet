@@ -26,7 +26,7 @@ import com.spl.safetyNet.models.Person;
 
 public class IFirestationImpl implements IFirestation {
 	@Autowired
-	private JsonFileData jSonFile;
+	private JsonFileData jSonFile; 
 
 	private static Logger logger = LogManager.getLogger(IFirestationImpl.class);
 
@@ -271,14 +271,14 @@ public class IFirestationImpl implements IFirestation {
 	 */
 
 	@Override
-	public FireStation updateFireStationNumber(String fireStationNumber, String newStationNumber) {
+	public boolean updateFireStationNumber(String fireStationNumber, String newStationNumber) {
 		if (!fireStationNumber.isEmpty() && !newStationNumber.isEmpty()) {
 			FireStation updateFireStationNumber = getFireStation(fireStationNumber);
 			updateFireStationNumber.setStationNumber(newStationNumber);
 
-			return updateFireStationNumber;
+			return true;
 		} else
-			return null;
+			return false;
 	}
 
 	@Override

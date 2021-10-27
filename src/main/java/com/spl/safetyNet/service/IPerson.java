@@ -19,7 +19,7 @@ public interface IPerson {
 			String email, Date birthDate);
 
 	public Person updatePerson(String firstName, String lastName, String phone, String zip, String address, String city,
-			String email, Date birthDate);
+			String email);
 
 	public InfoPerson getInfoPerson(String firstName, String lastName);
 
@@ -27,7 +27,7 @@ public interface IPerson {
 
 	public List<InfoPerson> getListInfoPerson(String firstName, String lastName);
 
-	public void delete(String firstName, String lastName);
+	public boolean delete(String firstName, String lastName);
 
 	public List<Person> getResidentsByAddress(String address);
 

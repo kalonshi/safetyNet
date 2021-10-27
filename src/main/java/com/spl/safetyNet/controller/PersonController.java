@@ -38,7 +38,7 @@ public class PersonController {
 	private IPersonSerciveImpl iPersonImpl;
 
 	private static final Logger logger = LogManager.getLogger(PersonController.class);
-
+ 
 	// TODO
 	/*
 	 * ajouter une nouvelle personne ; ● mettre à jour une personne existante (pour
@@ -121,7 +121,7 @@ public class PersonController {
 			@RequestParam String newPhone, @RequestParam String newZip, @RequestParam String newAddress,
 			@RequestParam String newCity, @RequestParam String newEmail, @RequestParam Date newBirthDate) {
 		Person updatePersonRecord = iPersonImpl.updatePerson(firstName, lastName, newPhone, newZip, newAddress, newCity,
-				newEmail, newBirthDate);
+				newEmail);
 
 		return updatePersonRecord;
 

@@ -42,5 +42,5 @@ public interface IFirestation {
 	 * public List<Person> listOfPersonLinkWithSelectedStations(List<String>
 	 * fireStations);
 	 */
-	public FireStation updateFireStationNumber(String fireStationNumber, String newStationNumber);
+	public boolean updateFireStationNumber(String fireStationNumber, String newStationNumber);
 }

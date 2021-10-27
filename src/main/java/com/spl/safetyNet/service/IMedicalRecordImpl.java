@@ -41,7 +41,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		if (firstName.isEmpty() && lastName.isEmpty()) {
 			return false;
 		}
-		if(getMedicalRecord(firstName, lastName).equals(null)) {
+		if (getMedicalRecord(firstName, lastName).equals(null)) {
 			return false;
 		}
 		MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
@@ -60,22 +60,24 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 	@Override
 	public MedicalRecord getMedicalRecord(String firstName, String lastName) {
 		// TODO Auto-generated method stub
+		MedicalRecord medicalRecordSelected = new MedicalRecord();
 		if (firstName.isEmpty() && lastName.isEmpty()) {
-			return null;
+			return medicalRecordSelected;
 		}
 		try {
 			List<MedicalRecord> medicalRecords = jSonFile.loadMedicalRecords();
 			for (MedicalRecord m : medicalRecords) {
 				if ((m.getPerson().getFirstName().equals(firstName)) && (m.getPerson().getLastName().equals(lastName)))
-					return m;
+					medicalRecordSelected = m;
+				return medicalRecordSelected;
 			}
-
+			return medicalRecordSelected;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return null;
+		return medicalRecordSelected;
 	}
 
 	@Override
@@ -88,6 +90,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 			MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
 
 			medicalRecordSelected.addAllergie(allergy);
+			logger.info("add allergy!!");
 			return true;
 		}
 		return false;
@@ -104,6 +107,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		}
 		MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
 		medicalRecordSelected.addMedication(medication);
+
 		return true;
 	}
 
@@ -147,24 +151,6 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		return false;
 	}
 
-	/*
-	 * @Override public boolean updateMedicalRecordMedication(String firstName,
-	 * String lastName, String medication, String newMedication) { if
-	 * (firstName.isEmpty() && lastName.isEmpty()) { return false; } if
-	 * (!getMedicalRecord(firstName, lastName).equals(null)) { MedicalRecord
-	 * medicalRecordSelected = getMedicalRecord(firstName, lastName);
-	 * 
-	 * if (!medicalRecordSelected.getMedications().isEmpty()) { List<String>
-	 * medicationsList = medicalRecordSelected.getMedications();
-	 * 
-	 * for (String medic : medicationsList) { if (medic.contains(medication)) {
-	 * medic = newMedication; break; } else {
-	 * System.out.println("medication not found!"); return false; } } } else {
-	 * System.out.println("medicalRecordSelected is empty!!"); return false; } }
-	 * 
-	 * System.out.println("firstName is Empty or lastName is Empty()"); return
-	 * false; }
-	 */
 	@Override
 	public boolean updateMedicalRecordMedication(String firstName, String lastName, String medication,
 			String newMedication) {
@@ -172,32 +158,33 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 			logger.error("firstName or lastName Empty");
 			return false;
 		}
-		
-		if(getMedicalRecord(firstName, lastName).equals(null)) {
+
+		if (getMedicalRecord(firstName, lastName).equals(null)) {
 			logger.error("No record found!!");
 			return false;
 		}
 		MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
-		if(medicalRecordSelected.getMedications().isEmpty()) {
+		if (medicalRecordSelected.getMedications().isEmpty()) {
 			logger.error("No record of Medication found!!");
 			return false;
 		}
-			List<String> medicationsList = medicalRecordSelected.getAllergies();
-			int cpt=0;
-			for (String med : medicationsList) {
-				
-				if (med.equals(medication)) {
-					
-					medicalRecordSelected.getMedications().set(cpt, newMedication);
-					logger.info("Success update allergy!");
-					return true;
-				}
-				cpt++;
+		List<String> medicationsList = medicalRecordSelected.getMedications();
+		int cpt = 0;
+		for (String med : medicationsList) {
+
+			if (med.equals(medication)) {
+
+				medicalRecordSelected.getMedications().set(cpt, newMedication);
+				logger.info("Success update allergy!");
+				return true;
 			}
-			
-			logger.error("No record Allergy found!!");
-			return false;	
-}
+			cpt++;
+		}
+
+		logger.error("No record Medication found!!");
+		return false;
+	}
+
 	@Override
 	public boolean updateMedicalRecordAllergy(String firstName, String lastName, String allergy, String newAllergy) {
 		// TODO Auto-generated method stub
@@ -205,30 +192,30 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 			logger.error("firstName or lastName Empty");
 			return false;
 		}
-		
-		if(getMedicalRecord(firstName, lastName).equals(null)) {
+
+		if (getMedicalRecord(firstName, lastName).equals(null)) {
 			logger.error("No record found!!");
 			return false;
 		}
 		MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
-		if(medicalRecordSelected.getAllergies().isEmpty()) {
+		if (medicalRecordSelected.getAllergies().isEmpty()) {
 			logger.error("No record of Allergy found!!");
 			return false;
 		}
-			List<String> allergiesList = medicalRecordSelected.getAllergies();
-			int cpt=0;
-			for (String allerg : allergiesList) {
-				
-				if (allerg.equals(allergy)) {
-					
-					medicalRecordSelected.getAllergies().set(cpt, newAllergy);
-					logger.info("Success update allergy!");
-					return true;
-				}
-				cpt++;
+		List<String> allergiesList = medicalRecordSelected.getAllergies();
+		int cpt = 0;
+		for (String allerg : allergiesList) {
+
+			if (allerg.equals(allergy)) {
+
+				medicalRecordSelected.getAllergies().set(cpt, newAllergy);
+				logger.info("Success update allergy!");
+				return true;
 			}
-			
-			logger.error("No allergy found!!");
-			return false;	
-}
+			cpt++;
+		}
+
+		logger.error("No allergy found!!");
+		return false;
+	}
 }

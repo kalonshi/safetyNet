@@ -23,7 +23,7 @@ import com.spl.safetyNet.Views.Personchild;
 
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person;
- 
+
 @Service
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
@@ -37,9 +37,9 @@ public class IPersonSerciveImpl implements IPerson {
 
 		// TODO Auto-generated method stub
 		logger.info("Entering the addPerson() method");
-		if (firstName.isEmpty() && lastName.isEmpty() && phone.isEmpty() && zip.isEmpty() && address.isEmpty()
-				&& city.isEmpty() && email.isEmpty() && birthDate.equals(null)) {
-			return null;
+		if (firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() || zip.isEmpty()
+				|| address.isEmpty() && city.isEmpty() || email.isEmpty() || birthDate.equals(null)) {
+			return newPerson;
 		} else
 			newPerson = new Person(firstName, lastName, phone, zip, address, city, email, birthDate);
 		try {
@@ -51,7 +51,7 @@ public class IPersonSerciveImpl implements IPerson {
 		}
 		return newPerson;
 	}
-	
+
 	@Override
 	public InfoPerson getInfoPerson(String firstName, String lastName) {
 		// TODO Auto-generated method stub
@@ -86,11 +86,11 @@ public class IPersonSerciveImpl implements IPerson {
 	public Person getPerson(String firstName, String lastName) {
 		// TODO Auto-generated method stub
 		logger.info("Entering the getPerson() method");
-Person personSearch=new Person();
+		Person personSearch = new Person();
 		List<Person> personList;
 		try {
 			logger.info("Entering the getPerson() method2");
-		
+
 			personList = jSonFile.loadPersons();
 			logger.info("Entering the getPerson() method3");
 			if (!firstName.isEmpty() && !lastName.isEmpty()) {
@@ -99,14 +99,13 @@ Person personSearch=new Person();
 					logger.info("Entering the getPerson() method5");
 					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName))) {
 						logger.info("Success get Person " + p.getFirstName() + " " + p.getLastName());
-					
-					personSearch=p;
-					return personSearch;
-				}
+
+						personSearch = p;
+						return personSearch;
+					}
 				}
 			}
-		}
-		 catch (IOException e) { // TODO Auto-generated catch block
+		} catch (IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -114,22 +113,30 @@ Person personSearch=new Person();
 	}
 
 	@Override
-	public void delete(String firstName, String lastName) {
+	public boolean delete(String firstName, String lastName) {
 		// TODO Auto-generated method stub
 		logger.info("Entering the delete() method");
-		Person person = getPerson(firstName, lastName);
-
-		try {
-
-			MedicalRecord medicalRecordToDelete = person.getMedicalRecord();
-			jSonFile.loadJsonMedicalRecords().remove(medicalRecordToDelete);
-			jSonFile.loadJsonPersons().remove(person);
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (firstName.isEmpty() || lastName.isEmpty()) {
+			return false;
 		}
-		person = null;
+		if(!getPerson(firstName, lastName).equals(null)) {
+			Person person = getPerson(firstName, lastName);
+
+			try {
+
+				MedicalRecord medicalRecordToDelete = person.getMedicalRecord();
+				jSonFile.loadJsonMedicalRecords().remove(medicalRecordToDelete);
+				jSonFile.loadJsonPersons().remove(person);
+				return true;
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();return false;
+			}
+		}
+		
+		
+		return false;
 	}
 
 	@Override
@@ -220,7 +227,7 @@ Person personSearch=new Person();
 								p.getCity(), p.age(), p.getEmail(), p.getMedicalRecord().getMedications(),
 								p.getMedicalRecord().getAllergies());
 						getPersons.add(info);
-						}
+					}
 					logger.info("Success add list person with   lastName " + getPersons.size());
 				}
 				return getPersons;
@@ -287,70 +294,30 @@ Person personSearch=new Person();
 
 	@Override
 	public Person updatePerson(String firstName, String lastName, String newPhone, String newZip, String newAddress,
-			String newCity, String newEmail, Date newBirthDate) {
+			String newCity, String newEmail) {
 		logger.info("Entering updatePersonInfo method");
 		Person personSelectedToUpdate = getPerson(firstName, lastName);
 		if (!personSelectedToUpdate.equals(null)) {
-			if (!newPhone.isEmpty() && !newZip.isEmpty() && !newAddress.isEmpty() && !newCity.isEmpty()
-					&& !newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-				personSelectedToUpdate.setAddress(newAddress);
-				personSelectedToUpdate.setBirthDate(newBirthDate);
-				personSelectedToUpdate.setCity(newCity);
-				personSelectedToUpdate.setEmail(newEmail);
+			if (!newPhone.isEmpty()) {
 				personSelectedToUpdate.setPhone(newPhone);
-				personSelectedToUpdate.setZip(newZip);
-				return personSelectedToUpdate;
-			} else if (!newZip.isEmpty() && !newAddress.isEmpty() && !newCity.isEmpty() && !newZip.isEmpty()
-					&& !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-				personSelectedToUpdate.setAddress(newAddress);
-				personSelectedToUpdate.setBirthDate(newBirthDate);
-				personSelectedToUpdate.setCity(newCity);
-				personSelectedToUpdate.setEmail(newEmail);
-				personSelectedToUpdate.setZip(newZip);
-				return personSelectedToUpdate;
-			} else if (!newAddress.isEmpty() && !newCity.isEmpty() && !newZip.isEmpty() && newEmail.isEmpty()
-					&& !newBirthDate.equals(null)) {
-				personSelectedToUpdate.setAddress(newAddress);
-				personSelectedToUpdate.setBirthDate(newBirthDate);
-				personSelectedToUpdate.setCity(newCity);
-				personSelectedToUpdate.setEmail(newEmail);
-				personSelectedToUpdate.setZip(newZip);
-				return personSelectedToUpdate;
-
+				logger.info("new phone"+personSelectedToUpdate.getPhone());
 			}
-
-			else if (!newCity.isEmpty() && !newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-
-				personSelectedToUpdate.setBirthDate(newBirthDate);
-				personSelectedToUpdate.setCity(newCity);
-				personSelectedToUpdate.setEmail(newEmail);
+			if (!newZip.isEmpty()) {
 				personSelectedToUpdate.setZip(newZip);
-				return personSelectedToUpdate;
-			} else if (!newZip.isEmpty() && !newEmail.isEmpty() && !newBirthDate.equals(null)) {
-				personSelectedToUpdate.setBirthDate(newBirthDate);
-				personSelectedToUpdate.setEmail(newEmail);
-				personSelectedToUpdate.setZip(newZip);
-				return personSelectedToUpdate;
-			} else if (!newEmail.isEmpty() && !newBirthDate.equals(null)) {
-				personSelectedToUpdate.setBirthDate(newBirthDate);
-
-				personSelectedToUpdate.setEmail(newEmail);
-
-				return personSelectedToUpdate;
-
-			} else if (newBirthDate.equals(null)) {
-				personSelectedToUpdate.setBirthDate(newBirthDate);
-
-				personSelectedToUpdate.setEmail(newEmail);
-
-				return personSelectedToUpdate;
-
 			}
-
+			if (!newAddress.isEmpty()) {
+				personSelectedToUpdate.setAddress(newAddress);
+			}
+			if (!newCity.isEmpty()) {
+				personSelectedToUpdate.setCity(newCity);
+			}
+			if (!newEmail.isEmpty()) {
+				personSelectedToUpdate.setEmail(newEmail);
+			
+			}
 			return personSelectedToUpdate;
-
-		} else
-			return null;
+		}
+		return personSelectedToUpdate;
 	}
 
 // http://localhost:8080/firestation?stationNumber=%3Cstation_number OK 14 10
@@ -451,7 +418,5 @@ Person personSearch=new Person();
 	 * 
 	 * return residents; }
 	 */
-
-	
 
 }

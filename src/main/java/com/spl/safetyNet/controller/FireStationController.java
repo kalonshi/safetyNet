@@ -88,11 +88,11 @@ public class FireStationController {
 	}
 
 	@PutMapping("/fireStation/updateNumber")
-	public FireStation updateFireStationNumber(@RequestParam String fireStationNumber,
+	public boolean updateFireStationNumber(@RequestParam String fireStationNumber,
 			@RequestBody String newStationNumber) {
-		FireStation updateNumberFireStation = iFirestationImpl.updateFireStationNumber(fireStationNumber,
+		boolean updateNumberFireStation = iFirestationImpl.updateFireStationNumber(fireStationNumber,
 				newStationNumber);
-		return updateNumberFireStation;
+		return true;
 	}
 
 	@DeleteMapping("/fireStation/delete/")

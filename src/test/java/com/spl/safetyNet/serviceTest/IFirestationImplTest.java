@@ -146,12 +146,6 @@ public class IFirestationImplTest {
 			List<PersonFire> listPersonFireByFireStations=iFirestationImpl.getListPersonFireByFireStations(fireStations);	
 	
 	}
-	
-	
-	
-	
-	
-	
 	@Test
 	public void getListPersonFireByAdresseTest() {
 		String address = "892 Downing Ct";
@@ -228,16 +222,21 @@ public void deleteStationTest() throws IOException {
 	String numberStation="1";
 	iFirestationImpl.deleteStation(numberStation);
 		
-		/*
-		 * List<FireStation> stations=jSonFile.loadStations(); List<String>
-		 * stationNumbers=new ArrayList<String>(); stations.forEach(f->{
-		 * stationNumbers.add(f.getStationNumber()); });
-		 */
-		 
-		/* assertEquals(true,iFirestationImpl.deleteStation(numberStation)); */
+		}
+@Test
+public void updateExistingFireStationNumber() {
+	String numberStation="1";
+	String newNumberStation="65";
+	
+	assertEquals(true, iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation));
 }
-
-
+@Test
+public void updateNotExistingFireStationNumber() {
+	String numberStation="";
+	String newNumberStation="65";
+	
+	assertEquals(false, iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation));
+}
 
 
 
