@@ -14,8 +14,8 @@ public class SafetyNetApplication {
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(SafetyNetApplication.class, args);
 		
-		JsonFileData jsonFileData = new JsonFileData();
-		/*
+		
+		/*JsonFileData jsonFileData = new JsonFileData();
 		 * jsonFileData.loadJsonPersons(); jsonFileData.loadJsonMedicalRecords();
 		 * jsonFileData.loadStationsWithOutListPerson();
 		 * jsonFileData.loadMedicalRecords(); jsonFileData.loadPersons();

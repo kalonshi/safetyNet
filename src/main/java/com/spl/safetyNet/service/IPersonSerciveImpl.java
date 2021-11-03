@@ -28,8 +28,8 @@ import com.spl.safetyNet.models.Person;
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
 	private JsonFileData jSonFile;
-	private static final Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
-
+	private  Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
+	
 	@Override
 	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
 			String email, Date birthDate) {
@@ -39,16 +39,20 @@ public class IPersonSerciveImpl implements IPerson {
 		logger.info("Entering the addPerson() method");
 		if (firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() || zip.isEmpty()
 				|| address.isEmpty() && city.isEmpty() || email.isEmpty() || birthDate.equals(null)) {
+			logger.error("Failed to add due to empty field ");
 			return newPerson;
 		} else
 			newPerson = new Person(firstName, lastName, phone, zip, address, city, email, birthDate);
+		
 		try {
 			jSonFile.loadJsonPersons().add(newPerson);
+			logger.info("succes add a new Person");
 			return newPerson;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		logger.error("failed to add new Person");
 		return newPerson;
 	}
 
@@ -117,16 +121,18 @@ public class IPersonSerciveImpl implements IPerson {
 		// TODO Auto-generated method stub
 		logger.info("Entering the delete() method");
 		if (firstName.isEmpty() || lastName.isEmpty()) {
+			logger.error("firstName isEmpty or lastName isEmpty");
 			return false;
 		}
 		if(!getPerson(firstName, lastName).equals(null)) {
 			Person person = getPerson(firstName, lastName);
-
+			logger.error("unknown firstName or lastName ");
 			try {
 
 				MedicalRecord medicalRecordToDelete = person.getMedicalRecord();
 				jSonFile.loadJsonMedicalRecords().remove(medicalRecordToDelete);
 				jSonFile.loadJsonPersons().remove(person);
+				logger.info("success in deleted Person  ");
 				return true;
 
 			} catch (IOException e) {
@@ -135,7 +141,7 @@ public class IPersonSerciveImpl implements IPerson {
 			}
 		}
 		
-		
+		logger.error("delete Failed ");
 		return false;
 	}
 
@@ -257,7 +263,8 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public List<Personchild> printlistMinorsByAddress(String adress) {
-		logger.info("Entering printlistMinorsByAddress() method");
+		logger.info("Entering url http://localhost:8080/childAlert?address= "+adress);
+		logger.info("Entering printlistMinorsByAddress() method ");
 		List<Person> getInfoPersons = new ArrayList<Person>();
 		List<Person> getInfoPersonsAdult = new ArrayList<Person>();
 
@@ -283,11 +290,13 @@ public class IPersonSerciveImpl implements IPerson {
 						}
 					}
 				}
+				logger.info("No Familly Menbers ");
+				
 				newChild.setFamilyMenber(familyMenbers);
 				childAlertList.add(newChild);
 			}
-
-		}
+			
+			}
 
 		return childAlertList;
 	}
@@ -317,13 +326,14 @@ public class IPersonSerciveImpl implements IPerson {
 			}
 			return personSelectedToUpdate;
 		}
+		logger.error("Failed to updated");
 		return personSelectedToUpdate;
 	}
 
 // http://localhost:8080/firestation?stationNumber=%3Cstation_number OK 14 10
 	@Override
 	public ListPerson listPersonsLinkToStationSelected(String fireStationNumber) { // TODO Auto-generated method
-		logger.info("Entering listPersonsLinkToStationSelected method");
+		logger.info("Entering listPersonsLinkToStationSelected method"+fireStationNumber);
 		ListPerson list = new ListPerson(); // stub
 		List<PersonPrint> listPersonsLinkTest = new ArrayList<PersonPrint>();
 		try {
@@ -354,7 +364,10 @@ public class IPersonSerciveImpl implements IPerson {
 			return list;
 		} catch (IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error(" Failed create list firestation?stationNumber ");
 		}
+		logger.error(" Failed create list . Return empty List ");
+		
 		return list;
 	}
 
@@ -393,13 +406,16 @@ public class IPersonSerciveImpl implements IPerson {
 				if (p.getCity().equals(city)) {
 					PersonEmail newEmail = new PersonEmail(p.getEmail());
 					listEmail.add(newEmail);
+					
 				}
 			}
+			logger.info("list Email size :"+listEmail);
 			return listEmail;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		logger.error("Failed to get List of email by city :"+city);
 		return listEmail;
 
 	}

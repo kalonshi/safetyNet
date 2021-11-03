@@ -16,7 +16,7 @@ import com.spl.safetyNet.models.MedicalRecord;
 public class IMedicalRecordImpl implements IMedicalRecord {
 	@Autowired
 	private JsonFileData jSonFile;
-	private static final Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
+	private  Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
 
 	@Override
 	public boolean addMedicalRecord(List<String> medications, List<String> allergies) {
@@ -27,7 +27,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		try {
 			jSonFile.loadJsonMedicalRecords().add(newMedicalRecord);
 			return true;
-
+ 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

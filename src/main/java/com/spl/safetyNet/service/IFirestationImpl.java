@@ -28,7 +28,7 @@ public class IFirestationImpl implements IFirestation {
 	@Autowired
 	private JsonFileData jSonFile; 
 
-	private static Logger logger = LogManager.getLogger(IFirestationImpl.class);
+	private  Logger logger = LogManager.getLogger(IFirestationImpl.class);
 
 	@Override
 	public FireStation addFireStation(String fireStationNumber, String addresse) {
@@ -323,11 +323,12 @@ public class IFirestationImpl implements IFirestation {
 
 				return phoneList;
 			} catch (Exception e) {
+				logger.error("unabled to get a phoneList");
 				// TODO: handle exception
 			}
 			return phoneList;
 		}
-
+		logger.error("Failed due to unknown Station Number");
 		return phoneList;
 	}
 
@@ -347,6 +348,7 @@ public class IFirestationImpl implements IFirestation {
 			return finalList;
 
 		} catch (Exception e) {
+			logger.error("List can't be found at this address"+adresse);
 			// TODO: handle exception
 		}
 		return finalList;
