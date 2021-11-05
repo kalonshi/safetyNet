@@ -62,7 +62,7 @@ public class FireStationController {
 	public List<ListContactsForFire> getListOfHouseAndPersonsWithMedicalrecordlinkToStation(
 			@RequestParam java.util.List<String> stations) {
 		logger.info("Entering  flood method : list of contacts by address :"+stations.toString());
-		
+		 
 				return iFirestationImpl.listFlood(stations);
 		
 	}

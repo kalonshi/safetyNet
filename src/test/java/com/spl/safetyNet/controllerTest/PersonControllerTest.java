@@ -49,7 +49,12 @@ class PersonControllerTest {
     @MockBean
     private IPersonSerciveImpl iPersonSerciveImpl;
     
-    
+    @Test
+    public void getAccurators() throws Exception {
+    	
+        mvc.perform(get("/"))
+            .andExpect(status().isOk());
+    }
     @Test
     public void testGetEmails() throws Exception {
     	String city="Culver";

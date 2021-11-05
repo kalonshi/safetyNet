@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
-import com.spl.safetyNet.controller.PersonController;
+
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person;
@@ -65,7 +65,7 @@ public class JsonFileData {
 		 * String filePath = "src/main/resources/data.json"; byte[] bytesFile =
 		 * Files.readAllBytes(new File(filePath).toPath()); JsonIterator iter =
 		 * JsonIterator.parse(bytesFile); Any any = iter.readAny();
-		 */
+		 */ 
 		Any personAny = readFileJson("src/main/resources/data.json").get("persons");
 		Any medicalAny = readFileJson("src/main/resources/data.json").get("medicalrecords");
 		List<Person> persons = new ArrayList<>();

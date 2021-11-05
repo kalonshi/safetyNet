@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,8 +29,8 @@ import com.spl.safetyNet.models.Person;
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
 	private JsonFileData jSonFile;
-	private  Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
-	
+	private Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
+
 	@Override
 	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
 			String email, Date birthDate) {
@@ -43,7 +44,7 @@ public class IPersonSerciveImpl implements IPerson {
 			return newPerson;
 		} else
 			newPerson = new Person(firstName, lastName, phone, zip, address, city, email, birthDate);
-		
+
 		try {
 			jSonFile.loadJsonPersons().add(newPerson);
 			logger.info("succes add a new Person");
@@ -124,7 +125,7 @@ public class IPersonSerciveImpl implements IPerson {
 			logger.error("firstName isEmpty or lastName isEmpty");
 			return false;
 		}
-		if(!getPerson(firstName, lastName).equals(null)) {
+		if (!getPerson(firstName, lastName).equals(null)) {
 			Person person = getPerson(firstName, lastName);
 			logger.error("unknown firstName or lastName ");
 			try {
@@ -137,10 +138,11 @@ public class IPersonSerciveImpl implements IPerson {
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();return false;
+				e.printStackTrace();
+				return false;
 			}
 		}
-		
+
 		logger.error("delete Failed ");
 		return false;
 	}
@@ -263,7 +265,7 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public List<Personchild> printlistMinorsByAddress(String adress) {
-		logger.info("Entering url http://localhost:8080/childAlert?address= "+adress);
+		logger.info("Entering url http://localhost:8080/childAlert?address= " + adress);
 		logger.info("Entering printlistMinorsByAddress() method ");
 		List<Person> getInfoPersons = new ArrayList<Person>();
 		List<Person> getInfoPersonsAdult = new ArrayList<Person>();
@@ -291,12 +293,12 @@ public class IPersonSerciveImpl implements IPerson {
 					}
 				}
 				logger.info("No Familly Menbers ");
-				
+
 				newChild.setFamilyMenber(familyMenbers);
 				childAlertList.add(newChild);
 			}
-			
-			}
+
+		}
 
 		return childAlertList;
 	}
@@ -309,7 +311,7 @@ public class IPersonSerciveImpl implements IPerson {
 		if (!personSelectedToUpdate.equals(null)) {
 			if (!newPhone.isEmpty()) {
 				personSelectedToUpdate.setPhone(newPhone);
-				logger.info("new phone"+personSelectedToUpdate.getPhone());
+				logger.info("new phone" + personSelectedToUpdate.getPhone());
 			}
 			if (!newZip.isEmpty()) {
 				personSelectedToUpdate.setZip(newZip);
@@ -322,7 +324,7 @@ public class IPersonSerciveImpl implements IPerson {
 			}
 			if (!newEmail.isEmpty()) {
 				personSelectedToUpdate.setEmail(newEmail);
-			
+
 			}
 			return personSelectedToUpdate;
 		}
@@ -333,7 +335,7 @@ public class IPersonSerciveImpl implements IPerson {
 // http://localhost:8080/firestation?stationNumber=%3Cstation_number OK 14 10
 	@Override
 	public ListPerson listPersonsLinkToStationSelected(String fireStationNumber) { // TODO Auto-generated method
-		logger.info("Entering listPersonsLinkToStationSelected method"+fireStationNumber);
+		logger.info("Entering listPersonsLinkToStationSelected method" + fireStationNumber);
 		ListPerson list = new ListPerson(); // stub
 		List<PersonPrint> listPersonsLinkTest = new ArrayList<PersonPrint>();
 		try {
@@ -343,7 +345,7 @@ public class IPersonSerciveImpl implements IPerson {
 			for (Person personStation : personDatSource) {
 
 				if (personStation.getFireStation().getStationNumber().equals(fireStationNumber)) {
-					// prénom, nom, adresse, numéro de téléphone
+
 					if (personStation.isMinor()) {
 
 						qtMinors++;
@@ -355,8 +357,7 @@ public class IPersonSerciveImpl implements IPerson {
 				}
 
 			}
-			Collections.sort(listPersonsLinkTest);
-			/* listPersonsLinkTest.sort(PersonPrint); */
+
 			list.setContactsList(listPersonsLinkTest);
 			list.setNbMinors(qtMinors);
 			list.setNbAdults(listPersonsLinkTest.size() - qtMinors);
@@ -367,7 +368,7 @@ public class IPersonSerciveImpl implements IPerson {
 			logger.error(" Failed create list firestation?stationNumber ");
 		}
 		logger.error(" Failed create list . Return empty List ");
-		
+
 		return list;
 	}
 
@@ -399,23 +400,34 @@ public class IPersonSerciveImpl implements IPerson {
 	@Override
 	public List<PersonEmail> listEmail(String city) {
 		List<PersonEmail> listEmail = new ArrayList<PersonEmail>();
+		
 		try {
 			List<Person> persons = jSonFile.loadPersons();
-
+			List<Person>personEmails= new ArrayList<Person>();
+			Set<String> emails = new HashSet<String>();
+			for (Person p : persons) {
+			emails.add(p.getEmail());	
+			}
 			for (Person p : persons) {
 				if (p.getCity().equals(city)) {
-					PersonEmail newEmail = new PersonEmail(p.getEmail());
-					listEmail.add(newEmail);
-					
+					personEmails.add(p);
 				}
 			}
-			logger.info("list Email size :"+listEmail);
+			for(Person pEmail:personEmails) {
+				emails.add(pEmail.getEmail());
+			}
+			for (String email:emails)
+			{
+				PersonEmail newEmail = new PersonEmail(email);
+				  listEmail.add(newEmail);
+			}
+			logger.info("list Email size :" + listEmail);
 			return listEmail;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		logger.error("Failed to get List of email by city :"+city);
+		logger.error("Failed to get List of email by city :" + city);
 		return listEmail;
 
 	}

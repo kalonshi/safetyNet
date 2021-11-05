@@ -26,9 +26,9 @@ import com.spl.safetyNet.models.Person;
 
 public class IFirestationImpl implements IFirestation {
 	@Autowired
-	private JsonFileData jSonFile; 
+	private JsonFileData jSonFile;
 
-	private  Logger logger = LogManager.getLogger(IFirestationImpl.class);
+	private Logger logger = LogManager.getLogger(IFirestationImpl.class);
 
 	@Override
 	public FireStation addFireStation(String fireStationNumber, String addresse) {
@@ -316,8 +316,13 @@ public class IFirestationImpl implements IFirestation {
 			try {
 				FireStation fireStationContactPhoneList = getFireStation(fireStationNumber);
 				List<Person> personsToContact = fireStationContactPhoneList.getListOfPersons();
+				Set<String> phoneParse = new HashSet<String>();
 				for (Person p : personsToContact) {
-					PersonPhone phonecontact = new PersonPhone(p.getPhone());
+					phoneParse.add(p.getPhone());
+				}
+
+				for (String phone : phoneParse) {
+					PersonPhone phonecontact = new PersonPhone(phone);
 					phoneList.add(phonecontact);
 				}
 
@@ -348,7 +353,7 @@ public class IFirestationImpl implements IFirestation {
 			return finalList;
 
 		} catch (Exception e) {
-			logger.error("List can't be found at this address"+adresse);
+			logger.error("List can't be found at this address" + adresse);
 			// TODO: handle exception
 		}
 		return finalList;
