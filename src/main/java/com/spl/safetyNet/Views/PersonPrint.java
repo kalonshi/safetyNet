@@ -2,16 +2,15 @@ package com.spl.safetyNet.Views;
 
 import com.spl.safetyNet.models.Person;
 
-public class PersonPrint implements Comparable{
+public class PersonPrint implements Comparable {
 	private String firstName;
 	private String lastName;
-	
 	private String zip;
 	private String address;
 	private String city;
 	private String phone;
-	public PersonPrint(String firstName, String lastName,  String address, String city,String zip, String phone
-			) {
+
+	public PersonPrint(String firstName, String lastName, String address, String city, String zip, String phone) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -19,12 +18,14 @@ public class PersonPrint implements Comparable{
 		this.zip = zip;
 		this.address = address;
 		this.city = city;
-		
+
 	}
+
 	public PersonPrint() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -70,10 +71,9 @@ public class PersonPrint implements Comparable{
 	@Override
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
-	PersonPrint person= (PersonPrint) o;
-	
+		PersonPrint person = (PersonPrint) o;
+
 		return getAddress().compareTo(person.getAddress());
 	}
 
-	
 }

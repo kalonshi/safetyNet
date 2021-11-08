@@ -32,7 +32,7 @@ class FireStationTest {
 		FireStation newFireStation = new FireStation(addresses, addStationNumber);
 		String newAddress = "14 rue du petit Lac";
 		newFireStation.addAddress(newAddress);
-		Set<String> listadr=newFireStation.getAddresses();
-		assertEquals(true,listadr.contains("14 rue du petit Lac"));
+		Set<String> listadr = newFireStation.getAddresses();
+		assertEquals(true, listadr.contains("14 rue du petit Lac"));
 	}
 }

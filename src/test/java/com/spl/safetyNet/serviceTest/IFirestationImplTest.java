@@ -2,29 +2,18 @@ package com.spl.safetyNet.serviceTest;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.IOException;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import com.spl.safetyNet.Views.ListContactsForFire;
-import com.spl.safetyNet.Views.PersonFire;
 import com.spl.safetyNet.Views.PersonPhone;
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.Person;
@@ -44,23 +33,25 @@ public class IFirestationImplTest {
 	private JsonFileData jSonFile;
 
 	private static Logger logger = LogManager.getLogger(IFirestationImpl.class);
+
 	@Test
 	public void addFireStationTest() {
 		String addStationNumber = "6";
 		String addAdress = "17 av Jules Guesdes";
-		FireStation newFireStation=iFirestationImpl.addFireStation(addStationNumber, addAdress);
+		FireStation newFireStation = iFirestationImpl.addFireStation(addStationNumber, addAdress);
 		assertEquals(true, newFireStation.getAddresses().contains(addAdress));
 		assertEquals("6", newFireStation.getStationNumber());
 	}
+
 	@Test
 	public void addEmptyFireStationTest() {
 		String addStationNumber = "";
 		String addAdress = "";
-		FireStation newFireStation=iFirestationImpl.addFireStation(addStationNumber, addAdress);
+		FireStation newFireStation = iFirestationImpl.addFireStation(addStationNumber, addAdress);
 		assertEquals(null, iFirestationImpl.addFireStation(addStationNumber, addAdress));
-		
+
 	}
-	
+
 	@Test
 	public void getFireStationstationByNumberTest() {
 
@@ -81,71 +72,100 @@ public class IFirestationImplTest {
 
 	@Test
 	public void getFireStationForPersonByAddress() {
-		
-			String address = "29 15th St";
 
-			FireStation firestationSelected = iFirestationImpl.getFireStationForPerson(address);
+		String address = "29 15th St";
 
-			assertEquals("2", firestationSelected.getStationNumber());
+		FireStation firestationSelected = iFirestationImpl.getFireStationForPerson(address);
 
-		
+		assertEquals("2", firestationSelected.getStationNumber());
+
 	}
-	
+
 	@Test
 	public void phoneListTest() {
 		String stationNumber = "2";
-		String phone="841-874-6513";
-		String unknownPhone="unknown";
+		String phone = "841-874-6513";
+		String unknownPhone = "unknown";
 		List<PersonPhone> phoneList = iFirestationImpl.phoneList(stationNumber);
-	List<String> contactsPhone=new ArrayList<>();
-	phoneList.forEach(p->{
-		contactsPhone.add(p.getPhone());
-	});
+		List<String> contactsPhone = new ArrayList<>();
+		phoneList.forEach(p -> {
+			contactsPhone.add(p.getPhone());
+		});
 		assertEquals(true, contactsPhone.contains(phone));
-	assertEquals(false, contactsPhone.contains(unknownPhone));
-	assertEquals(5, contactsPhone.size());
+		assertEquals(false, contactsPhone.contains(unknownPhone));
+		assertEquals(4, contactsPhone.size());
 	}
-	
+
 	@Test
 	public void phoneListUnknowStationTest() {
 		String stationNumber = "unknown";
-		
+
 		List<PersonPhone> phoneList = iFirestationImpl.phoneList(stationNumber);
-	
-		assertEquals(true, phoneList.isEmpty());	
-	
+
+		assertEquals(true, phoneList.isEmpty());
+
 	}
-	
+
 	@Test
 	public void getlistContactsByAddressAndStation() {
 		String address = "29 15th St";
 		String stationNumber = "2";
-		String firstName="Jonanathan";
-		String lastName="Marrack";
-		String phone="841-874-6513";
-		int age=32;
-		ListContactsForFire listContactsByAddressAndStation= iFirestationImpl.getlistContactsByAddressAndStation(address);
-	
-	assertEquals(true, listContactsByAddressAndStation.getAddress().equals(address));
-	assertEquals(stationNumber,listContactsByAddressAndStation.getStationNumber());
-	assertEquals(1,listContactsByAddressAndStation.getListcontactsFire().size());
-	assertEquals(firstName,listContactsByAddressAndStation.getListcontactsFire().get(0).getFirstName());
-	assertEquals(lastName,listContactsByAddressAndStation.getListcontactsFire().get(0).getLastName());
-	assertEquals(phone,listContactsByAddressAndStation.getListcontactsFire().get(0).getPhone());
-	assertEquals(age,listContactsByAddressAndStation.getListcontactsFire().get(0).getAge());
-	assertEquals(true,listContactsByAddressAndStation.getListcontactsFire().get(0).getAllergies().isEmpty());
-	assertEquals(true,listContactsByAddressAndStation.getListcontactsFire().get(0).getMedications().isEmpty());
-	
+		String firstName = "Jonanathan";
+		String lastName = "Marrack";
+		String phone = "841-874-6513";
+		int age = 32;
+		ListContactsForFire listContactsByAddressAndStation = iFirestationImpl
+				.getlistContactsByAddressAndStation(address);
+
+		assertEquals(true, listContactsByAddressAndStation.getAddress().equals(address));
+		assertEquals(stationNumber, listContactsByAddressAndStation.getStationNumber());
+		assertEquals(1, listContactsByAddressAndStation.getListcontactsFire().size());
+		assertEquals(firstName, listContactsByAddressAndStation.getListcontactsFire().get(0).getFirstName());
+		assertEquals(lastName, listContactsByAddressAndStation.getListcontactsFire().get(0).getLastName());
+		assertEquals(phone, listContactsByAddressAndStation.getListcontactsFire().get(0).getPhone());
+		assertEquals(age, listContactsByAddressAndStation.getListcontactsFire().get(0).getAge());
+		assertEquals(true, listContactsByAddressAndStation.getListcontactsFire().get(0).getAllergies().isEmpty());
+		assertEquals(true, listContactsByAddressAndStation.getListcontactsFire().get(0).getMedications().isEmpty());
+
 	}
-	
+
 	@Test
-	public void getListPersonFireByFireStationsTest() {
-		List<String> fireStations=new ArrayList<String>();
-			fireStations.add("1");
-			fireStations.add("2");
-			List<PersonFire> listPersonFireByFireStations=iFirestationImpl.getListPersonFireByFireStations(fireStations);	
-	
+	public void getListPersonForFloodByFireStationsTest() {
+		List<String> fireStations = new ArrayList<String>();
+		fireStations.add("1");
+		fireStations.add("2");
+		List<ListContactsForFire> listContactsForFlood = iFirestationImpl.listFlood(fireStations);
+
+		String address = "908 73rd St";
+		String stationNumber = "1";
+		String firstName = "Reginold";
+		String lastName = "Walker";
+		String phone = "841-874-8547";
+		int age = 40;
+		String addressResult = listContactsForFlood.get(0).getAddress();
+		String stationNumberResult = listContactsForFlood.get(0).getStationNumber();
+		String firstNameResult = listContactsForFlood.get(0).getListcontactsFire().get(0).getFirstName();
+		String lastNameResult = listContactsForFlood.get(0).getListcontactsFire().get(0).getLastName();
+		String phoneResult = listContactsForFlood.get(0).getListcontactsFire().get(0).getPhone();
+		int ageResult = listContactsForFlood.get(0).getListcontactsFire().get(0).getAge();
+		assertEquals(false, listContactsForFlood.isEmpty());
+		assertEquals(address, addressResult);
+		assertEquals(stationNumber, stationNumberResult);
+		assertEquals(firstName, firstNameResult);
+		assertEquals(lastName, lastNameResult);
+		assertEquals(phone, phoneResult);
+		assertEquals(age, ageResult);
 	}
+
+	@Test
+	public void getListPersonForFloodWithWrongStationNumberTest() {
+		List<String> fireStations = new ArrayList<String>();
+		fireStations.add("10");
+		fireStations.add("20");
+		List<ListContactsForFire> listContactsForFlood = iFirestationImpl.listFlood(fireStations);
+		assertEquals(true, listContactsForFlood.isEmpty());
+	}
+
 	@Test
 	public void getListPersonFireByAdresseTest() {
 		String address = "892 Downing Ct";
@@ -157,23 +177,14 @@ public class IFirestationImplTest {
 		listPersonByAdresse.forEach(p -> {
 			firstNameList.add(p.getFirstName());
 			lastNameList.add(p.getLastName());
-		});	
+		});
 	}
-	
-	
-	
+
 	@Test
 	public void listFloodTest() {
-		
-	}
-	
-	
-	
-	
-	
 
-	
-	
+	}
+
 	/*
 	 * @Test
 	 * 
@@ -196,10 +207,10 @@ public class IFirestationImplTest {
 	 * 
 	 * }
 	 */
-	 
+
 	@Test
 	public void getListPersonByAdresseTest() throws IOException {
-		
+
 		String address = "892 Downing Ct";
 		String firstName = "Warren";
 		String lastName = "Zemicks";
@@ -210,36 +221,34 @@ public class IFirestationImplTest {
 			firstNameList.add(p.getFirstName());
 			lastNameList.add(p.getLastName());
 		});
-		
+
 		assertEquals(3, listPersonByAdresse.size());
 		assertEquals(true, firstNameList.contains(firstName));
 		assertEquals(true, lastNameList.contains(lastName));
 	}
-	
-@Test
-public void deleteStationTest() throws IOException {
-	
-	String numberStation="1";
-	iFirestationImpl.deleteStation(numberStation);
-		
-		}
-@Test
-public void updateExistingFireStationNumber() {
-	String numberStation="1";
-	String newNumberStation="65";
-	
-	assertEquals(true, iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation));
-}
-@Test
-public void updateNotExistingFireStationNumber() {
-	String numberStation="";
-	String newNumberStation="65";
-	
-	assertEquals(false, iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation));
-}
 
+	@Test
+	public void deleteStationAddressTest() throws IOException {
 
+		String address = "892 Downing Ct";
+		boolean stationIsDelete = iFirestationImpl.deleteStationAdresse(address);
+		assertEquals(true, stationIsDelete);
+	}
 
+	@Test
+	public void updateExistingFireStationNumber() {
+		String numberStation = "1";
+		String newNumberStation = "65";
+		boolean isStationUpdated = iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation);
+		assertEquals(true, isStationUpdated);
+	}
 
+	@Test
+	public void updateNotExistingFireStationNumber() {
+		String numberStation = "";
+		String newNumberStation = "65";
+
+		assertEquals(false, iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation));
+	}
 
 }

@@ -16,7 +16,7 @@ import com.spl.safetyNet.models.MedicalRecord;
 public class IMedicalRecordImpl implements IMedicalRecord {
 	@Autowired
 	private JsonFileData jSonFile;
-	private  Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
+	private Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
 
 	@Override
 	public boolean addMedicalRecord(List<String> medications, List<String> allergies) {
@@ -27,7 +27,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		try {
 			jSonFile.loadJsonMedicalRecords().add(newMedicalRecord);
 			return true;
- 
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +37,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 
 	@Override
 	public boolean deleteMedicalRecord(String firstName, String lastName) {
-		// TODO Auto-generated method stub
+
 		if (firstName.isEmpty() && lastName.isEmpty()) {
 			return false;
 		}
@@ -59,7 +59,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 
 	@Override
 	public MedicalRecord getMedicalRecord(String firstName, String lastName) {
-		// TODO Auto-generated method stub
+
 		MedicalRecord medicalRecordSelected = new MedicalRecord();
 		if (firstName.isEmpty() && lastName.isEmpty()) {
 			return medicalRecordSelected;
@@ -82,7 +82,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 
 	@Override
 	public boolean addMedicalRecordAllergie(String firstName, String lastName, String allergy) {
-		// TODO Auto-generated method stub
+
 		if (firstName.isEmpty() && lastName.isEmpty()) {
 			return false;
 		}
@@ -98,7 +98,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 
 	@Override
 	public boolean addMedicalRecordMedication(String firstName, String lastName, String medication) {
-		// TODO Auto-generated method stub
+
 		if (firstName.isEmpty() && lastName.isEmpty()) {
 			return false;
 		}
@@ -113,7 +113,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 
 	@Override
 	public boolean deleteMedicalRecordAllergy(String firstName, String lastName, String allergy) {
-		// TODO Auto-generated method stub
+
 		if (firstName.isEmpty() && lastName.isEmpty()) {
 			return false;
 		}
@@ -187,7 +187,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 
 	@Override
 	public boolean updateMedicalRecordAllergy(String firstName, String lastName, String allergy, String newAllergy) {
-		// TODO Auto-generated method stub
+
 		if (firstName.isEmpty() && lastName.isEmpty()) {
 			logger.error("firstName or lastName Empty");
 			return false;

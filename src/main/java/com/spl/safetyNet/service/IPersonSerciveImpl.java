@@ -36,7 +36,6 @@ public class IPersonSerciveImpl implements IPerson {
 			String email, Date birthDate) {
 		Person newPerson = new Person();
 
-		// TODO Auto-generated method stub
 		logger.info("Entering the addPerson() method");
 		if (firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() || zip.isEmpty()
 				|| address.isEmpty() && city.isEmpty() || email.isEmpty() || birthDate.equals(null)) {
@@ -59,7 +58,7 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public InfoPerson getInfoPerson(String firstName, String lastName) {
-		// TODO Auto-generated method stub
+
 		logger.info("Entering the getPerson() method");
 		InfoPerson personInfo = new InfoPerson();
 		List<Person> personList;
@@ -89,7 +88,7 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public Person getPerson(String firstName, String lastName) {
-		// TODO Auto-generated method stub
+
 		logger.info("Entering the getPerson() method");
 		Person personSearch = new Person();
 		List<Person> personList;
@@ -119,7 +118,7 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public boolean delete(String firstName, String lastName) {
-		// TODO Auto-generated method stub
+
 		logger.info("Entering the delete() method");
 		if (firstName.isEmpty() || lastName.isEmpty()) {
 			logger.error("firstName isEmpty or lastName isEmpty");
@@ -149,7 +148,7 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public List<Person> getfamilyMenbers(String lastName) {
-		// TODO Auto-generated method stub
+
 		logger.info("Entering the getfamilyMenbers() method");
 		List<Person> familyMenbers = new ArrayList<Person>();
 		try {
@@ -194,7 +193,6 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public List<Person> getResidentsByAddress(String address) {
-		// TODO Auto-generated method stub
 
 		logger.info("Entering getResidentsByAddress(String address) method");
 		List<Person> residents = new ArrayList<>();
@@ -218,7 +216,7 @@ public class IPersonSerciveImpl implements IPerson {
 // http://localhost:8080/personInfo?firstName=%3CfirstName%3E&lastName=%3ClastName
 	@Override
 	public List<InfoPerson> getListInfoPerson(String firstName, String lastName) {
-		// TODO Auto-generated method stub
+
 		logger.info("Entering getListPersons() method");
 		List<InfoPerson> getPersons = new ArrayList<InfoPerson>();
 		List<Person> personList;
@@ -400,26 +398,24 @@ public class IPersonSerciveImpl implements IPerson {
 	@Override
 	public List<PersonEmail> listEmail(String city) {
 		List<PersonEmail> listEmail = new ArrayList<PersonEmail>();
-		
+
 		try {
 			List<Person> persons = jSonFile.loadPersons();
-			List<Person>personEmails= new ArrayList<Person>();
+			List<Person> personEmails = new ArrayList<Person>();
 			Set<String> emails = new HashSet<String>();
-			for (Person p : persons) {
-			emails.add(p.getEmail());	
-			}
+
 			for (Person p : persons) {
 				if (p.getCity().equals(city)) {
 					personEmails.add(p);
 				}
 			}
-			for(Person pEmail:personEmails) {
-				emails.add(pEmail.getEmail());
+			for (Person p : personEmails) {
+				emails.add(p.getEmail());
 			}
-			for (String email:emails)
-			{
+
+			for (String email : emails) {
 				PersonEmail newEmail = new PersonEmail(email);
-				  listEmail.add(newEmail);
+				listEmail.add(newEmail);
 			}
 			logger.info("list Email size :" + listEmail);
 			return listEmail;

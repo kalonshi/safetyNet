@@ -58,37 +58,23 @@ class JsonFileDataTest {
 		String firstName = "John";
 		String lastNameJson = jSonFileData.readFileJson(filePath).get("persons").get(0).get(1).toString();
 		String firstNameJson = jSonFileData.readFileJson(filePath).get("persons").get(0).get(0).toString();
-		
-		/*
-		 * String firstNameJsonTest =
-		 * jSonFileData.readFileJson(filePath).get("persons").;
-		 */
 		assertEquals(nbP, nbOfPersons);
-		/*
-		 * assertEquals(lastName, lastNameJson ); assertEquals(firstName,
-		 * firstNameJson);
-		 */
 
 	}
 
 	@Test
 	public void testLoadJsonMedicalRecords() throws IOException {
 		String filePath = "src/main/resources/data.json";
-
 		int nbOfMedicalRecords = jSonFileData.readFileJson(filePath).get("medicalrecords").size();
 		int nbM = 23;
 		assertEquals(nbM, nbOfMedicalRecords);
 
 	}
 
-	@Test
-	public void TestReadFileJson() {
-		String filePath = "src/main/resources/data.json";
-		try {
-			jSonFileData.readFileJson(filePath).size();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	/*
+	 * @Test public void TestReadFileJson() { String filePath =
+	 * "src/main/resources/data.json"; try {
+	 * jSonFileData.readFileJson(filePath).size(); } catch (IOException e) { // TODO
+	 * Auto-generated catch block e.printStackTrace(); } }
+	 */
 }

@@ -28,10 +28,10 @@ import com.spl.safetyNet.models.Person;
 @Service
 public class JsonFileData {
 	private static final Logger logger = LogManager.getLogger(JsonFileData.class);
-	
+
 	public JsonFileData() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 	/* READ AND PARSE JSON FILE IN OBJECT */
 
@@ -43,7 +43,7 @@ public class JsonFileData {
 		 * Files.readAllBytes(new File(filePath).toPath()); JsonIterator iter =
 		 * JsonIterator.parse(bytesFile);
 		 */
-		
+
 		Any fireStationAny = readFileJson("src/main/resources/data.json").get("firestations");
 		Map<String, FireStation> fireStationMap = new HashMap<>();
 		fireStationAny.forEach(anyStation -> {
@@ -61,11 +61,7 @@ public class JsonFileData {
 	// Creation convertion Json to Person sans Medical Record et Station et date
 	public List<Person> loadJsonPersons() throws IOException {
 		logger.info("Entering the loadJsonPersons() method");
-		/*
-		 * String filePath = "src/main/resources/data.json"; byte[] bytesFile =
-		 * Files.readAllBytes(new File(filePath).toPath()); JsonIterator iter =
-		 * JsonIterator.parse(bytesFile); Any any = iter.readAny();
-		 */ 
+
 		Any personAny = readFileJson("src/main/resources/data.json").get("persons");
 		Any medicalAny = readFileJson("src/main/resources/data.json").get("medicalrecords");
 		List<Person> persons = new ArrayList<>();
@@ -81,7 +77,7 @@ public class JsonFileData {
 								a.get("phone").toString(), a.get("zip").toString(), a.get("address").toString(),
 								a.get("city").toString(), a.get("email").toString(), date));
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
+
 						e.printStackTrace();
 					}
 				}
@@ -167,7 +163,7 @@ public class JsonFileData {
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				logger.info("Failed to  add firestation to person");
 
 				e.printStackTrace();
@@ -210,12 +206,13 @@ public class JsonFileData {
 
 		return fireStations;
 	}
-public Any readFileJson(String filePath ) throws IOException {
-	byte[] bytesFile = Files.readAllBytes(new File(filePath).toPath());
-	JsonIterator iter = JsonIterator.parse(bytesFile);
-	Any any = iter.readAny();
-	
-	return any;
-	
-}
+
+	public Any readFileJson(String filePath) throws IOException {
+		byte[] bytesFile = Files.readAllBytes(new File(filePath).toPath());
+		JsonIterator iter = JsonIterator.parse(bytesFile);
+		Any any = iter.readAny();
+
+		return any;
+
+	}
 }

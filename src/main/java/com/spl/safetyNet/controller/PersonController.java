@@ -8,7 +8,6 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,38 +38,30 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @RestController
-public class PersonController   {
-	
+public class PersonController {
+
 	@Autowired
 	private IPersonSerciveImpl iPersonImpl;
-	
-	private Logger logger = LogManager.getLogger(PersonController.class);
-	
-	 
-	// TODO
-	/*
-	 * ajouter une nouvelle personne ; ● mettre à jour une personne existante (pour
-	 * le moment, supposons que le prénom et le nom de famille ne changent pas, mais
-	 * que les autres champs peuvent être modifiés) ; ● supprimer une personne
-	 * (utilisez une combinaison de prénom et de nom comme identificateur unique).
-	 */
-	  @ResponseBody
-	    @RequestMapping(path = "/")
-	    public String home(HttpServletRequest request) {
-	        String contextPath = request.getContextPath();
-	        String host = request.getServerName();
-	        // Spring Boot >= 2.0.0.M7
-	        String endpointBasePath = "/actuator";
-	        StringBuilder sb = new StringBuilder();
-	        sb.append("<h2>Spring Boot Actuator</h2>");
-	        sb.append("<ul>");
 
-	        // http://localhost:8090/actuator
-	        String url = "http://" + host + ":8080" + contextPath + endpointBasePath;
-	        sb.append("<li><a href='" + url + "'>" + url + "</a></li>");
-	        sb.append("</ul>");
-	        return sb.toString();
-	    }
+	private Logger logger = LogManager.getLogger(PersonController.class);
+
+	@ResponseBody
+	@RequestMapping(path = "/")
+	public String home(HttpServletRequest request) {
+		String contextPath = request.getContextPath();
+		String host = request.getServerName();
+		// Spring Boot >= 2.0.0.M7
+		String endpointBasePath = "/actuator";
+		StringBuilder sb = new StringBuilder();
+		sb.append("<h2>Spring Boot Actuator</h2>");
+		sb.append("<ul>");
+
+		// http://localhost:8090/actuator
+		String url = "http://" + host + ":8080" + contextPath + endpointBasePath;
+		sb.append("<li><a href='" + url + "'>" + url + "</a></li>");
+		sb.append("</ul>");
+		return sb.toString();
+	}
 
 	// http://localhost:8080/firestation?stationNumber=<station_number>
 
@@ -78,66 +69,56 @@ public class PersonController   {
 
 	@ResponseBody
 	public ListPerson getListPersonLinkedWithStation(@RequestParam String stationNumber) {
-		
-		  logger.info("Entering url :firestation?stationNumber=" +stationNumber);
-		
-		 
-return iPersonImpl.listPersonsLinkToStationSelected(stationNumber);
+
+		logger.info("Entering url :firestation?stationNumber=" + stationNumber);
+
+		return iPersonImpl.listPersonsLinkToStationSelected(stationNumber);
 
 	}
 
-	// TEST OK **************
 	// http://localhost:8080/childAlert?address=<address>
 	@GetMapping("/childAlert")
 	@ResponseBody
 	public List<Personchild> getListOfMinorAndRelative(@RequestParam String address) {
 		/* return null; */
-		
-		  logger.info("Entering url :http://localhost:8080/childAlert?address="
-		  +address);
-		 
+
+		logger.info("Entering url :http://localhost:8080/childAlert?address=" + address);
+
 		return iPersonImpl.printlistMinorsByAddress(address);
 	}
-	
-
 
 	// Test A verifier
 	// http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
 	@GetMapping("/personInfo")
 	@ResponseBody
 	public List<InfoPerson> getPersonInfo(@RequestParam String firstName, @RequestParam String lastName) {
-		
-		  logger.info("Entering url :http://localhost:8080/personInfo?firstName= "
-		  +firstName+" &lastName= "+lastName);
-		 
-		if(!firstName.isEmpty()||!lastName.isEmpty()) {
+
+		logger.info(
+				"Entering url :http://localhost:8080/personInfo?firstName= " + firstName + " &lastName= " + lastName);
+
+		if (!firstName.isEmpty() || !lastName.isEmpty()) {
 			return iPersonImpl.getListInfoPerson(firstName, lastName);
 		}
-		
-		  logger.error( "firstName.isEmpty()||!lastName.isEmpty()");
-		 return null;
-	}
-	
 
-	
-	
+		logger.error("firstName.isEmpty()||!lastName.isEmpty()");
+		return null;
+	}
+
 	// http://localhost:8080/communityEmail?city OK
- 
-		@GetMapping("/communityEmail")
-		@ResponseBody
-		public List<PersonEmail> getListEmailCitizens(@RequestParam String city) {
-			logger.info("entering http://localhost:8080/communityEmail?"+city);
-			List<PersonEmail> list = iPersonImpl.listEmail(city);
-			
-			return list;
-		}	
-	
-	
+
+	@GetMapping("/communityEmail")
+	@ResponseBody
+	public List<PersonEmail> getListEmailCitizens(@RequestParam String city) {
+		logger.info("entering http://localhost:8080/communityEmail?" + city);
+		List<PersonEmail> list = iPersonImpl.listEmail(city);
+
+		return list;
+	}
 
 	@DeleteMapping("/person/delete")
 	@ResponseBody
 	public void deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
-		logger.info("delete Person by FirstName and LastName"+firstName+" "+lastName);
+		logger.info("delete Person by FirstName and LastName" + firstName + " " + lastName);
 		iPersonImpl.delete(firstName, lastName);
 
 	}
@@ -147,8 +128,8 @@ return iPersonImpl.listPersonsLinkToStationSelected(stationNumber);
 	public Person add(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String phone,
 			@RequestParam String zip, @RequestParam String address, @RequestParam String city,
 			@RequestParam String email, @RequestParam Date birthDate) {
-		logger.info("add Person :"+firstName+" "+lastName);
-		
+		logger.info("add Person :" + firstName + " " + lastName);
+
 		Person newPerson = iPersonImpl.addPerson(firstName, lastName, phone, zip, address, city, email, birthDate);
 
 		return newPerson;
@@ -160,15 +141,13 @@ return iPersonImpl.listPersonsLinkToStationSelected(stationNumber);
 	public Person updatePerson(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String newPhone, @RequestParam String newZip, @RequestParam String newAddress,
 			@RequestParam String newCity, @RequestParam String newEmail, @RequestParam Date newBirthDate) {
-	
-		logger.info("update Person :"+firstName+" "+lastName);
+
+		logger.info("update Person :" + firstName + " " + lastName);
 		Person updatePersonRecord = iPersonImpl.updatePerson(firstName, lastName, newPhone, newZip, newAddress, newCity,
 				newEmail);
 
 		return updatePersonRecord;
 
 	}
-
-	
 
 }

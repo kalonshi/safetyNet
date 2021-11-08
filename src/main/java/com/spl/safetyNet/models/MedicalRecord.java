@@ -12,12 +12,6 @@ public class MedicalRecord {
 		// TODO Auto-generated constructor stub
 	}
 
-	/*
-	 * public MedicalRecord(Person person, List<String> medications, List<String>
-	 * allergies) { super(); this.person = person; this.medications = medications;
-	 * this.allergies = allergies; }
-	 */
-
 	public MedicalRecord(List<String> medications, List<String> allergies) {
 		super();
 		this.medications = medications;
@@ -60,7 +54,6 @@ public class MedicalRecord {
 		return this;
 	}
 
-	
 	@Override
 	public String toString() {
 		return "MedicalRecord [medications=" + medications + ", allergies=" + allergies + "]";

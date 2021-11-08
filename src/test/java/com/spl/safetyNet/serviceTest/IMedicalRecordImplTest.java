@@ -1,14 +1,8 @@
 package com.spl.safetyNet.serviceTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,11 +10,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import com.spl.safetyNet.models.MedicalRecord;
-
 import com.spl.safetyNet.service.IMedicalRecordImpl;
-import com.spl.safetyNet.service.JsonFileData;
 
 @SpringBootTest
 
@@ -41,6 +32,7 @@ public class IMedicalRecordImplTest {
 		medicationTest.add("aznol:350mg");
 		medicationTest.add("hydrapermazol:100mg");
 		allergiesTest.add("nillacilan");
+		iMedicalRecordImpl.addMedicalRecord(medicationTest, allergiesTest);
 	}
 
 	@Test
@@ -52,8 +44,6 @@ public class IMedicalRecordImplTest {
 		System.out.println("ajout Status : " + addAllergyOk);
 		assertEquals(true, addAllergyOk);
 
-		
-
 	}
 
 	@Test
@@ -63,7 +53,7 @@ public class IMedicalRecordImplTest {
 		String medication = "aspirin 500mg";
 		boolean addOk = iMedicalRecordImpl.addMedicalRecordMedication(firstName, lastName, medication);
 		assertEquals(true, addOk);
-		
+
 	}
 
 	@Test
@@ -177,54 +167,59 @@ public class IMedicalRecordImplTest {
 	public void updateMedicalRecordAllergiesTest() {
 		String lastName = "Boyd";
 		String firstName = "John";
-	String allergy="nillacilan";
-		String newAllergy="Butter";
-		boolean isAllergiesUpdated=iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy, newAllergy);
+		String allergy = "nillacilan";
+		String newAllergy = "Butter";
+		boolean isAllergiesUpdated = iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy,
+				newAllergy);
 		assertEquals(true, isAllergiesUpdated);
-	
+
 	}
-	
+
 	@Test
 	public void updateUnknownMedicalRecordAllergiesTest() {
 		String lastName = "Boyd";
 		String firstName = "John";
-	String allergy="";
-		String newAllergy="Butter";
-		boolean isAllergiesUpdated=iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy, newAllergy);
+		String allergy = "";
+		String newAllergy = "Butter";
+		boolean isAllergiesUpdated = iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy,
+				newAllergy);
 		assertEquals(false, isAllergiesUpdated);
-	
+
 	}
+
 	@Test
 	public void updateMedicalRecordMedicationsTest() {
 		String lastName = "Boyd";
 		String firstName = "John";
-		String medication="hydrapermazol:100mg";
-		String newMedication="Doliprane:1000mg";
-		boolean isMedicationsUpdated=iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication, newMedication);
+		String medication = "hydrapermazol:100mg";
+		String newMedication = "Doliprane:1000mg";
+		boolean isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication,
+				newMedication);
 		assertEquals(true, isMedicationsUpdated);
 	}
-	
-	
+
 	@Test
 	public void updateUnknownPersonMedicalRecordMedicationTest() {
 		String lastName = "";
 		String firstName = "";
-		String medication="hydrapermazol:100mg";
-		String newMedication="Doliprane:1000mg";
-		boolean isMedicationsUpdated=iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication, newMedication);
+		String medication = "hydrapermazol:100mg";
+		String newMedication = "Doliprane:1000mg";
+		boolean isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication,
+				newMedication);
 		assertEquals(false, isMedicationsUpdated);
-		
+
 	}
+
 	@Test
 	public void updateMedicalRecordwithUnknownMedicationTest() {
 		String lastName = "Boyd";
 		String firstName = "John";
-		String medication="";
-		String newMedication="Doliprane:1000mg";
-		boolean isMedicationsUpdated=iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication, newMedication);
+		String medication = "";
+		String newMedication = "Doliprane:1000mg";
+		boolean isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication,
+				newMedication);
 		assertEquals(false, isMedicationsUpdated);
-		
+
 	}
-	
 
 }

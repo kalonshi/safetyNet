@@ -2,7 +2,7 @@ package com.spl.safetyNet.models;
 
 import java.util.Date;
 
-public class Person  {
+public class Person {
 	private String firstName;
 	private String lastName;
 	private String phone;
@@ -17,6 +17,19 @@ public class Person  {
 	public Person() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Person(String firstName, String lastName, String phone, String zip, String address, String city,
+			String email, Date birthDate) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.phone = phone;
+		this.zip = zip;
+		this.address = address;
+		this.city = city;
+		this.email = email;
+		this.birthDate = birthDate;
 	}
 
 	public Person(String firstName, String lastName, String phone, String zip, String address, String city,
@@ -111,19 +124,6 @@ public class Person  {
 		this.fireStation = fireStation;
 	}
 
-	public Person(String firstName, String lastName, String phone, String zip, String address, String city,
-			String email, Date birthDate) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phone = phone;
-		this.zip = zip;
-		this.address = address;
-		this.city = city;
-		this.email = email;
-		this.birthDate = birthDate;
-	}
-
 	public Boolean isMinor() {
 		if (age() <= 18) {
 
@@ -147,29 +147,4 @@ public class Person  {
 		return age;
 	}
 
-	
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Person other = (Person) obj;
-		if (firstName == null) {
-			if (other.firstName != null)
-				return false;
-		} else if (!firstName.equals(other.firstName))
-			return false;
-		if (lastName == null) {
-			if (other.lastName != null)
-				return false;
-		} else if (!lastName.equals(other.lastName))
-			return false;
-		return true;
-	}
-
-	
 }

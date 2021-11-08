@@ -12,33 +12,33 @@ import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.MedicalRecord;
 
 class MedicalRecordTest {
-private static MedicalRecord medicalRecord;
-private String List;
+	private static MedicalRecord medicalRecord;
+	private String List;
+
 	@BeforeEach
 	private void setUpPerTest() {
-		
-		List<String> medications = new ArrayList<String>() ;
+
+		List<String> medications = new ArrayList<String>();
 		medications.add("aspirin:1000mg");
-		List<String> allergies = new ArrayList<String>() ;
+		List<String> allergies = new ArrayList<String>();
 		allergies.add("peanuts");
-	medicalRecord=new MedicalRecord(medications, allergies);
-	
+		medicalRecord = new MedicalRecord(medications, allergies);
+
 	}
 
-	
 	@Test
 	public void addNewMedicationTest() {
-	
-	String newMedic="Doliprane:500mg";
-	medicalRecord.addMedication(newMedic);
-	assertEquals(true,medicalRecord.getMedications().contains(newMedic));
+
+		String newMedic = "Doliprane:500mg";
+		medicalRecord.addMedication(newMedic);
+		assertEquals(true, medicalRecord.getMedications().contains(newMedic));
 	}
-	
+
 	@Test
 	public void addNewAllergyTest() {
-	
-	String newAllergy="SeaFood";
-	medicalRecord.addAllergie(newAllergy);
-	assertEquals(true,medicalRecord.getAllergies().contains(newAllergy));
+
+		String newAllergy = "SeaFood";
+		medicalRecord.addAllergie(newAllergy);
+		assertEquals(true, medicalRecord.getAllergies().contains(newAllergy));
 	}
 }

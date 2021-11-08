@@ -39,40 +39,35 @@ public class FireStationController {
 	@Autowired
 	private IFirestationImpl iFirestationImpl;
 	private Logger logger = LogManager.getLogger(FireStationController.class);
-	
-	/*
-	 * ajout d'un mapping caserne/adresse ; ● mettre à jour le numéro de la caserne
-	 * de pompiers d'une adresse ; ● supprimer le mapping d'une caserne ou d'une
-	 * adresse.
-	 */
-	
-	@GetMapping("/fire") //OK
+
+	@GetMapping("/fire") // OK
 
 	public @ResponseBody ListContactsForFire ListOfResidents(@RequestParam String address) {
-		logger.info("Entering ListOfResidents method : list of contact by address :"+address);
-		
-			return iFirestationImpl.getlistContactsByAddressAndStation(address);
-		
+		logger.info("Entering ListOfResidents method : list of contact by address :" + address);
+
+		return iFirestationImpl.getlistContactsByAddressAndStation(address);
+
 	}
-	
-	// **********A TESTER*****
+
+	// **********A TESTER OK*****
 	// http://localhost:8080/flood/stations?stations=<a list of station_numbers>
-	@GetMapping("/flood/Stations")
+	@GetMapping("/flood/stations")
 	@ResponseBody
 	public List<ListContactsForFire> getListOfHouseAndPersonsWithMedicalrecordlinkToStation(
-			@RequestParam java.util.List<String> stations) {
-		logger.info("Entering  flood method : list of contacts by address :"+stations.toString());
-		 
-				return iFirestationImpl.listFlood(stations);
-		
+			@RequestParam List<String> stations) {
+		logger.info("Entering  flood method : list of contacts by address :" + stations.toString());
+
+		return iFirestationImpl.listFlood(stations);
+
 	}
+
 	// http://localhost:8080/phoneAlert?firestation=1 Test OK
 	@GetMapping("/phoneAlert")
 
 	@ResponseBody
 	public List<PersonPhone> getListOfPhoneNumberFromPersonLinkWithStationNumber(@RequestParam String firestation) {
-		logger.info("Entering http://localhost:8080/phoneAlert?firestation :"+firestation);
-		
+		logger.info("Entering http://localhost:8080/phoneAlert?firestation :" + firestation);
+
 		return iFirestationImpl.phoneList(firestation);
 	}
 
@@ -80,33 +75,32 @@ public class FireStationController {
 	@PostMapping("/fireStation/add")
 	@ResponseBody
 	public FireStation addFireStation(@RequestParam String fireStationNumber, @RequestParam String address) {
-		logger.info("Add a fireStation :"+fireStationNumber+ "at the following address :" +address);
-		
+		logger.info("Add a fireStation :" + fireStationNumber + "at the following address :" + address);
+
 		FireStation newFireStation = iFirestationImpl.addFireStation(fireStationNumber, address);
 		return newFireStation;
 	}
 
 	@DeleteMapping("/fireStation/delete")
 	public void deleteFireStation(@RequestParam String fireStationNumber) {
-		logger.info("Delete a fireStation :"+fireStationNumber);
-		
+		logger.info("Delete a fireStation :" + fireStationNumber);
+
 		iFirestationImpl.deleteStation(fireStationNumber);
 	}
 
 	@PutMapping("/fireStation/updateNumber")
 	public boolean updateFireStationNumber(@RequestParam String fireStationNumber,
 			@RequestBody String newStationNumber) {
-		logger.info("Update number of fireStation :"+fireStationNumber+ "to :" +newStationNumber);
-		
-		boolean updateNumberFireStation = iFirestationImpl.updateFireStationNumber(fireStationNumber,
-				newStationNumber);
+		logger.info("Update number of fireStation :" + fireStationNumber + "to :" + newStationNumber);
+
+		boolean updateNumberFireStation = iFirestationImpl.updateFireStationNumber(fireStationNumber, newStationNumber);
 		return true;
 	}
 
-	@DeleteMapping("/fireStation/delete/")
+	@DeleteMapping("/fireStation/address/delete")
 	public void deleteAddressFireStation(@RequestParam String address) {
-		logger.info("Delete address :"+address+" from  fireStation ");
-		
+		logger.info("Delete address :" + address + " from  fireStation ");
+
 		iFirestationImpl.deleteStationAdresse(address);
 	}
 }
