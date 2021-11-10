@@ -1,44 +1,35 @@
 package com.spl.safetyNet.controller;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spl.safetyNet.Views.ListContactsForFire;
-import com.spl.safetyNet.Views.ListPerson;
-import com.spl.safetyNet.Views.PersonFire;
 import com.spl.safetyNet.Views.PersonPhone;
 import com.spl.safetyNet.models.FireStation;
-import com.spl.safetyNet.models.Person;
-import com.spl.safetyNet.service.IFirestation;
 import com.spl.safetyNet.service.IFirestationImpl;
-import com.spl.safetyNet.service.IPerson;
-import com.spl.safetyNet.service.IPersonSerciveImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 @RestController
 public class FireStationController {
+	
 	@Autowired
 	private IFirestationImpl iFirestationImpl;
-	private Logger logger = LogManager.getLogger(FireStationController.class);
+	 
+	private static final Logger logger = LogManager.getLogger(FireStationController.class);
 
 	@GetMapping("/fire") // OK
 
@@ -82,6 +73,7 @@ public class FireStationController {
 	}
 
 	@DeleteMapping("/fireStation/delete")
+	@ResponseBody
 	public void deleteFireStation(@RequestParam String fireStationNumber) {
 		logger.info("Delete a fireStation :" + fireStationNumber);
 
@@ -89,15 +81,17 @@ public class FireStationController {
 	}
 
 	@PutMapping("/fireStation/updateNumber")
-	public boolean updateFireStationNumber(@RequestParam String fireStationNumber,
-			@RequestBody String newStationNumber) {
+	@ResponseBody
+	public void updateFireStationNumber(@RequestParam String fireStationNumber,
+			@RequestParam String newStationNumber) {
 		logger.info("Update number of fireStation :" + fireStationNumber + "to :" + newStationNumber);
 
-		boolean updateNumberFireStation = iFirestationImpl.updateFireStationNumber(fireStationNumber, newStationNumber);
-		return true;
+		 iFirestationImpl.updateFireStationNumber(fireStationNumber, newStationNumber);
+		
 	}
 
 	@DeleteMapping("/fireStation/address/delete")
+	@ResponseBody
 	public void deleteAddressFireStation(@RequestParam String address) {
 		logger.info("Delete address :" + address + " from  fireStation ");
 

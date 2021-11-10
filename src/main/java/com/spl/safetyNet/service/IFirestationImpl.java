@@ -28,7 +28,7 @@ public class IFirestationImpl implements IFirestation {
 	@Autowired
 	private JsonFileData jSonFile;
 
-	private Logger logger = LogManager.getLogger(IFirestationImpl.class);
+	 private static final Logger logger = LogManager.getLogger(IFirestationImpl.class);
 
 	@Override
 	public FireStation addFireStation(String fireStationNumber, String addresse) {

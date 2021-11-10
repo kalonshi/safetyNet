@@ -29,7 +29,7 @@ import com.spl.safetyNet.models.Person;
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
 	private JsonFileData jSonFile;
-	private Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
+	 private static final Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
 
 	@Override
 	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,

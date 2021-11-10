@@ -2,21 +2,17 @@ package com.spl.safetyNet.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.service.IMedicalRecordImpl;
-import com.spl.safetyNet.service.IPersonSerciveImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @RestController
 public class MedicalRecordController {
@@ -24,7 +20,7 @@ public class MedicalRecordController {
 	@Autowired
 	private IMedicalRecordImpl iMedicalRecordImpl;
 
-	private Logger logger = LogManager.getLogger(MedicalRecordController.class);
+	 private static final Logger logger = LogManager.getLogger(MedicalRecordController.class);
 
 	@PostMapping("/medicalRecord/add")
 	@ResponseBody

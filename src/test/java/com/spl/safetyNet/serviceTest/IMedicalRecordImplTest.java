@@ -32,7 +32,9 @@ public class IMedicalRecordImplTest {
 		medicationTest.add("aznol:350mg");
 		medicationTest.add("hydrapermazol:100mg");
 		allergiesTest.add("nillacilan");
-		iMedicalRecordImpl.addMedicalRecord(medicationTest, allergiesTest);
+		boolean addMedicalRecord=iMedicalRecordImpl.addMedicalRecord(medicationTest, allergiesTest);
+		assertEquals(true, addMedicalRecord);
+
 	}
 
 	@Test

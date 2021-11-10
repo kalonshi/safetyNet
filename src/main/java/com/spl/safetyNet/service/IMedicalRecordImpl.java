@@ -16,7 +16,7 @@ import com.spl.safetyNet.models.MedicalRecord;
 public class IMedicalRecordImpl implements IMedicalRecord {
 	@Autowired
 	private JsonFileData jSonFile;
-	private Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
+	 private static final Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
 
 	@Override
 	public boolean addMedicalRecord(List<String> medications, List<String> allergies) {
