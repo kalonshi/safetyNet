@@ -5,7 +5,7 @@ public class PersonPhone {
 
 	public PersonPhone() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public PersonPhone(String phone) {
@@ -16,8 +16,6 @@ public class PersonPhone {
 	public String getPhone() {
 		return phone;
 	}
-	/*
-	 * public void setPhone(String phone) { this.phone = phone; }
-	 */
+	
 
 }

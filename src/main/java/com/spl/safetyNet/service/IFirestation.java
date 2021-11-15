@@ -25,10 +25,6 @@ public interface IFirestation {
 
 	public List<PersonFire> getListPersonFireByAdresse(String adresse);
 
-	public List<Person> getListPersonByFireStations(List<String> fireStations);
-
-	public List<PersonFire> getListPersonFireByFireStations(List<String> fireStations);
-
 	public List<ListContactsForFire> listFlood(List<String> fireStations);
 
 	public boolean deleteStation(String fireStationNumber);

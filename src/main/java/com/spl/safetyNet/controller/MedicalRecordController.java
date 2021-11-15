@@ -22,14 +22,7 @@ public class MedicalRecordController {
 
 	 private static final Logger logger = LogManager.getLogger(MedicalRecordController.class);
 
-	@PostMapping("/medicalRecord/add")
-	@ResponseBody
-	public void addMedicalRecord(@RequestParam MedicalRecord medicalRecord) {
-		logger.info("add MedicalRecord");
-
-		/* medicalRecordDao.save(medicalRecord); */
-	}
-
+	
 	@PostMapping("/medicalRecord/delete")
 	@ResponseBody
 	public void deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {

@@ -1,8 +1,6 @@
 package com.spl.safetyNet.controller;
 
-
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,16 +20,15 @@ import com.spl.safetyNet.service.IFirestationImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 @RestController
 public class FireStationController {
-	
+
 	@Autowired
 	private IFirestationImpl iFirestationImpl;
-	 
+
 	private static final Logger logger = LogManager.getLogger(FireStationController.class);
 
-	@GetMapping("/fire") // OK
+	@GetMapping("/fire")
 
 	public @ResponseBody ListContactsForFire ListOfResidents(@RequestParam String address) {
 		logger.info("Entering ListOfResidents method : list of contact by address :" + address);
@@ -40,8 +37,6 @@ public class FireStationController {
 
 	}
 
-	// **********A TESTER OK*****
-	// http://localhost:8080/flood/stations?stations=<a list of station_numbers>
 	@GetMapping("/flood/stations")
 	@ResponseBody
 	public List<ListContactsForFire> getListOfHouseAndPersonsWithMedicalrecordlinkToStation(
@@ -52,7 +47,6 @@ public class FireStationController {
 
 	}
 
-	// http://localhost:8080/phoneAlert?firestation=1 Test OK
 	@GetMapping("/phoneAlert")
 
 	@ResponseBody
@@ -62,7 +56,6 @@ public class FireStationController {
 		return iFirestationImpl.phoneList(firestation);
 	}
 
-	// Test Ok pour adresse et number. ListPerson à checker
 	@PostMapping("/fireStation/add")
 	@ResponseBody
 	public FireStation addFireStation(@RequestParam String fireStationNumber, @RequestParam String address) {
@@ -82,12 +75,11 @@ public class FireStationController {
 
 	@PutMapping("/fireStation/updateNumber")
 	@ResponseBody
-	public void updateFireStationNumber(@RequestParam String fireStationNumber,
-			@RequestParam String newStationNumber) {
+	public void updateFireStationNumber(@RequestParam String fireStationNumber, @RequestParam String newStationNumber) {
 		logger.info("Update number of fireStation :" + fireStationNumber + "to :" + newStationNumber);
 
-		 iFirestationImpl.updateFireStationNumber(fireStationNumber, newStationNumber);
-		
+		iFirestationImpl.updateFireStationNumber(fireStationNumber, newStationNumber);
+
 	}
 
 	@DeleteMapping("/fireStation/address/delete")

@@ -8,7 +8,7 @@ public class Family {
 
 	public Family() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public Family(String firstName, String lastName, int age) {

@@ -8,6 +8,18 @@ public class Personchild {
 	public int age;
 	public List<Family> familyMenber;
 
+	public Personchild() {
+		super();
+
+	}
+
+	public Personchild(String firstName, String lastName, int age) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.age = age;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -38,18 +50,6 @@ public class Personchild {
 
 	public void setFamilyMenber(List<Family> familyMenbers) {
 		this.familyMenber = familyMenbers;
-	}
-
-	public Personchild() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Personchild(String firstName, String lastName, int age) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.age = age;
 	}
 
 }

@@ -47,9 +47,9 @@ public class IFirestationImplTest {
 	public void addEmptyFireStationTest() {
 		String addStationNumber = "";
 		String addAdress = "";
-		FireStation newFireStation = iFirestationImpl.addFireStation(addStationNumber, addAdress);
-		assertEquals(null, iFirestationImpl.addFireStation(addStationNumber, addAdress));
 
+		assertEquals(true, iFirestationImpl.addFireStation(addStationNumber, addAdress).getAddresses().isEmpty());
+		assertEquals(null, iFirestationImpl.addFireStation(addStationNumber, addAdress).getStationNumber());
 	}
 
 	@Test
@@ -184,29 +184,6 @@ public class IFirestationImplTest {
 	public void listFloodTest() {
 
 	}
-
-	/*
-	 * @Test
-	 * 
-	 * public void getListPersonByFireStationTest() { String fireStationNumber =
-	 * "1"; String firstName = "Jamie"; String lastName = "Peters";
-	 * 
-	 * List<Person> listContactsFire =
-	 * iFirestationImpl.getListPersonByFireStation(fireStationNumber);
-	 * 
-	 * List<String> firstNameList = new ArrayList<String>(); List<String>
-	 * lastNameList = new ArrayList<String>(); for (Person p : listContactsFire) {
-	 * firstNameList.add(p.getFirstName()); lastNameList.add(lastName); }
-	 * 
-	 * assertEquals(6, listContactsFire.size());
-	 * 
-	 * assertEquals(true, firstNameList.contains(firstName)); assertEquals(true,
-	 * lastNameList.contains(lastName));
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
 
 	@Test
 	public void getListPersonByAdresseTest() throws IOException {

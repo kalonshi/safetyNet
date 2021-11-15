@@ -35,14 +35,8 @@ public class JsonFileData {
 	}
 	/* READ AND PARSE JSON FILE IN OBJECT */
 
-	// Creation de Station sans personnes liée
 	public List<FireStation> loadStationsWithOutListPerson() throws IOException {
 		logger.info("Entering the loadStationsWithOutListPerson() method");
-		/*
-		 * String filePath = "src/main/resources/data.json"; byte[] bytesFile =
-		 * Files.readAllBytes(new File(filePath).toPath()); JsonIterator iter =
-		 * JsonIterator.parse(bytesFile);
-		 */
 
 		Any fireStationAny = readFileJson("src/main/resources/data.json").get("firestations");
 		Map<String, FireStation> fireStationMap = new HashMap<>();
@@ -58,7 +52,6 @@ public class JsonFileData {
 
 	}
 
-	// Creation convertion Json to Person sans Medical Record et Station et date
 	public List<Person> loadJsonPersons() throws IOException {
 		logger.info("Entering the loadJsonPersons() method");
 
@@ -87,14 +80,9 @@ public class JsonFileData {
 		return persons;
 	}
 
-	// Creation du dossier medical sans lien avec classe personne
 	public List<MedicalRecord> loadJsonMedicalRecords() throws IOException {
 		logger.info("Entering the loadJsonMedicalRecords() method");
-		/*
-		 * String filePath = "src/main/resources/data.json"; byte[] bytesFile =
-		 * Files.readAllBytes(new File(filePath).toPath()); JsonIterator iter =
-		 * JsonIterator.parse(bytesFile); Any any = iter.readAny();
-		 */
+
 		Any medicalAny = readFileJson("src/main/resources/data.json").get("medicalrecords");
 		List<MedicalRecord> JsonMedicalRecords = new ArrayList<>();
 		medicalAny.forEach(medicalRecord -> {
@@ -116,9 +104,8 @@ public class JsonFileData {
 
 	}
 
-	/* CREATE LIST OF OBJECT FROM JSON FILE */
+	
 
-	// Methode pour créer une liste de MedicalRecord avec dépendances***********
 	public List<MedicalRecord> loadMedicalRecords() throws IOException {
 		logger.info("Entering the loadMedicalRecords() method");
 		List<MedicalRecord> medicalRecordsParse = new ArrayList<>();
@@ -134,11 +121,9 @@ public class JsonFileData {
 
 	}
 
-//Creation Liste de Person complete avec  dépendances
-
 	public List<Person> loadPersons() throws IOException {
 		logger.info("Entering the loadPersons() method");
-// Creation du dossier medical par personne
+
 		List<Person> personsList = loadJsonPersons();
 		List<MedicalRecord> medicalRecordList = loadMedicalRecords();
 		for (int i = 0; i < personsList.size(); i++) {
@@ -146,8 +131,6 @@ public class JsonFileData {
 		}
 
 		personsList.forEach(p -> {
-
-			// Ajout de la liste des Stations à une personne
 
 			List<FireStation> stations;
 			try {
@@ -168,20 +151,15 @@ public class JsonFileData {
 
 				e.printStackTrace();
 			}
-			System.out.println("Prenom: " + p.getFirstName() + "   " + " Nom : " + p.getLastName()
-					+ " Date de naissance : " + p.getBirthDate() + " agée de : " + p.age() + " est elle mineure? : "
-					+ p.isMinor() + " Dossier Medicale : Medications :" + p.getMedicalRecord().getMedications()
-					+ "Allergies  :" + p.getMedicalRecord().getAllergies() + " Depend de la caserne :  "
-					+ p.getFireStation().getStationNumber());
+
 		});
 
 		return personsList;
 	}
 
-	// Methode pour créer une liste de stations avec dépendances***********
 	public List<FireStation> loadStations() throws IOException {
 		logger.info("Entering the loadStations() method");
-		// Ajout de la Liste des personnes dépend d'une station
+
 		List<Person> persons = loadPersons();
 
 		List<FireStation> fireStations = loadStationsWithOutListPerson();

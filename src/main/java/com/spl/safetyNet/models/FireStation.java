@@ -13,7 +13,7 @@ public class FireStation {
 
 	public FireStation() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public FireStation(String stationNumber) {

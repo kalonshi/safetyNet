@@ -9,7 +9,7 @@ public class ListContactsForFire {
 
 	public ListContactsForFire() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public ListContactsForFire(String address, String stationNumber, List<PersonFire> listcontactsFire) {

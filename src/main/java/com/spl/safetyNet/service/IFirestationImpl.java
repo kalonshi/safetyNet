@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jacoco.agent.rt.internal_43f5073.asm.tree.TryCatchBlockNode;
@@ -28,7 +29,7 @@ public class IFirestationImpl implements IFirestation {
 	@Autowired
 	private JsonFileData jSonFile;
 
-	 private static final Logger logger = LogManager.getLogger(IFirestationImpl.class);
+	private static final Logger logger = LogManager.getLogger(IFirestationImpl.class);
 
 	@Override
 	public FireStation addFireStation(String fireStationNumber, String addresse) {
@@ -36,7 +37,7 @@ public class IFirestationImpl implements IFirestation {
 		logger.info("Entering the addFireStation() method");
 		FireStation newFireStation = new FireStation();
 
-		if (!(fireStationNumber.isEmpty()) && !(addresse.isEmpty())) {
+		if (!StringUtils.isEmpty(fireStationNumber) && !StringUtils.isEmpty(addresse)) {
 			newFireStation = new FireStation(fireStationNumber);
 
 			newFireStation.addAddress(addresse);
@@ -44,35 +45,38 @@ public class IFirestationImpl implements IFirestation {
 				jSonFile.loadStationsWithOutListPerson().add(newFireStation);
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
-			return newFireStation;
+
 		}
 
-		return null;
+		return newFireStation;
 	}
 
 	@Override
 	public FireStation getFireStation(String fireStationNumber) {
-
+		FireStation selectedStation = new FireStation();
 		logger.info("GET FIRESTATION BY NUMBER ");
-		try {
-			List<FireStation> fireStations = jSonFile.loadStations();
-			logger.info(" ");
-			for (FireStation f : fireStations) {
-				if (f.getStationNumber().equals(fireStationNumber)) {
-					return f;
+		if (!StringUtils.isEmpty(fireStationNumber)) {
+			try {
+				List<FireStation> fireStations = jSonFile.loadStations();
+				logger.info(" ");
+				for (FireStation f : fireStations) {
+					if (f.getStationNumber().equals(fireStationNumber)) {
+						selectedStation = f;
+					}
 				}
+
+			} catch (IOException e) {
+
+				logger.error(" Pas de resultat");
+				e.printStackTrace();
 			}
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.error(" Pas de resultat");
-			e.printStackTrace();
 		}
 
-		return null;
+		return selectedStation;
 	}
 
 	@Override
@@ -80,47 +84,40 @@ public class IFirestationImpl implements IFirestation {
 
 		logger.info("Entering getFireStationForPerson ");
 		FireStation fireStationSelected = new FireStation();
-		try {
-			List<FireStation> fireStations = jSonFile.loadStations();
-			logger.info(" ");
-			for (FireStation f : fireStations) {
+		if (!StringUtils.isEmpty(adresse)) {
+			try {
+				List<FireStation> fireStations = jSonFile.loadStations();
 
-				Set<String> addresses = f.getAddresses();
-				for (String ad : addresses) {
+				for (FireStation f : fireStations) {
 
-					if (ad.equals(adresse)) {
+					Set<String> addresses = f.getAddresses();
+					for (String ad : addresses) {
 
-						fireStationSelected = f;
-						logger.info("select station OK");
-						return fireStationSelected;
+						if (ad.equals(adresse)) {
+
+							fireStationSelected = f;
+							logger.info("select station OK");
+							return fireStationSelected;
+						}
+						logger.info("select station NOK!!!!!!");
 					}
-					logger.info("select station NOK!!!!!!");
+
 				}
 
+			} catch (IOException e) {
+
+				e.printStackTrace();
 			}
-
-			return fireStationSelected;
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+
 		return fireStationSelected;
 	}
-
-	/*
-	 * @Override public List<Person> getListPersonByFireStation(String
-	 * fireStationNumber) { FireStation fireStationSelected =
-	 * getFireStation(fireStationNumber); List<Person> listPersonByStation = new
-	 * ArrayList<Person>(); listPersonByStation =
-	 * fireStationSelected.getListOfPersons(); return listPersonByStation; }
-	 */
 
 	@Override
 	public List<Person> getListPersonByAdresse(String adresse) {
 
 		List<Person> listPersonsByAdresse = new ArrayList<Person>();
-		if (!adresse.isEmpty()) {
+		if (!StringUtils.isEmpty(adresse)) {
 			FireStation f = getFireStationForPerson(adresse);
 			List<Person> listPersonByStation = f.getListOfPersons();
 			listPersonByStation.forEach(p -> {
@@ -129,146 +126,97 @@ public class IFirestationImpl implements IFirestation {
 				}
 			});
 
-			return listPersonsByAdresse;
 		}
 		return listPersonsByAdresse;
 	}
 
-//:http://localhost:8080/flood/stations?stations=<a list of station_numbers>
-	@Override
-	public List<Person> getListPersonByFireStations(List<String> fireStations) {
-
-		try {
-
-			List<FireStation> fireStationWithPersons;
-			fireStationWithPersons = jSonFile.loadStations();
-
-			List<Person> listPersonByFireStations = new ArrayList<Person>();
-
-			for (FireStation fst : fireStationWithPersons) {
-				for (String listedstation : fireStations) {
-					if (fst.getStationNumber().equals(listedstation)) {
-						for (Person ps : fst.getListOfPersons()) {
-							listPersonByFireStations.add(ps);
-						}
-					}
-				}
-			}
-			return listPersonByFireStations;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
 	@Override
 	public boolean deleteStation(String fireStationNumber) {
-		System.out.println("!fireStationNumber.isEmpty()");
-		System.out.println();
-		if (!fireStationNumber.isEmpty() && !getFireStation(fireStationNumber).equals(null)) {
+		boolean isDeleted = false;
+		if (!StringUtils.isEmpty(fireStationNumber) && getFireStation(fireStationNumber) != null) {
 
 			FireStation fireStationSelected = getFireStation(fireStationNumber);
-			System.out.println("fireStationSelected :" + fireStationSelected.getStationNumber());
+			logger.info("fireStationSelected :" + fireStationSelected.getStationNumber());
 			try {
-				List<FireStation> fireStations = jSonFile.loadStations();
-				System.out.println("******Station number****");
-				fireStations.forEach(f -> {
-					System.out.println("fireStationSelected :" + f.getStationNumber());
+				List<FireStation> listOfStations = jSonFile.loadStations();
 
-				});
-				List<Person> personsLinkWithStation = fireStationSelected.getListOfPersons();
-				fireStations.remove(fireStationSelected);
+				listOfStations.remove(fireStationSelected);
 				jSonFile.loadStationsWithOutListPerson().remove(fireStationSelected);
 
-				System.out.println("jSonFile.loadStationsWithOutListPerson().remove(fireStationSelected)");
-				System.out.println(jSonFile.loadStationsWithOutListPerson().remove(fireStationSelected));
-				System.out.println("jSonFile.loadStations().remove(fireStationSelected)");
-				System.out.println(fireStations.remove(fireStationSelected));
-				boolean isDeleted = fireStations.remove(fireStationSelected);
-
-				return isDeleted;
+				isDeleted = listOfStations.remove(fireStationSelected);
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
-			return false;
+
 		}
 
-		return false;
+		return isDeleted;
 	}
 
 	@Override
 	public boolean deleteStationAdresse(String adresse) {
-
+		boolean isAdressDeleted = false;
 		List<FireStation> fireStations;
+		if (!StringUtils.isEmpty(adresse)) {
+			try {
+				fireStations = jSonFile.loadStations();
 
-		try {
-			fireStations = jSonFile.loadStations();
+				for (FireStation f : fireStations) {
 
-			for (FireStation f : fireStations) {
-
-				if (f.getAddresses().contains(adresse)) {
-					f.getAddresses().remove(adresse);
-					return true;
-				}
-
-				List<Person> persons = jSonFile.loadPersons();
-				for (Person p : persons) {
-					if (p.getFireStation().equals(f)) {
-						p.setFireStation(null);
+					if (f.getAddresses().contains(adresse)) {
+						f.getAddresses().remove(adresse);
+						isAdressDeleted = true;
 					}
+
+					List<Person> persons = jSonFile.loadPersons();
+					for (Person p : persons) {
+						if (p.getFireStation().equals(f)) {
+							p.setFireStation(null);
+						}
+					}
+
 				}
 
-			}
-			return false;
-		} catch (IOException e) {
+			} catch (IOException e) {
 
-			e.printStackTrace();
+				e.printStackTrace();
+			}
 		}
-		return false;
+
+		return isAdressDeleted;
 	}
 
 	@Override
 	public boolean updateFireStationNumber(String fireStationNumber, String newStationNumber) {
-		if (!fireStationNumber.isEmpty() && !newStationNumber.isEmpty()
-				&& !getFireStation(fireStationNumber).equals(null)) {
+		boolean isStationUpdated = false;
+		if (!StringUtils.isEmpty(fireStationNumber) && !StringUtils.isEmpty(newStationNumber)
+				&& getFireStation(fireStationNumber) != null) {
 			FireStation updateFireStationNumber = getFireStation(fireStationNumber);
 			updateFireStationNumber.setStationNumber(newStationNumber);
 
-			return true;
-		} else
-			return false;
+			isStationUpdated = true;
+		}
+		return isStationUpdated;
 	}
 
 	@Override
 	public List<PersonFire> getListPersonFireByAdresse(String adresse) {
-		List<Person> listPersonByAdresse = getListPersonByAdresse(adresse);
-		logger.info("listPersonByAdresse " + listPersonByAdresse.size());
-		List<PersonFire> getListPersonFireByAdresse = new ArrayList<PersonFire>();
-		for (Person p : listPersonByAdresse) {
-			PersonFire pf = new PersonFire(p.getFirstName(), p.getLastName(), p.getPhone(), p.age(),
-					p.getMedicalRecord().getMedications(), p.getMedicalRecord().getAllergies());
+		List<PersonFire> listPersonsByAdresseInCaseOfFire = new ArrayList<PersonFire>();
+		if (!StringUtils.isEmpty(adresse)) {
+			List<Person> listPersonsByAdresse = getListPersonByAdresse(adresse);
+			logger.info("listPersonsByAdresse " + listPersonsByAdresse.size());
 
-			getListPersonFireByAdresse.add(pf);
+			for (Person p : listPersonsByAdresse) {
+				PersonFire pf = new PersonFire(p.getFirstName(), p.getLastName(), p.getPhone(), p.age(),
+						p.getMedicalRecord().getMedications(), p.getMedicalRecord().getAllergies());
+
+				listPersonsByAdresseInCaseOfFire.add(pf);
+			}
 		}
-		return getListPersonFireByAdresse;
-	}
 
-	@Override
-	public List<PersonFire> getListPersonFireByFireStations(List<String> fireStations) {
-
-		List<PersonFire> listPersonFireByFireStations = new ArrayList<PersonFire>();
-		List<Person> listOfPersonLinkWithSelectedStations = getListPersonByFireStations(fireStations);
-		for (Person p : listOfPersonLinkWithSelectedStations) {
-			PersonFire pf = new PersonFire(p.getFirstName(), p.getLastName(), p.getPhone(), p.age(),
-					p.getMedicalRecord().getMedications(), p.getMedicalRecord().getAllergies());
-			listPersonFireByFireStations.add(pf);
-		}
-		return listPersonFireByFireStations;
-
+		return listPersonsByAdresseInCaseOfFire;
 	}
 
 	@Override
@@ -299,47 +247,44 @@ public class IFirestationImpl implements IFirestation {
 		return phoneList;
 	}
 
-//@GetMapping("/fire") http://localhost:8080/fire?address=<address>
-//OK
 	@Override
 	public ListContactsForFire getlistContactsByAddressAndStation(String adresse) {
 
 		logger.info("Entering the GetlistContactsByAddressAndStation method");
-		ListContactsForFire finalList = new ListContactsForFire();
+		ListContactsForFire listContactsForFire = new ListContactsForFire();
 		try {
 			String stationNumber = getFireStationForPerson(adresse).getStationNumber().toString();
 
-			List<PersonFire> list = getListPersonFireByAdresse(adresse);
-			finalList = new ListContactsForFire(adresse, stationNumber, list);
+			List<PersonFire> listPersonFireByAdresse = getListPersonFireByAdresse(adresse);
+			listContactsForFire = new ListContactsForFire(adresse, stationNumber, listPersonFireByAdresse);
 			logger.info("create a list with adresse then station number then a list of contact");
-			return finalList;
+			return listContactsForFire;
 
 		} catch (Exception e) {
 			logger.error("List can't be found at this address" + adresse);
 
 		}
-		return finalList;
+		return listContactsForFire;
 	}
-//http://localhost:8080/flood/stations?stations=<a list of station_numbers>
 
 	@Override
 	public List<ListContactsForFire> listFlood(List<String> fireStations) {
 
 		List<ListContactsForFire> listContactsForFlood = new ArrayList<ListContactsForFire>();
-		if (fireStations.isEmpty()) {
-			return listContactsForFlood;
-		}
-		for (String stationNumber : fireStations) {
-			try {
-				FireStation fs = getFireStation(stationNumber);
+		if (!fireStations.isEmpty()) {
 
-				for (String address : fs.getAddresses()) {
-					listContactsForFlood.add(getlistContactsByAddressAndStation(address));
+			for (String stationNumber : fireStations) {
+				try {
+					FireStation fs = getFireStation(stationNumber);
+
+					for (String address : fs.getAddresses()) {
+						listContactsForFlood.add(getlistContactsByAddressAndStation(address));
+					}
+
+				} catch (Exception e) {
+
+					logger.error("Invalid numbers!!!");
 				}
-
-			} catch (Exception e) {
-
-				logger.error("Invalid numbers!!!");
 			}
 		}
 		return listContactsForFlood;

@@ -58,7 +58,7 @@ public class PersonController {
 
 		logger.info("Entering url :firestation?stationNumber=" + stationNumber);
 
-		return iPersonImpl.listPersonsLinkToStationSelected(stationNumber);
+		return iPersonImpl.listPersonsLinkToSelectedStation(stationNumber);
 
 	}
 
@@ -73,7 +73,6 @@ public class PersonController {
 		return iPersonImpl.printlistMinorsByAddress(address);
 	}
 
-	// Test A verifier
 	// http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
 	@GetMapping("/personInfo")
 	@ResponseBody
@@ -83,7 +82,7 @@ public class PersonController {
 				"Entering url :http://localhost:8080/personInfo?firstName= " + firstName + " &lastName= " + lastName);
 
 		if (!firstName.isEmpty() || !lastName.isEmpty()) {
-			return iPersonImpl.getListInfoPerson(firstName, lastName);
+			return iPersonImpl.listSelectedPersonByFirstNameAndLasrtNameAndRelatives(firstName, lastName);
 		}
 
 		logger.error("firstName.isEmpty()||!lastName.isEmpty()");

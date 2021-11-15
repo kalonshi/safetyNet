@@ -312,7 +312,8 @@ public class IPersonSerciveImplTest {
 		String firstNameFamilyMenber = "John";
 		String lastNameFamilyMenber = "Boyd";
 		int ageFamilyMenber = 37;
-		List<InfoPerson> getPersons = iPersonSerciveImpl.getListInfoPerson(firstName, lastName);
+		List<InfoPerson> getPersons = iPersonSerciveImpl
+				.listSelectedPersonByFirstNameAndLasrtNameAndRelatives(firstName, lastName);
 		assertEquals(firstName, getPersons.get(0).getFirstName());
 		assertEquals(lastName, getPersons.get(0).getLastName());
 		assertEquals(address, getPersons.get(0).getAddress());
@@ -332,7 +333,8 @@ public class IPersonSerciveImplTest {
 	public void getEmptyListInfoPersonWithunknownContactTest() {
 		String firstName = "unknown";
 		String lastName = "unknown";
-		List<InfoPerson> getPersons = iPersonSerciveImpl.getListInfoPerson(firstName, lastName);
+		List<InfoPerson> getPersons = iPersonSerciveImpl
+				.listSelectedPersonByFirstNameAndLasrtNameAndRelatives(firstName, lastName);
 		System.out.println("getPersons.size()");
 		System.out.println(getPersons.size());
 		System.out.println(getPersons.get(0).getFirstName());
@@ -348,7 +350,8 @@ public class IPersonSerciveImplTest {
 	public void getEmptyListInfoPersonWithEmptyContactTest() {
 		String firstName = "";
 		String lastName = "";
-		List<InfoPerson> getPersons = iPersonSerciveImpl.getListInfoPerson(firstName, lastName);
+		List<InfoPerson> getPersons = iPersonSerciveImpl
+				.listSelectedPersonByFirstNameAndLasrtNameAndRelatives(firstName, lastName);
 		assertEquals(true, getPersons.isEmpty());
 	}
 
@@ -365,7 +368,7 @@ public class IPersonSerciveImplTest {
 		String city = "Culver";
 		String phone = "841-874-6512";
 		ListPerson personsLinkToStationSelectedTest = iPersonSerciveImpl
-				.listPersonsLinkToStationSelected(stationNumber);
+				.listPersonsLinkToSelectedStation(stationNumber);
 		List<PersonPrint> liste = personsLinkToStationSelectedTest.getContactsList();
 
 		assertEquals(1, personsLinkToStationSelectedTest.getNbMinors());
@@ -385,7 +388,7 @@ public class IPersonSerciveImplTest {
 		String stationNumber = "unknown";
 
 		ListPerson personsLinkToStationSelectedTest = iPersonSerciveImpl
-				.listPersonsLinkToStationSelected(stationNumber);
+				.listPersonsLinkToSelectedStation(stationNumber);
 
 		assertEquals(0, personsLinkToStationSelectedTest.getContactsList().size());
 

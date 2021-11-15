@@ -10,7 +10,7 @@ public class ListPerson {
 
 	public ListPerson() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	/*

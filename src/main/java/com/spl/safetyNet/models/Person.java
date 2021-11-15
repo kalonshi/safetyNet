@@ -16,7 +16,7 @@ public class Person {
 
 	public Person() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Person(String firstName, String lastName, String phone, String zip, String address, String city,

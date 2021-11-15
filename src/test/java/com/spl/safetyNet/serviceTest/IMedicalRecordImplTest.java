@@ -25,16 +25,17 @@ public class IMedicalRecordImplTest {
 
 	@Test
 	public void addMedicalRecordTest() {
-		String lastName = "Boyd";
-		String firstName = "John";
+
 		List<String> medicationTest = new ArrayList<>();
 		List<String> allergiesTest = new ArrayList<>();
 		medicationTest.add("aznol:350mg");
 		medicationTest.add("hydrapermazol:100mg");
 		allergiesTest.add("nillacilan");
-		boolean addMedicalRecord=iMedicalRecordImpl.addMedicalRecord(medicationTest, allergiesTest);
-		assertEquals(true, addMedicalRecord);
+		MedicalRecord addMedicalRecord = iMedicalRecordImpl.addMedicalRecord(medicationTest, allergiesTest);
 
+		assertEquals(true, addMedicalRecord.getAllergies().contains("nillacilan"));
+		assertEquals(true, addMedicalRecord.getMedications().contains("aznol:350mg"));
+		assertEquals(2, addMedicalRecord.getMedications().size());
 	}
 
 	@Test
@@ -42,9 +43,10 @@ public class IMedicalRecordImplTest {
 		String lastName = "Boyd";
 		String firstName = "John";
 		String allergy = "shell";
-		boolean addAllergyOk = iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
-		System.out.println("ajout Status : " + addAllergyOk);
-		assertEquals(true, addAllergyOk);
+		MedicalRecord addAllergy = iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
+		assertEquals(lastName, addAllergy.getPerson().getLastName());
+		assertEquals(firstName, addAllergy.getPerson().getFirstName());
+		assertEquals(true, addAllergy.getAllergies().contains(allergy));
 
 	}
 
@@ -53,9 +55,10 @@ public class IMedicalRecordImplTest {
 		String lastName = "Boyd";
 		String firstName = "John";
 		String medication = "aspirin 500mg";
-		boolean addOk = iMedicalRecordImpl.addMedicalRecordMedication(firstName, lastName, medication);
-		assertEquals(true, addOk);
-
+		MedicalRecord addMedication = iMedicalRecordImpl.addMedicalRecordMedication(firstName, lastName, medication);
+		assertEquals(true, addMedication.getMedications().contains(medication));
+		assertEquals(lastName, addMedication.getPerson().getLastName());
+		assertEquals(firstName, addMedication.getPerson().getFirstName());
 	}
 
 	@Test
@@ -171,9 +174,9 @@ public class IMedicalRecordImplTest {
 		String firstName = "John";
 		String allergy = "nillacilan";
 		String newAllergy = "Butter";
-		boolean isAllergiesUpdated = iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy,
+		MedicalRecord isAllergiesUpdated = iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy,
 				newAllergy);
-		assertEquals(true, isAllergiesUpdated);
+		assertEquals(newAllergy, isAllergiesUpdated.getAllergies().get(0));
 
 	}
 
@@ -181,11 +184,14 @@ public class IMedicalRecordImplTest {
 	public void updateUnknownMedicalRecordAllergiesTest() {
 		String lastName = "Boyd";
 		String firstName = "John";
-		String allergy = "";
+		String wrongAllergySelected = "";
 		String newAllergy = "Butter";
-		boolean isAllergiesUpdated = iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy,
-				newAllergy);
-		assertEquals(false, isAllergiesUpdated);
+		String allergyRecord = "nillacilan";
+		MedicalRecord isAllergiesUpdated = iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName,
+				wrongAllergySelected, newAllergy);
+
+		assertEquals(false, isAllergiesUpdated.getAllergies().contains(newAllergy));
+		assertEquals(true, isAllergiesUpdated.getAllergies().contains(allergyRecord));
 
 	}
 
@@ -195,9 +201,9 @@ public class IMedicalRecordImplTest {
 		String firstName = "John";
 		String medication = "hydrapermazol:100mg";
 		String newMedication = "Doliprane:1000mg";
-		boolean isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication,
-				newMedication);
-		assertEquals(true, isMedicationsUpdated);
+		MedicalRecord isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName,
+				medication, newMedication);
+		assertEquals(true, isMedicationsUpdated.getMedications().contains(newMedication));
 	}
 
 	@Test
@@ -206,9 +212,10 @@ public class IMedicalRecordImplTest {
 		String firstName = "";
 		String medication = "hydrapermazol:100mg";
 		String newMedication = "Doliprane:1000mg";
-		boolean isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication,
-				newMedication);
-		assertEquals(false, isMedicationsUpdated);
+		MedicalRecord isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName,
+				medication, newMedication);
+		assertEquals(null, isMedicationsUpdated.getAllergies());
+		assertEquals(null, isMedicationsUpdated.getMedications());
 
 	}
 
@@ -218,9 +225,9 @@ public class IMedicalRecordImplTest {
 		String firstName = "John";
 		String medication = "";
 		String newMedication = "Doliprane:1000mg";
-		boolean isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication,
-				newMedication);
-		assertEquals(false, isMedicationsUpdated);
+		MedicalRecord isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName,
+				medication, newMedication);
+		assertEquals(false, isMedicationsUpdated.getMedications().contains(newMedication));
 
 	}
 

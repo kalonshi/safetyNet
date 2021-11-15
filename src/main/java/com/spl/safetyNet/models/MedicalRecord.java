@@ -9,7 +9,7 @@ public class MedicalRecord {
 
 	public MedicalRecord() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public MedicalRecord(List<String> medications, List<String> allergies) {

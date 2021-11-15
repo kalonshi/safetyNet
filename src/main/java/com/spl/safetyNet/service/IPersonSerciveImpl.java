@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ import com.spl.safetyNet.models.Person;
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
 	private JsonFileData jSonFile;
-	 private static final Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
+	private static final Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
 
 	@Override
 	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
@@ -37,19 +38,20 @@ public class IPersonSerciveImpl implements IPerson {
 		Person newPerson = new Person();
 
 		logger.info("Entering the addPerson() method");
-		if (firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() || zip.isEmpty()
-				|| address.isEmpty() && city.isEmpty() || email.isEmpty() || birthDate.equals(null)) {
+		if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName) || StringUtils.isEmpty(phone)
+				|| StringUtils.isEmpty(zip) || StringUtils.isEmpty(address) && StringUtils.isEmpty(city)
+				|| StringUtils.isEmpty(email) || birthDate.equals(null)) {
 			logger.error("Failed to add due to empty field ");
-			return newPerson;
+
 		} else
 			newPerson = new Person(firstName, lastName, phone, zip, address, city, email, birthDate);
 
 		try {
 			jSonFile.loadJsonPersons().add(newPerson);
 			logger.info("succes add a new Person");
-			return newPerson;
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		logger.error("failed to add new Person");
@@ -64,7 +66,7 @@ public class IPersonSerciveImpl implements IPerson {
 		List<Person> personList;
 		try {
 			personList = jSonFile.loadPersons();
-			if (!firstName.isEmpty() && !lastName.isEmpty()) {
+			if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
 				for (Person p : personList) {
 					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName))) {
 						personInfo = new InfoPerson(p.getFirstName(), p.getLastName(), p.getAddress(), p.getZip(),
@@ -77,7 +79,7 @@ public class IPersonSerciveImpl implements IPerson {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			logger.info("Failed to  find Person with firstName  and lastName");
 
 			e.printStackTrace();
@@ -93,14 +95,13 @@ public class IPersonSerciveImpl implements IPerson {
 		Person personSearch = new Person();
 		List<Person> personList;
 		try {
-			logger.info("Entering the getPerson() method2");
 
 			personList = jSonFile.loadPersons();
-			logger.info("Entering the getPerson() method3");
-			if (!firstName.isEmpty() && !lastName.isEmpty()) {
-				logger.info("Entering the getPerson() method4");
+
+			if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
+
 				for (Person p : personList) {
-					logger.info("Entering the getPerson() method5");
+
 					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName))) {
 						logger.info("Success get Person " + p.getFirstName() + " " + p.getLastName());
 
@@ -109,7 +110,7 @@ public class IPersonSerciveImpl implements IPerson {
 					}
 				}
 			}
-		} catch (IOException e) { // TODO Auto-generated catch block
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -118,32 +119,31 @@ public class IPersonSerciveImpl implements IPerson {
 
 	@Override
 	public boolean delete(String firstName, String lastName) {
-
+		boolean isPersonDelete = false;
 		logger.info("Entering the delete() method");
-		if (firstName.isEmpty() || lastName.isEmpty()) {
+
+		if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName)) {
 			logger.error("firstName isEmpty or lastName isEmpty");
-			return false;
-		}
-		if (!getPerson(firstName, lastName).equals(null)) {
+
+		} else if (getPerson(firstName, lastName) != null) {
 			Person person = getPerson(firstName, lastName);
-			logger.error("unknown firstName or lastName ");
+
 			try {
 
 				MedicalRecord medicalRecordToDelete = person.getMedicalRecord();
 				jSonFile.loadJsonMedicalRecords().remove(medicalRecordToDelete);
 				jSonFile.loadJsonPersons().remove(person);
 				logger.info("success in deleted Person  ");
-				return true;
+				isPersonDelete = true;
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				logger.error("unknown firstName or lastName ");
 				e.printStackTrace();
-				return false;
+
 			}
 		}
 
-		logger.error("delete Failed ");
-		return false;
+		return isPersonDelete;
 	}
 
 	@Override
@@ -151,94 +151,72 @@ public class IPersonSerciveImpl implements IPerson {
 
 		logger.info("Entering the getfamilyMenbers() method");
 		List<Person> familyMenbers = new ArrayList<Person>();
-		try {
-			List<Person> persons = jSonFile.loadPersons();
-			for (Person p : persons) {
-				if (p.getLastName().equals(lastName)) {
-					familyMenbers.add(p);
+		if (!StringUtils.isEmpty(lastName)) {
+			try {
+				List<Person> persons = jSonFile.loadPersons();
+				for (Person p : persons) {
+					if (p.getLastName().equals(lastName)) {
+						familyMenbers.add(p);
+					}
 				}
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
 			}
-			return familyMenbers;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		return familyMenbers;
 	}
-
-	/*
-	 * @Override public List<Person> getMinorsByAddress(String address) { // TODO
-	 * Auto-generated method stub
-	 * logger.info("Entering getMinorsByAddress() method"); List<Person> minors =
-	 * new ArrayList<>(); try { List<Person> persons = jSonFile.loadPersons(); for
-	 * (Person p : persons) { if ((p.getAddress().contains(address)) &&
-	 * (p.isMinor())) { minors.add(p); } } return minors; } catch (IOException e) {
-	 * // TODO Auto-generated catch block e.printStackTrace(); }
-	 * 
-	 * return minors; }
-	 */
-	/*
-	 * @Override public List<Person> getAdultsByAddress(String address) { // TODO
-	 * Auto-generated method stub List<Person> adults = new ArrayList<>(); try {
-	 * List<Person> persons = jSonFile.loadPersons(); for (Person p : persons) { if
-	 * ((p.getAddress().contains(address)) && (!p.isMinor())) { adults.add(p); } }
-	 * return adults; } catch (IOException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); }
-	 * 
-	 * return null;
-	 * 
-	 * }
-	 */
 
 	@Override
 	public List<Person> getResidentsByAddress(String address) {
 
 		logger.info("Entering getResidentsByAddress(String address) method");
 		List<Person> residents = new ArrayList<>();
-		try {
-			List<Person> persons = jSonFile.loadPersons();
-			for (Person p : persons) {
-				if ((p.getAddress().contains(address))) {
-					residents.add(p);
+		if (!StringUtils.isEmpty(address)) {
+			try {
+				List<Person> persons = jSonFile.loadPersons();
+				for (Person p : persons) {
+					if ((p.getAddress().equals(address))) {
+						residents.add(p);
+					}
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 
-			return residents;
-		} catch (IOException e) { // TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		return residents;
 
 	}
 
-// http://localhost:8080/personInfo?firstName=%3CfirstName%3E&lastName=%3ClastName
 	@Override
-	public List<InfoPerson> getListInfoPerson(String firstName, String lastName) {
+	public List<InfoPerson> listSelectedPersonByFirstNameAndLasrtNameAndRelatives(String firstName, String lastName) {
 
 		logger.info("Entering getListPersons() method");
-		List<InfoPerson> getPersons = new ArrayList<InfoPerson>();
-		List<Person> personList;
-		if (!firstName.isEmpty() && !lastName.isEmpty()) {
+		List<InfoPerson> listSelectedPersonAndRelatives = new ArrayList<InfoPerson>();
+		List<Person> listOfAllrecordPersons;
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
 			try {
-				personList = jSonFile.loadPersons();
+				listOfAllrecordPersons = jSonFile.loadPersons();
 
-				getPersons.add(getInfoPerson(firstName, lastName));
-				for (Person p : personList) {
+				listSelectedPersonAndRelatives.add(getInfoPerson(firstName, lastName));
+				for (Person p : listOfAllrecordPersons) {
 					InfoPerson info = new InfoPerson();
 					if (p.getLastName().equals(lastName) && !p.getFirstName().equals(firstName)) {
 
 						info = new InfoPerson(p.getFirstName(), p.getLastName(), p.getAddress(), p.getZip(),
 								p.getCity(), p.age(), p.getEmail(), p.getMedicalRecord().getMedications(),
 								p.getMedicalRecord().getAllergies());
-						getPersons.add(info);
+						listSelectedPersonAndRelatives.add(info);
 					}
-					logger.info("Success add list person with   lastName " + getPersons.size());
+					logger.info("Success add list person with   lastName " + listSelectedPersonAndRelatives.size());
 				}
-				return getPersons;
+				return listSelectedPersonAndRelatives;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				logger.error("Failed add person with   lastName ");
 
 				e.printStackTrace();
@@ -246,45 +224,32 @@ public class IPersonSerciveImpl implements IPerson {
 
 		}
 
-		return getPersons;
+		return listSelectedPersonAndRelatives;
 	}
-
-	/*
-	 * @Override
-	 * 
-	 * public List<Person> printlistPersonByadress(String adress) {
-	 * logger.info("Entering printlistPersonByadress() method"); List<Person>
-	 * getInfoPersons = new ArrayList<Person>(); if (adress.isEmpty()) { return
-	 * getInfoPersons; } getInfoPersons = getResidentsByAddress(adress);
-	 * 
-	 * return getInfoPersons; }
-	 */
-	// http://localhost:8080/childAlert?address=<address>
 
 	@Override
 	public List<Personchild> printlistMinorsByAddress(String adress) {
 		logger.info("Entering url http://localhost:8080/childAlert?address= " + adress);
-		logger.info("Entering printlistMinorsByAddress() method ");
-		List<Person> getInfoPersons = new ArrayList<Person>();
-		List<Person> getInfoPersonsAdult = new ArrayList<Person>();
+
+		List<Person> listPersonsByAdresse = new ArrayList<Person>();
+		List<Person> listFamilyMenber = new ArrayList<Person>();
 
 		List<Personchild> childAlertList = new ArrayList<Personchild>();
-		getInfoPersons = getResidentsByAddress(adress);
+		listPersonsByAdresse = getResidentsByAddress(adress);
 
-		for (Person pf : getInfoPersons) {
-
-			// ******TEST ajout ChildClass***************************
+		for (Person pf : listPersonsByAdresse) {
 
 			List<Family> familyMenbers = new ArrayList<Family>();
 			if (pf.isMinor()) {
-				Personchild newChild = new Personchild(pf.getFirstName(), pf.getLastName(), pf.age());
-				getInfoPersonsAdult = getfamilyMenbers(pf.getLastName());
-				if (!getInfoPersonsAdult.isEmpty()) {
-					for (Person pa : getInfoPersonsAdult) {
-						if (!(pa.getFirstName().equals(pf.getFirstName()))
-								&& (pa.getAddress().equals(pf.getAddress()))) {
+				Personchild minor = new Personchild(pf.getFirstName(), pf.getLastName(), pf.age());
+				listFamilyMenber = getfamilyMenbers(pf.getLastName());
+				if (!listFamilyMenber.isEmpty()) {
+					for (Person familyMenber : listFamilyMenber) {
+						if (!(familyMenber.getFirstName().equals(pf.getFirstName()))
+								&& (familyMenber.getAddress().equals(pf.getAddress()))) {
 
-							Family relative = new Family(pa.getFirstName(), pa.getLastName(), pa.age());
+							Family relative = new Family(familyMenber.getFirstName(), familyMenber.getLastName(),
+									familyMenber.age());
 
 							familyMenbers.add(relative);
 						}
@@ -292,8 +257,8 @@ public class IPersonSerciveImpl implements IPerson {
 				}
 				logger.info("No Familly Menbers ");
 
-				newChild.setFamilyMenber(familyMenbers);
-				childAlertList.add(newChild);
+				minor.setFamilyMenber(familyMenbers);
+				childAlertList.add(minor);
 			}
 
 		}
@@ -306,21 +271,21 @@ public class IPersonSerciveImpl implements IPerson {
 			String newCity, String newEmail) {
 		logger.info("Entering updatePersonInfo method");
 		Person personSelectedToUpdate = getPerson(firstName, lastName);
-		if (!personSelectedToUpdate.equals(null)) {
-			if (!newPhone.isEmpty()) {
+		if (personSelectedToUpdate != null) {
+			if (!StringUtils.isEmpty(newPhone)) {
 				personSelectedToUpdate.setPhone(newPhone);
 				logger.info("new phone" + personSelectedToUpdate.getPhone());
 			}
-			if (!newZip.isEmpty()) {
+			if (!StringUtils.isEmpty(newZip)) {
 				personSelectedToUpdate.setZip(newZip);
 			}
-			if (!newAddress.isEmpty()) {
+			if (!StringUtils.isEmpty(newAddress)) {
 				personSelectedToUpdate.setAddress(newAddress);
 			}
-			if (!newCity.isEmpty()) {
+			if (!StringUtils.isEmpty(newCity)) {
 				personSelectedToUpdate.setCity(newCity);
 			}
-			if (!newEmail.isEmpty()) {
+			if (!StringUtils.isEmpty(newEmail)) {
 				personSelectedToUpdate.setEmail(newEmail);
 
 			}
@@ -330,117 +295,79 @@ public class IPersonSerciveImpl implements IPerson {
 		return personSelectedToUpdate;
 	}
 
-// http://localhost:8080/firestation?stationNumber=%3Cstation_number OK 14 10
 	@Override
-	public ListPerson listPersonsLinkToStationSelected(String fireStationNumber) { // TODO Auto-generated method
+	public ListPerson listPersonsLinkToSelectedStation(String fireStationNumber) { // TODO Auto-generated method
 		logger.info("Entering listPersonsLinkToStationSelected method" + fireStationNumber);
-		ListPerson list = new ListPerson(); // stub
-		List<PersonPrint> listPersonsLinkTest = new ArrayList<PersonPrint>();
-		try {
+		ListPerson list = new ListPerson();
+		List<PersonPrint> listPersonsLinkToSelectedStation = new ArrayList<PersonPrint>();
+		if (!StringUtils.isEmpty(fireStationNumber)) {
+			try {
+				List<Person> listOfAllRegisterPerson = jSonFile.loadPersons();
+				int qtMinors = 0;
+				for (Person personLinkToSelectedStation : listOfAllRegisterPerson) {
 
-			List<Person> personDatSource = jSonFile.loadPersons();
-			int qtMinors = 0;
-			for (Person personStation : personDatSource) {
+					if (personLinkToSelectedStation.getFireStation().getStationNumber().equals(fireStationNumber)) {
 
-				if (personStation.getFireStation().getStationNumber().equals(fireStationNumber)) {
+						if (personLinkToSelectedStation.isMinor()) {
 
-					if (personStation.isMinor()) {
-
-						qtMinors++;
+							qtMinors++;
+						}
+						PersonPrint infoPerso = new PersonPrint(personLinkToSelectedStation.getFirstName(),
+								personLinkToSelectedStation.getLastName(), personLinkToSelectedStation.getAddress(),
+								personLinkToSelectedStation.getCity(), personLinkToSelectedStation.getZip(),
+								personLinkToSelectedStation.getPhone());
+						listPersonsLinkToSelectedStation.add(infoPerso);
 					}
-					PersonPrint infoPerso = new PersonPrint(personStation.getFirstName(), personStation.getLastName(),
-							personStation.getAddress(), personStation.getCity(), personStation.getZip(),
-							personStation.getPhone());
-					listPersonsLinkTest.add(infoPerso);
+
 				}
 
-			}
+				list.setContactsList(listPersonsLinkToSelectedStation);
+				list.setNbMinors(qtMinors);
+				list.setNbAdults(listPersonsLinkToSelectedStation.size() - qtMinors);
+				logger.info(" Creation de la list firestation?stationNumber ");
 
-			list.setContactsList(listPersonsLinkTest);
-			list.setNbMinors(qtMinors);
-			list.setNbAdults(listPersonsLinkTest.size() - qtMinors);
-			logger.info(" Creation de la list firestation?stationNumber ");
-			return list;
-		} catch (IOException e) { // TODO Auto-generated catch block
-			e.printStackTrace();
-			logger.error(" Failed create list firestation?stationNumber ");
+			} catch (IOException e) {
+				e.printStackTrace();
+
+				logger.error(" Failed create list . Return empty List ");
+			}
 		}
-		logger.error(" Failed create list . Return empty List ");
 
 		return list;
 	}
 
-	/*
-	 * @Override public List<Person> getListPersons(String firstName, String
-	 * lastName) { logger.info("Entering getListPersons() method"); List<Person>
-	 * getPersons = new ArrayList<Person>(); List<Person> personList; if
-	 * (!firstName.isEmpty() && !lastName.isEmpty()) { try { personList =
-	 * jSonFile.loadPersons();
-	 * 
-	 * getPersons.add(getPerson(firstName, lastName));
-	 * logger.info("Success add person with  firstName, lastName "); for (Person p :
-	 * personList) { if (p.getLastName().equals(lastName))
-	 * 
-	 * getPersons.add(p); logger.info( "Success add  family menber with   lastName "
-	 * + p.getLastName() + " " + p.getFirstName()); }
-	 * logger.info("Success add list person with   lastName ");
-	 * 
-	 * return getPersons; } catch (IOException e) { // TODO Auto-generated catch
-	 * block logger.error("Failed add person with   lastName ");
-	 * 
-	 * e.printStackTrace(); }
-	 * 
-	 * }
-	 * 
-	 * return getPersons; }
-	 */
-
 	@Override
 	public List<PersonEmail> listEmail(String city) {
-		List<PersonEmail> listEmail = new ArrayList<PersonEmail>();
+		List<PersonEmail> listEmails = new ArrayList<PersonEmail>();
+		if (!StringUtils.isEmpty(city)) {
+			try {
+				List<Person> persons = jSonFile.loadPersons();
+				List<Person> personEmails = new ArrayList<Person>();
+				Set<String> emailsWithoutDouble = new HashSet<String>();
 
-		try {
-			List<Person> persons = jSonFile.loadPersons();
-			List<Person> personEmails = new ArrayList<Person>();
-			Set<String> emails = new HashSet<String>();
-
-			for (Person p : persons) {
-				if (p.getCity().equals(city)) {
-					personEmails.add(p);
+				for (Person p : persons) {
+					if (p.getCity().equals(city)) {
+						personEmails.add(p);
+					}
 				}
-			}
-			for (Person p : personEmails) {
-				emails.add(p.getEmail());
-			}
+				for (Person p : personEmails) {
+					emailsWithoutDouble.add(p.getEmail());
+				}
 
-			for (String email : emails) {
-				PersonEmail newEmail = new PersonEmail(email);
-				listEmail.add(newEmail);
+				for (String email : emailsWithoutDouble) {
+					PersonEmail newEmail = new PersonEmail(email);
+					listEmails.add(newEmail);
+				}
+				logger.info("list Email size :" + listEmails);
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
 			}
-			logger.info("list Email size :" + listEmail);
-			return listEmail;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to get List of email by city :" + city);
+
 		}
-		logger.error("Failed to get List of email by city :" + city);
-		return listEmail;
-
+		return listEmails;
 	}
-//http://localhost:8080/fire?address=1509%20Culver%20St unused!!!!!
-	/*
-	 * @Override public List<PersonFire> listResidentsByAddress(String address) {
-	 * logger.info("Entering getResidentsByAddress(String address) method");
-	 * List<PersonFire> residents = new ArrayList<>(); try { List<Person> persons =
-	 * jSonFile.loadPersons(); for (Person p : persons) { if
-	 * ((p.getAddress().contains(address))) {
-	 * 
-	 * } }
-	 * 
-	 * return residents; } catch (IOException e) { // TODO Auto-generated catch
-	 * block logger.error("Pbl import JsonFile!!"); e.printStackTrace(); }
-	 * 
-	 * return residents; }
-	 */
 
 }
