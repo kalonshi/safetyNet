@@ -50,7 +50,7 @@ public class JsonFileData {
 		return fireStationMap.values().stream().collect(Collectors.toList());
 
 	}
-
+	
 	public List<Person> loadJsonPersons() throws IOException {
 		logger.info("Entering the loadJsonPersons() method");
 
@@ -107,7 +107,7 @@ public class JsonFileData {
 	public List<MedicalRecord> loadMedicalRecords() throws IOException {
 		logger.info("Entering the loadMedicalRecords() method");
 		List<MedicalRecord> medicalRecordsParse = new ArrayList<>();
-		/* List<Person> listContactsMedicalRecord = loadPersons(); */
+		
 		List<Person> listContactsMedicalRecord = loadJsonPersons();
 		List<MedicalRecord> listMedicalRecordWithNocontact = loadJsonMedicalRecords();
 		for (int i = 0; i < listContactsMedicalRecord.size(); i++) {
@@ -144,7 +144,7 @@ public class JsonFileData {
 						logger.info("Success add firestation to person " + p.getFireStation());
 					}
 				}
-
+ 
 			} catch (IOException e) {
 
 				logger.info("Failed to  add firestation to person");

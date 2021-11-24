@@ -68,9 +68,14 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		boolean isDeleted = false;
 		if ((!firstName.isEmpty() && !lastName.isEmpty()) && (getMedicalRecord(firstName, lastName) != null)) {
 			MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
-
-			cacheManager.getCache("medicalRecord").evict(medicalRecordSelected);
-			isDeleted = true;
+			try {
+				jSonFile.loadMedicalRecords().remove(medicalRecordSelected);
+				isDeleted = true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		return isDeleted;
 
@@ -83,6 +88,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 				&& getMedicalRecord(firstName, lastName) != null) {
 
 			MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
+			/* List medjSonFile.loadMedicalRecords() */
 			medicalRecordAllergyUpdate = medicalRecordSelected;
 			medicalRecordAllergyUpdate.addAllergie(allergy);
 

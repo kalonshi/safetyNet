@@ -75,10 +75,10 @@ public class FireStationController {
 
 	@DeleteMapping("/fireStation/delete")
 	@ResponseBody
-	public void deleteFireStation(@RequestParam String fireStationNumber) {
-		logger.info("Delete a fireStation :" + fireStationNumber);
+	public void deleteFireStation(@RequestParam String stationNumber) {
+		logger.info("Delete a fireStation :" + stationNumber);
 
-		iFirestationImpl.deleteStation(fireStationNumber);
+		iFirestationImpl.deleteStation(stationNumber);
 	}
 
 	@PutMapping("/fireStation/updateNumber")

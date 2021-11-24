@@ -25,7 +25,7 @@ public interface IFirestation {
 
 	public List<ListContactsForFire> listFlood(List<String> fireStations);
 
-	public boolean deleteStation(String fireStationNumber);
+	public boolean deleteStation(String stationNumber);
 
 	public boolean deleteStationAdresse(String adresse);
 

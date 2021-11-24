@@ -128,15 +128,19 @@ public class IFirestationImpl implements IFirestation {
 	}
 
 	@Override
-	public boolean deleteStation(String fireStationNumber) {
+	public boolean deleteStation(String stationNumber) {
 		boolean isDeleted = false;
-		if (!StringUtils.isEmpty(fireStationNumber) && getFireStation(fireStationNumber) != null) {
-
-			FireStation fireStationSelected = getFireStation(fireStationNumber);
+		if (!StringUtils.isEmpty(stationNumber) && getFireStation(stationNumber)!= null) {
+ 
+			FireStation fireStationSelected = getFireStation(stationNumber);
 			logger.info("fireStationSelected :" + fireStationSelected.getStationNumber());
-
-			cacheManager.getCache("stations").evict(fireStationNumber);
-
+try {
+	jSonFile.loadStations().remove(fireStationSelected);
+} catch (IOException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+			
 			isDeleted = true;
 		}
 
@@ -146,19 +150,23 @@ public class IFirestationImpl implements IFirestation {
 	@Override
 	public boolean deleteStationAdresse(String adresse) {
 		boolean isAdressDeleted = false;
+		int indexFireStation=0;
 		List<FireStation> fireStations;
 		if (!StringUtils.isEmpty(adresse)) {
 			try {
 				fireStations = jSonFile.loadStations();
-
+				int n=0;
 				for (FireStation f : fireStations) {
 
 					if (f.getAddresses().contains(adresse)) {
-						f.getAddresses().remove(adresse);
+						indexFireStation=n;
+						/* f.getAddresses().remove(adresse); */
+						jSonFile.loadStations().get(n).getAddresses().remove(adresse);
 						isAdressDeleted = true;
 					}
+					n++;
 				}
-
+				
 			} catch (IOException e) {
 
 				e.printStackTrace();

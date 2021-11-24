@@ -95,7 +95,7 @@ public class PersonController {
 	public List<PersonEmail> getListEmailCitizens(@RequestParam String city) {
 		logger.info("entering http://localhost:8080/communityEmail?" + city);
 		List<PersonEmail> list = iPersonImpl.listEmail(city);
-
+ 
 		return list;
 	}
 

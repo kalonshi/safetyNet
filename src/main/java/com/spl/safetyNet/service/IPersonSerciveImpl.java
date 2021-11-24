@@ -108,7 +108,7 @@ public class IPersonSerciveImpl implements IPerson {
 			try {
 				List<Person> persons = jSonFile.loadPersons();
 				for (Person p : persons) {
-					if ((p.getAddress().equals(address))) {
+					if (p.getAddress() != null && (p.getAddress().equals(address))) {
 						residents.add(p);
 					}
 				}
@@ -242,7 +242,7 @@ public class IPersonSerciveImpl implements IPerson {
 
 		logger.info("Entering the getPerson() method");
 		Person personByFirstNameAndLastName = new Person();
-		 List<Person> personList; 
+		List<Person> personList;
 		try {
 
 			personList = jSonFile.loadPersons();
@@ -276,13 +276,15 @@ public class IPersonSerciveImpl implements IPerson {
 
 		} else if (getPerson(firstName, lastName) != null) {
 			Person person = getPerson(firstName, lastName);
-			
-				cacheManager.getCache("persons").evict(person);
-				logger.info("success in deleted Person from cache ");
+			try {
+				jSonFile.loadPersons().remove(person);
 				isPersonDelete = true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-			
-			
+			logger.info("success in deleted Person from cache ");
+
 		}
 		return isPersonDelete;
 	}
@@ -297,7 +299,7 @@ public class IPersonSerciveImpl implements IPerson {
 				Set<String> emailsWithoutDouble = new HashSet<String>();
 
 				for (Person p : persons) {
-					if (p.getCity().equals(city)) {
+					if (p.getCity() != null && p.getCity().equals(city)) {
 						personEmails.add(p);
 					}
 				}
@@ -387,7 +389,6 @@ public class IPersonSerciveImpl implements IPerson {
 			updatedPersonFirstName = personSelectedToUpdate;
 			updatedPersonFirstName.setFirstName(updatedFirstName);
 			cacheManager.getCache("persons").put(personSelectedToUpdate, updatedFirstName);
-			logger.info("updatedEmail" + updatedPersonFirstName.getEmail());
 
 		}
 		logger.error("Failed to updated");
