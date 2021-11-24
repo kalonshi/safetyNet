@@ -92,4 +92,10 @@ public class MedicalRecordController {
 		iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
 
 	}
+	@PostMapping("/medicalRecord/add")
+	@ResponseBody
+	public MedicalRecord addPersonMedicaleRecord(@RequestParam String firstName, @RequestParam String lastName) {
+		MedicalRecord addMedicalRecord=iMedicalRecordImpl.addMedicalRecordForPerson(firstName, lastName);
+return addMedicalRecord;
+	}
 }

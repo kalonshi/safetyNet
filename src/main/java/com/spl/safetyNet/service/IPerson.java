@@ -10,7 +10,8 @@ import com.spl.safetyNet.models.Person;
 
 public interface IPerson {
 	public Person updatePersonPhone(String firstName, String lastName, String updatedPhone);
-
+	public Person updatePersonFirstName(String firstName, String lastName, String updatedFirstName);
+	public Person updatePersonLaststName(String firstName, String lastName, String updatedLastName);
 	public Person updatePersonEmail(String firstName, String lastName, String updatedEmail);
 
 	public Person updatePersonAdresse(String firstName, String lastName, String updatedAddress);

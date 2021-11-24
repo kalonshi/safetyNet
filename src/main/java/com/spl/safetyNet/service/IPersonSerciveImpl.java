@@ -38,7 +38,8 @@ public class IPersonSerciveImpl implements IPerson {
 		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
 			newPerson = new Person(firstName, lastName);
 			try {
-				jSonFile.loadJsonPersons().add(newPerson);
+				/* jSonFile.loadJsonPersons().add(newPerson); */
+				jSonFile.loadPersons().add(newPerson);
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -241,7 +242,7 @@ public class IPersonSerciveImpl implements IPerson {
 
 		logger.info("Entering the getPerson() method");
 		Person personByFirstNameAndLastName = new Person();
-		List<Person> personList;
+		 List<Person> personList; 
 		try {
 
 			personList = jSonFile.loadPersons();
@@ -275,18 +276,13 @@ public class IPersonSerciveImpl implements IPerson {
 
 		} else if (getPerson(firstName, lastName) != null) {
 			Person person = getPerson(firstName, lastName);
-
-			try {
-
-				jSonFile.loadJsonPersons().remove(person);
+			
 				cacheManager.getCache("persons").evict(person);
 				logger.info("success in deleted Person from cache ");
 				isPersonDelete = true;
 
-			} catch (IOException e) {
-				logger.error("unknown firstName or lastName ");
-				e.printStackTrace();
-			}
+			
+			
 		}
 		return isPersonDelete;
 	}
@@ -379,6 +375,40 @@ public class IPersonSerciveImpl implements IPerson {
 			cacheManager.getCache("persons").put(personSelectedToUpdate, updatedAddress);
 		}
 		return updatedPersonFullAddress;
+	}
+
+	@Override
+	public Person updatePersonFirstName(String firstName, String lastName, String updatedFirstName) {
+		logger.info("Entering updatePersonInfo method");
+		Person updatedPersonFirstName = new Person();
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName) && !StringUtils.isEmpty(updatedFirstName)
+				&& getPerson(firstName, lastName) != null) {
+			Person personSelectedToUpdate = getPerson(firstName, lastName);
+			updatedPersonFirstName = personSelectedToUpdate;
+			updatedPersonFirstName.setFirstName(updatedFirstName);
+			cacheManager.getCache("persons").put(personSelectedToUpdate, updatedFirstName);
+			logger.info("updatedEmail" + updatedPersonFirstName.getEmail());
+
+		}
+		logger.error("Failed to updated");
+		return updatedPersonFirstName;
+	}
+
+	@Override
+	public Person updatePersonLaststName(String firstName, String lastName, String updatedLastName) {
+		logger.info("Entering updatePersonInfo method");
+		Person updatedPersonLastName = new Person();
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName) && !StringUtils.isEmpty(updatedLastName)
+				&& getPerson(firstName, lastName) != null) {
+			Person personSelectedToUpdate = getPerson(firstName, lastName);
+			updatedPersonLastName = personSelectedToUpdate;
+			updatedPersonLastName.setLastName(updatedLastName);
+			cacheManager.getCache("persons").put(personSelectedToUpdate, updatedLastName);
+			logger.info("updatedEmail" + updatedPersonLastName.getLastName());
+
+		}
+		logger.error("Failed to updated");
+		return updatedPersonLastName;
 	}
 
 }

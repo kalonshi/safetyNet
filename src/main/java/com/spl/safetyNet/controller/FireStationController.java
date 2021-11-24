@@ -73,7 +73,7 @@ public class FireStationController {
 		return newFireStation;
 	}
 
-	@DeleteMapping("/fireStation")
+	@DeleteMapping("/fireStation/delete")
 	@ResponseBody
 	public void deleteFireStation(@RequestParam String fireStationNumber) {
 		logger.info("Delete a fireStation :" + fireStationNumber);
