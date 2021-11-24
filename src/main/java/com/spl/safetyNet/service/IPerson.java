@@ -1,25 +1,19 @@
 package com.spl.safetyNet.service;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
 
 import com.spl.safetyNet.Views.InfoPerson;
 import com.spl.safetyNet.Views.ListPerson;
 import com.spl.safetyNet.Views.PersonEmail;
-import com.spl.safetyNet.Views.PersonFire;
-import com.spl.safetyNet.Views.PersonPrint;
 import com.spl.safetyNet.Views.Personchild;
 import com.spl.safetyNet.models.Person;
 
 public interface IPerson {
-	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
-			String email, Date birthDate);
+	public Person updatePersonPhone(String firstName, String lastName, String updatedPhone);
 
-	public Person updatePerson(String firstName, String lastName, String phone, String zip, String address, String city,
-			String email);
+	public Person updatePersonEmail(String firstName, String lastName, String updatedEmail);
+
+	public Person updatePersonAdresse(String firstName, String lastName, String updatedAddress);
 
 	public InfoPerson getInfoPerson(String firstName, String lastName);
 
@@ -38,4 +32,6 @@ public interface IPerson {
 	public List<Personchild> printlistMinorsByAddress(String adress);
 
 	public ListPerson listPersonsLinkToSelectedStation(String fireStationNumber);
+
+	public Person addPerson(String firstName, String lastName);
 }

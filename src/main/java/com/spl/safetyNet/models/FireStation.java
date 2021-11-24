@@ -13,7 +13,7 @@ public class FireStation {
 
 	public FireStation() {
 		super();
-		
+
 	}
 
 	public FireStation(String stationNumber) {

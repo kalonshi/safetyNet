@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +55,15 @@ public class FireStationController {
 		return iFirestationImpl.phoneList(firestation);
 	}
 
+	@GetMapping("/fireStation")
+
+	@ResponseBody
+	public FireStation getStation(@RequestParam String fireStationNumber) {
+		logger.info("Entering http://localhost:8080/fireStation?firestation :" + fireStationNumber);
+
+		return iFirestationImpl.getFireStation(fireStationNumber);
+	}
+
 	@PostMapping("/fireStation/add")
 	@ResponseBody
 	public FireStation addFireStation(@RequestParam String fireStationNumber, @RequestParam String address) {
@@ -65,7 +73,7 @@ public class FireStationController {
 		return newFireStation;
 	}
 
-	@DeleteMapping("/fireStation/delete")
+	@DeleteMapping("/fireStation")
 	@ResponseBody
 	public void deleteFireStation(@RequestParam String fireStationNumber) {
 		logger.info("Delete a fireStation :" + fireStationNumber);
@@ -82,7 +90,7 @@ public class FireStationController {
 
 	}
 
-	@DeleteMapping("/fireStation/address/delete")
+	@DeleteMapping("/fireStation/address")
 	@ResponseBody
 	public void deleteAddressFireStation(@RequestParam String address) {
 		logger.info("Delete address :" + address + " from  fireStation ");

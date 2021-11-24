@@ -62,7 +62,7 @@ class FireStationControllerTest {
 	@Test
 	public void deleteFireStationTest() throws Exception {
 		String fireStationNumber = "1";
-		mvc.perform(delete("/fireStation/delete?fireStationNumber=" + fireStationNumber)).andExpect(status().isOk());
+		mvc.perform(delete("/fireStation?fireStationNumber=" + fireStationNumber)).andExpect(status().isOk());
 
 	}
 
@@ -78,7 +78,7 @@ class FireStationControllerTest {
 	@Test
 	public void deleteAddressFireStationTest() throws Exception {
 		String address = "951 LoneTree Rd";
-		mvc.perform(delete("/fireStation/address/delete?address=" + address)).andExpect(status().isOk());
+		mvc.perform(delete("/fireStation/address?address=" + address)).andExpect(status().isOk());
 
 	}
 

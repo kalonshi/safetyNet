@@ -2,59 +2,48 @@ package com.spl.safetyNet.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-
 import com.spl.safetyNet.Views.Family;
 import com.spl.safetyNet.Views.InfoPerson;
 import com.spl.safetyNet.Views.ListPerson;
 import com.spl.safetyNet.Views.PersonEmail;
-import com.spl.safetyNet.Views.PersonFire;
 import com.spl.safetyNet.Views.PersonPrint;
 import com.spl.safetyNet.Views.Personchild;
-
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person;
 
 @Service
+@CacheConfig(cacheNames = { "stations", "persons", "medicalRecords" })
 public class IPersonSerciveImpl implements IPerson {
 	@Autowired
 	private JsonFileData jSonFile;
+	@Autowired
+	private CacheManager cacheManager;
 	private static final Logger logger = LogManager.getLogger(IPersonSerciveImpl.class);
 
 	@Override
-	public Person addPerson(String firstName, String lastName, String phone, String zip, String address, String city,
-			String email, Date birthDate) {
+	public Person addPerson(String firstName, String lastName) {
 		Person newPerson = new Person();
 
 		logger.info("Entering the addPerson() method");
-		if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName) || StringUtils.isEmpty(phone)
-				|| StringUtils.isEmpty(zip) || StringUtils.isEmpty(address) && StringUtils.isEmpty(city)
-				|| StringUtils.isEmpty(email) || birthDate.equals(null)) {
-			logger.error("Failed to add due to empty field ");
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
+			newPerson = new Person(firstName, lastName);
+			try {
+				jSonFile.loadJsonPersons().add(newPerson);
+			} catch (IOException e) {
 
-		} else
-			newPerson = new Person(firstName, lastName, phone, zip, address, city, email, birthDate);
-
-		try {
-			jSonFile.loadJsonPersons().add(newPerson);
-			logger.info("succes add a new Person");
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
+				e.printStackTrace();
+			}
 		}
-		logger.error("failed to add new Person");
 		return newPerson;
 	}
 
@@ -73,8 +62,6 @@ public class IPersonSerciveImpl implements IPerson {
 								p.getCity(), p.age(), p.getEmail(), p.getMedicalRecord().getMedications(),
 								p.getMedicalRecord().getAllergies());
 						logger.info("Success find Person with firstName  and lastName");
-						return (personInfo);
-
 					}
 				}
 			}
@@ -86,64 +73,6 @@ public class IPersonSerciveImpl implements IPerson {
 		}
 
 		return personInfo;
-	}
-
-	@Override
-	public Person getPerson(String firstName, String lastName) {
-
-		logger.info("Entering the getPerson() method");
-		Person personSearch = new Person();
-		List<Person> personList;
-		try {
-
-			personList = jSonFile.loadPersons();
-
-			if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
-
-				for (Person p : personList) {
-
-					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName))) {
-						logger.info("Success get Person " + p.getFirstName() + " " + p.getLastName());
-
-						personSearch = p;
-						return personSearch;
-					}
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return personSearch;
-	}
-
-	@Override
-	public boolean delete(String firstName, String lastName) {
-		boolean isPersonDelete = false;
-		logger.info("Entering the delete() method");
-
-		if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName)) {
-			logger.error("firstName isEmpty or lastName isEmpty");
-
-		} else if (getPerson(firstName, lastName) != null) {
-			Person person = getPerson(firstName, lastName);
-
-			try {
-
-				MedicalRecord medicalRecordToDelete = person.getMedicalRecord();
-				jSonFile.loadJsonMedicalRecords().remove(medicalRecordToDelete);
-				jSonFile.loadJsonPersons().remove(person);
-				logger.info("success in deleted Person  ");
-				isPersonDelete = true;
-
-			} catch (IOException e) {
-				logger.error("unknown firstName or lastName ");
-				e.printStackTrace();
-
-			}
-		}
-
-		return isPersonDelete;
 	}
 
 	@Override
@@ -214,7 +143,7 @@ public class IPersonSerciveImpl implements IPerson {
 					}
 					logger.info("Success add list person with   lastName " + listSelectedPersonAndRelatives.size());
 				}
-				return listSelectedPersonAndRelatives;
+
 			} catch (IOException e) {
 
 				logger.error("Failed add person with   lastName ");
@@ -267,36 +196,7 @@ public class IPersonSerciveImpl implements IPerson {
 	}
 
 	@Override
-	public Person updatePerson(String firstName, String lastName, String newPhone, String newZip, String newAddress,
-			String newCity, String newEmail) {
-		logger.info("Entering updatePersonInfo method");
-		Person personSelectedToUpdate = getPerson(firstName, lastName);
-		if (personSelectedToUpdate != null) {
-			if (!StringUtils.isEmpty(newPhone)) {
-				personSelectedToUpdate.setPhone(newPhone);
-				logger.info("new phone" + personSelectedToUpdate.getPhone());
-			}
-			if (!StringUtils.isEmpty(newZip)) {
-				personSelectedToUpdate.setZip(newZip);
-			}
-			if (!StringUtils.isEmpty(newAddress)) {
-				personSelectedToUpdate.setAddress(newAddress);
-			}
-			if (!StringUtils.isEmpty(newCity)) {
-				personSelectedToUpdate.setCity(newCity);
-			}
-			if (!StringUtils.isEmpty(newEmail)) {
-				personSelectedToUpdate.setEmail(newEmail);
-
-			}
-			return personSelectedToUpdate;
-		}
-		logger.error("Failed to updated");
-		return personSelectedToUpdate;
-	}
-
-	@Override
-	public ListPerson listPersonsLinkToSelectedStation(String fireStationNumber) { // TODO Auto-generated method
+	public ListPerson listPersonsLinkToSelectedStation(String fireStationNumber) {
 		logger.info("Entering listPersonsLinkToStationSelected method" + fireStationNumber);
 		ListPerson list = new ListPerson();
 		List<PersonPrint> listPersonsLinkToSelectedStation = new ArrayList<PersonPrint>();
@@ -337,6 +237,61 @@ public class IPersonSerciveImpl implements IPerson {
 	}
 
 	@Override
+	public Person getPerson(String firstName, String lastName) {
+
+		logger.info("Entering the getPerson() method");
+		Person personByFirstNameAndLastName = new Person();
+		List<Person> personList;
+		try {
+
+			personList = jSonFile.loadPersons();
+
+			if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
+
+				for (Person p : personList) {
+
+					if ((p.getFirstName().equals(firstName)) && (p.getLastName().equals(lastName))) {
+						logger.info("Success get Person " + p.getFirstName() + " " + p.getLastName());
+
+						personByFirstNameAndLastName = p;
+
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return personByFirstNameAndLastName;
+	}
+
+	@Override
+	public boolean delete(String firstName, String lastName) {
+		boolean isPersonDelete = false;
+		logger.info("Entering the delete() method");
+
+		if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName)) {
+			logger.error("firstName isEmpty or lastName isEmpty");
+
+		} else if (getPerson(firstName, lastName) != null) {
+			Person person = getPerson(firstName, lastName);
+
+			try {
+
+				jSonFile.loadJsonPersons().remove(person);
+				cacheManager.getCache("persons").evict(person);
+				logger.info("success in deleted Person from cache ");
+				isPersonDelete = true;
+
+			} catch (IOException e) {
+				logger.error("unknown firstName or lastName ");
+				e.printStackTrace();
+			}
+		}
+		return isPersonDelete;
+	}
+
+	@Override
 	public List<PersonEmail> listEmail(String city) {
 		List<PersonEmail> listEmails = new ArrayList<PersonEmail>();
 		if (!StringUtils.isEmpty(city)) {
@@ -368,6 +323,62 @@ public class IPersonSerciveImpl implements IPerson {
 
 		}
 		return listEmails;
+	}
+
+	@Override
+	public Person updatePersonPhone(String firstName, String lastName, String updatedPhone) {
+		logger.info("Entering updatePersonInfo method");
+
+		Person updatedPersonPhone = new Person();
+		MedicalRecord updatedMedicalRecord = new MedicalRecord();
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName) && !StringUtils.isEmpty(updatedPhone)
+				&& getPerson(firstName, lastName) != null) {
+			Person personSelectedToUpdate = getPerson(firstName, lastName);
+
+			updatedPersonPhone = personSelectedToUpdate;
+
+			updatedPersonPhone.setPhone(updatedPhone);
+			updatedMedicalRecord = personSelectedToUpdate.getMedicalRecord();
+			cacheManager.getCache("persons").put(personSelectedToUpdate, updatedPhone);
+			/*
+			 * cacheManager.getCache("medicalRecord").put(updatedMedicalRecord.getPerson().
+			 * getPhone(),updatedPhone);
+			 */logger.info("updatedPhone" + updatedPersonPhone.getPhone());
+
+		}
+
+		return updatedPersonPhone;
+	}
+
+	@Override
+	public Person updatePersonEmail(String firstName, String lastName, String updatedEmail) {
+		logger.info("Entering updatePersonInfo method");
+		Person updatedPersonEmail = new Person();
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName) && !StringUtils.isEmpty(updatedEmail)
+				&& getPerson(firstName, lastName) != null) {
+			Person personSelectedToUpdate = getPerson(firstName, lastName);
+			updatedPersonEmail = personSelectedToUpdate;
+			updatedPersonEmail.setEmail(updatedEmail);
+			cacheManager.getCache("persons").put(personSelectedToUpdate, updatedEmail);
+			logger.info("updatedEmail" + updatedPersonEmail.getEmail());
+
+		}
+		logger.error("Failed to updated");
+		return updatedPersonEmail;
+	}
+
+	@Override
+	public Person updatePersonAdresse(String firstName, String lastName, String updatedAddress) {
+		logger.info("Entering updatePersonInfo method");
+		Person updatedPersonFullAddress = new Person();
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName) && !StringUtils.isEmpty(updatedAddress)
+				&& getPerson(firstName, lastName) != null) {
+			Person personSelectedToUpdate = getPerson(firstName, lastName);
+			updatedPersonFullAddress = personSelectedToUpdate;
+			updatedPersonFullAddress.setAddress(updatedAddress);
+			cacheManager.getCache("persons").put(personSelectedToUpdate, updatedAddress);
+		}
+		return updatedPersonFullAddress;
 	}
 
 }

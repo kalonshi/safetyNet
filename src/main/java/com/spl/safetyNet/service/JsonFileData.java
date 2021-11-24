@@ -8,24 +8,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
-
 import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person;
 
 @Service
+
 public class JsonFileData {
 	private static final Logger logger = LogManager.getLogger(JsonFileData.class);
 
@@ -33,6 +31,7 @@ public class JsonFileData {
 		super();
 
 	}
+
 	/* READ AND PARSE JSON FILE IN OBJECT */
 
 	public List<FireStation> loadStationsWithOutListPerson() throws IOException {
@@ -57,7 +56,7 @@ public class JsonFileData {
 
 		Any personAny = readFileJson("src/main/resources/data.json").get("persons");
 		Any medicalAny = readFileJson("src/main/resources/data.json").get("medicalrecords");
-		List<Person> persons = new ArrayList<>();
+		List<Person> listJsonPpersons = new ArrayList<>();
 		personAny.forEach(a -> {
 			medicalAny.forEach(medicalRecord -> {
 				if ((medicalRecord.get("firstName").toString().equals(a.get("firstName").toString())
@@ -66,7 +65,7 @@ public class JsonFileData {
 					Date date = null;
 					try {
 						date = formatSortie.parse(medicalRecord.get("birthdate").toString());
-						persons.add(new Person(a.get("firstName").toString(), a.get("lastName").toString(),
+						listJsonPpersons.add(new Person(a.get("firstName").toString(), a.get("lastName").toString(),
 								a.get("phone").toString(), a.get("zip").toString(), a.get("address").toString(),
 								a.get("city").toString(), a.get("email").toString(), date));
 					} catch (ParseException e) {
@@ -77,7 +76,7 @@ public class JsonFileData {
 			});
 		});
 
-		return persons;
+		return listJsonPpersons;
 	}
 
 	public List<MedicalRecord> loadJsonMedicalRecords() throws IOException {
@@ -104,11 +103,11 @@ public class JsonFileData {
 
 	}
 
-	
-
+	@Cacheable(value = "medicalRecords")
 	public List<MedicalRecord> loadMedicalRecords() throws IOException {
 		logger.info("Entering the loadMedicalRecords() method");
 		List<MedicalRecord> medicalRecordsParse = new ArrayList<>();
+		/* List<Person> listContactsMedicalRecord = loadPersons(); */
 		List<Person> listContactsMedicalRecord = loadJsonPersons();
 		List<MedicalRecord> listMedicalRecordWithNocontact = loadJsonMedicalRecords();
 		for (int i = 0; i < listContactsMedicalRecord.size(); i++) {
@@ -121,6 +120,7 @@ public class JsonFileData {
 
 	}
 
+	@Cacheable(value = "persons")
 	public List<Person> loadPersons() throws IOException {
 		logger.info("Entering the loadPersons() method");
 
@@ -157,6 +157,7 @@ public class JsonFileData {
 		return personsList;
 	}
 
+	@Cacheable(value = "stations")
 	public List<FireStation> loadStations() throws IOException {
 		logger.info("Entering the loadStations() method");
 

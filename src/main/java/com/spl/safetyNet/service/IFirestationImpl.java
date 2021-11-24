@@ -5,54 +5,28 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeMap;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jacoco.agent.rt.internal_43f5073.asm.tree.TryCatchBlockNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import com.spl.safetyNet.Views.ListContactsForFire;
 import com.spl.safetyNet.Views.PersonFire;
 import com.spl.safetyNet.Views.PersonPhone;
-import com.spl.safetyNet.controller.PersonController;
 import com.spl.safetyNet.models.FireStation;
-import com.spl.safetyNet.models.MedicalRecord;
 import com.spl.safetyNet.models.Person;
 
 @Service
+@CacheConfig(cacheNames = { "stations", "persons", "medicalRecords" })
 
 public class IFirestationImpl implements IFirestation {
 	@Autowired
 	private JsonFileData jSonFile;
-
+	@Autowired
+	private CacheManager cacheManager;
 	private static final Logger logger = LogManager.getLogger(IFirestationImpl.class);
-
-	@Override
-	public FireStation addFireStation(String fireStationNumber, String addresse) {
-
-		logger.info("Entering the addFireStation() method");
-		FireStation newFireStation = new FireStation();
-
-		if (!StringUtils.isEmpty(fireStationNumber) && !StringUtils.isEmpty(addresse)) {
-			newFireStation = new FireStation(fireStationNumber);
-
-			newFireStation.addAddress(addresse);
-			try {
-				jSonFile.loadStationsWithOutListPerson().add(newFireStation);
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-
-		}
-
-		return newFireStation;
-	}
 
 	@Override
 	public FireStation getFireStation(String fireStationNumber) {
@@ -60,6 +34,7 @@ public class IFirestationImpl implements IFirestation {
 		logger.info("GET FIRESTATION BY NUMBER ");
 		if (!StringUtils.isEmpty(fireStationNumber)) {
 			try {
+
 				List<FireStation> fireStations = jSonFile.loadStations();
 				logger.info(" ");
 				for (FireStation f : fireStations) {
@@ -77,6 +52,27 @@ public class IFirestationImpl implements IFirestation {
 		}
 
 		return selectedStation;
+	}
+
+	@Override
+	public FireStation addFireStation(String fireStationNumber, String addresse) {
+
+		logger.info("Entering the addFireStation() method");
+		FireStation newFireStation = new FireStation();
+		if (!StringUtils.isEmpty(fireStationNumber) && !StringUtils.isEmpty(addresse)) {
+			newFireStation = new FireStation(fireStationNumber);
+
+			newFireStation.addAddress(addresse);
+			try {
+				jSonFile.loadStations().add(newFireStation);
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+
+		}
+
+		return newFireStation;
 	}
 
 	@Override
@@ -98,8 +94,9 @@ public class IFirestationImpl implements IFirestation {
 							fireStationSelected = f;
 							logger.info("select station OK");
 							return fireStationSelected;
+						} else {
+							logger.info("select station NOK!!!!!!");
 						}
-						logger.info("select station NOK!!!!!!");
 					}
 
 				}
@@ -137,19 +134,10 @@ public class IFirestationImpl implements IFirestation {
 
 			FireStation fireStationSelected = getFireStation(fireStationNumber);
 			logger.info("fireStationSelected :" + fireStationSelected.getStationNumber());
-			try {
-				List<FireStation> listOfStations = jSonFile.loadStations();
 
-				listOfStations.remove(fireStationSelected);
-				jSonFile.loadStationsWithOutListPerson().remove(fireStationSelected);
+			cacheManager.getCache("stations").evict(fireStationNumber);
 
-				isDeleted = listOfStations.remove(fireStationSelected);
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-
+			isDeleted = true;
 		}
 
 		return isDeleted;
@@ -169,14 +157,6 @@ public class IFirestationImpl implements IFirestation {
 						f.getAddresses().remove(adresse);
 						isAdressDeleted = true;
 					}
-
-					List<Person> persons = jSonFile.loadPersons();
-					for (Person p : persons) {
-						if (p.getFireStation().equals(f)) {
-							p.setFireStation(null);
-						}
-					}
-
 				}
 
 			} catch (IOException e) {
@@ -189,16 +169,19 @@ public class IFirestationImpl implements IFirestation {
 	}
 
 	@Override
-	public boolean updateFireStationNumber(String fireStationNumber, String newStationNumber) {
-		boolean isStationUpdated = false;
+
+	public FireStation updateFireStationNumber(String fireStationNumber, String newStationNumber) {
+		FireStation updatedStationNumber = new FireStation();
 		if (!StringUtils.isEmpty(fireStationNumber) && !StringUtils.isEmpty(newStationNumber)
 				&& getFireStation(fireStationNumber) != null) {
-			FireStation updateFireStationNumber = getFireStation(fireStationNumber);
-			updateFireStationNumber.setStationNumber(newStationNumber);
+			FireStation station = getFireStation(fireStationNumber);
+			updatedStationNumber = station;
+			updatedStationNumber.setStationNumber(newStationNumber);
 
-			isStationUpdated = true;
+			cacheManager.getCache("stations").put(station.getStationNumber(), newStationNumber);
+
 		}
-		return isStationUpdated;
+		return updatedStationNumber;
 	}
 
 	@Override
@@ -236,12 +219,11 @@ public class IFirestationImpl implements IFirestation {
 					phoneList.add(phonecontact);
 				}
 
-				return phoneList;
 			} catch (Exception e) {
 				logger.error("unabled to get a phoneList");
 
 			}
-			return phoneList;
+
 		}
 		logger.error("Failed due to unknown Station Number");
 		return phoneList;

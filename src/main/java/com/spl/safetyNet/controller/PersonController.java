@@ -28,10 +28,9 @@ public class PersonController {
 	@Autowired
 	private IPersonSerciveImpl iPersonImpl;
 
-	
-	 private static final Logger logger = LogManager.getLogger(PersonController.class);
-	  
-	 	@ResponseBody
+	private static final Logger logger = LogManager.getLogger(PersonController.class);
+
+	@ResponseBody
 	@RequestMapping(path = "/")
 	public String home(HttpServletRequest request) {
 		String contextPath = request.getContextPath();
@@ -108,31 +107,87 @@ public class PersonController {
 
 	}
 
+	@GetMapping("/person")
+
+	@ResponseBody
+	public Person getPerson(@RequestParam String firstName, @RequestParam String lastName) {
+
+		logger.info("Entering url :person?firstName=" + firstName + "& lastName= " + lastName);
+
+		return iPersonImpl.getPerson(firstName, lastName);
+
+	}
+
 	@PostMapping("/person/add")
 	@ResponseBody
-	public Person add(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String phone,
-			@RequestParam String zip, @RequestParam String address, @RequestParam String city,
-			@RequestParam String email, @RequestParam Date birthDate) {
-		logger.info("add Person :" + firstName + " " + lastName);
+	public Person addPerson(@RequestParam String firstName, @RequestParam String lastName) {
+		logger.info("add Person : firstname :" + firstName + " lastName : " + lastName);
 
-		Person newPerson = iPersonImpl.addPerson(firstName, lastName, phone, zip, address, city, email, birthDate);
+		Person newPerson = iPersonImpl.addPerson(firstName, lastName);
 
 		return newPerson;
 
 	}
 
-	@PutMapping("person/update")
+	/*
+	 * @PutMapping("person/update")
+	 * 
+	 * @ResponseBody public Person updatePerson(@RequestParam String
+	 * firstName, @RequestParam String lastName,
+	 * 
+	 * @RequestParam String newPhone, @RequestParam String newZip, @RequestParam
+	 * String newAddress,
+	 * 
+	 * @RequestParam String newCity, @RequestParam String newEmail, @RequestParam
+	 * Date newBirthDate) {
+	 * 
+	 * logger.info("update Person :" + firstName + " " + lastName); Person
+	 * updatePersonRecord = iPersonImpl.updatePerson(firstName, lastName, newPhone,
+	 * newZip, newAddress, newCity, newEmail);
+	 * 
+	 * return updatePersonRecord;
+	 * 
+	 * }
+	 */
+	@PutMapping("person/updatePhone")
 	@ResponseBody
-	public Person updatePerson(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String newPhone, @RequestParam String newZip, @RequestParam String newAddress,
-			@RequestParam String newCity, @RequestParam String newEmail, @RequestParam Date newBirthDate) {
+	public Person updatePersonPhone(@RequestParam String firstName, @RequestParam String lastName,
+			@RequestParam String updatedPhone) {
 
 		logger.info("update Person :" + firstName + " " + lastName);
-		Person updatePersonRecord = iPersonImpl.updatePerson(firstName, lastName, newPhone, newZip, newAddress, newCity,
-				newEmail);
+		Person updatePersonRecord = iPersonImpl.updatePersonPhone(firstName, lastName, updatedPhone);
 
 		return updatePersonRecord;
 
 	}
 
+	@PutMapping("person/updateEmail")
+	@ResponseBody
+	public Person updatePersonEmail(@RequestParam String firstName, @RequestParam String lastName,
+			@RequestParam String updatedEmail) {
+
+		logger.info("update Person :" + firstName + " " + lastName);
+		Person updatePersonRecord = iPersonImpl.updatePersonEmail(firstName, lastName, updatedEmail);
+
+		return updatePersonRecord;
+
+	}
+
+	
+	  @PutMapping("person/updateAddress")
+	  
+	  @ResponseBody public Person updatePerson(@RequestParam String
+	  firstName, @RequestParam String lastName,@RequestParam String updatedAddress
+	  
+	  ) {
+	  
+	  
+	  logger.info("update Person :" + firstName + " " + lastName); Person
+	  updatePersonRecord = iPersonImpl.updatePersonAdresse(firstName, lastName, updatedAddress);
+	  
+	  
+	  return updatePersonRecord;
+	  
+	  }
+	 
 }

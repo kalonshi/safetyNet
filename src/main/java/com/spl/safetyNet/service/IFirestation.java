@@ -1,9 +1,6 @@
 package com.spl.safetyNet.service;
 
 import java.util.List;
-
-import java.util.TreeMap;
-
 import com.spl.safetyNet.Views.ListContactsForFire;
 import com.spl.safetyNet.Views.PersonFire;
 import com.spl.safetyNet.Views.PersonPhone;
@@ -11,6 +8,7 @@ import com.spl.safetyNet.models.FireStation;
 import com.spl.safetyNet.models.Person;
 
 public interface IFirestation {
+
 	public FireStation addFireStation(String fireStationNumber, String addresse);
 
 	public FireStation getFireStation(String fireStationNumber);
@@ -31,5 +29,5 @@ public interface IFirestation {
 
 	public boolean deleteStationAdresse(String adresse);
 
-	public boolean updateFireStationNumber(String fireStationNumber, String newStationNumber);
+	public FireStation updateFireStationNumber(String fireStationNumber, String newStationNumber);
 }

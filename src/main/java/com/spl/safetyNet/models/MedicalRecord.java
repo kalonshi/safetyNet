@@ -7,15 +7,27 @@ public class MedicalRecord {
 	private List<String> medications;
 	private List<String> allergies;
 
+	public MedicalRecord(Person person, List<String> medications, List<String> allergies) {
+		super();
+		this.person = person;
+		this.medications = medications;
+		this.allergies = allergies;
+	}
+
 	public MedicalRecord() {
 		super();
-	
+
 	}
 
 	public MedicalRecord(List<String> medications, List<String> allergies) {
 		super();
 		this.medications = medications;
 		this.allergies = allergies;
+	}
+
+	public MedicalRecord(Person person) {
+		super();
+		this.person = person;
 	}
 
 	public Person getPerson() {

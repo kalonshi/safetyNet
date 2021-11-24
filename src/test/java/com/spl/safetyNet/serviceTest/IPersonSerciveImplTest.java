@@ -42,17 +42,10 @@ public class IPersonSerciveImplTest {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date birthDate = simpleDateFormat.parse("06/12/2010");
-		Person addPerson = iPersonSerciveImpl.addPerson(firstName, lastName, phone, zip, address, city, email,
-				birthDate);
+		Person addPerson = iPersonSerciveImpl.addPerson(firstName, lastName);
 		assertEquals(firstName, addPerson.getFirstName());
 		assertEquals(lastName, addPerson.getLastName());
-		assertEquals(phone, addPerson.getPhone());
-		assertEquals(zip, addPerson.getZip());
-		assertEquals(address, addPerson.getAddress());
-		assertEquals(city, addPerson.getCity());
-		assertEquals(email, addPerson.getEmail());
-		assertEquals(birthDate, addPerson.getBirthDate());
-
+		
 	}
 
 	@Test
@@ -67,16 +60,11 @@ public class IPersonSerciveImplTest {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date birthDate = simpleDateFormat.parse("06/12/2010");
-		Person addPerson = iPersonSerciveImpl.addPerson(firstName, lastName, phone, zip, address, city, email,
-				birthDate);
+		Person addPerson = iPersonSerciveImpl.addPerson(firstName, lastName
+				);
 		assertEquals(null, addPerson.getFirstName());
 		assertEquals(null, addPerson.getLastName());
-		assertEquals(null, addPerson.getPhone());
-		assertEquals(null, addPerson.getZip());
-		assertEquals(null, addPerson.getAddress());
-		assertEquals(null, addPerson.getCity());
-		assertEquals(null, addPerson.getEmail());
-		assertEquals(null, addPerson.getBirthDate());
+		
 
 	}
 
@@ -182,69 +170,23 @@ public class IPersonSerciveImplTest {
 
 	}
 
-	@Test
-	public void updateExistingPersonTest() throws ParseException {
-
-		String firstName = "Jamie";
-		String lastName = "Peters";
-		String newPhone = "841-884-7862";
-		String newZip = "97851";
-		String newAddress = "958 73rd St";
-		String newCity = "London";
-		String newEmail = "newemail@gmail.com";
-		/*
-		 * SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); Date
-		 * newBirthDate = simpleDateFormat.parse("06/12/2010");
-		 */
-		Person personToUpdated = iPersonSerciveImpl.updatePerson(firstName, lastName, newPhone, newZip, newAddress,
-				newCity, newEmail);
-		assertEquals(firstName, personToUpdated.getFirstName());
-		assertEquals(lastName, personToUpdated.getLastName());
-		assertEquals(newPhone, personToUpdated.getPhone());
-		assertEquals(newZip, personToUpdated.getZip());
-		assertEquals(newAddress, personToUpdated.getAddress());
-		assertEquals(newCity, personToUpdated.getCity());
-		assertEquals(newEmail, personToUpdated.getEmail());
-
-	}
 
 	@Test
 	public void updatePhoneExistingPersonTest() throws ParseException {
 
 		String firstName = "Jamie";
 		String lastName = "Peters";
+String newPhone = "841-884-7862";
 
-		String address = "908 73rd St";
-		String city = "Culver";
-		String zip = "97451";
-
-		String email = "jpeter@email.com";
-
-		String newPhone = "841-884-7862";
-
-		Person personToUpdated = iPersonSerciveImpl.updatePerson(firstName, lastName, newPhone, "", "", "", "");
+		Person personToUpdated = iPersonSerciveImpl.updatePersonPhone(firstName, lastName, newPhone);
 		assertEquals(firstName, personToUpdated.getFirstName());
 		assertEquals(lastName, personToUpdated.getLastName());
 		assertEquals(newPhone, personToUpdated.getPhone());
-		assertEquals(zip, personToUpdated.getZip());
-		assertEquals(address, personToUpdated.getAddress());
-		assertEquals(city, personToUpdated.getCity());
-		assertEquals(email, personToUpdated.getEmail());
+		
 
 	}
 
-	@Test
-	public void updatePhoneNonExistingPersonTest() throws ParseException {
-
-		String firstName = "";
-		String lastName = "";
-		String newPhone = "841-884-7862";
-
-		Person personToUpdated = iPersonSerciveImpl.updatePerson(firstName, lastName, newPhone, "", "", "", "");
-		assertEquals(null, personToUpdated.getFirstName());
-		assertEquals(null, personToUpdated.getLastName());
-
-	}
+	
 
 	@Test
 	public void deleteExistingPersonTest() {

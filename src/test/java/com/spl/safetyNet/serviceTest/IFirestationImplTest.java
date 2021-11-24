@@ -216,8 +216,8 @@ public class IFirestationImplTest {
 	public void updateExistingFireStationNumber() {
 		String numberStation = "1";
 		String newNumberStation = "65";
-		boolean isStationUpdated = iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation);
-		assertEquals(true, isStationUpdated);
+		FireStation isStationUpdated = iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation);
+		assertEquals(newNumberStation, isStationUpdated.getStationNumber());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class IFirestationImplTest {
 		String numberStation = "";
 		String newNumberStation = "65";
 
-		assertEquals(false, iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation));
+		assertEquals(null, iFirestationImpl.updateFireStationNumber(numberStation, newNumberStation).getStationNumber());
 	}
 
 }

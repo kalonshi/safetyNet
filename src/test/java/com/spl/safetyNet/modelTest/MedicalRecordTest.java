@@ -8,12 +8,12 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.spl.safetyNet.models.FireStation;
+
 import com.spl.safetyNet.models.MedicalRecord;
 
 class MedicalRecordTest {
 	private static MedicalRecord medicalRecord;
-	private String List;
+	
 
 	@BeforeEach
 	private void setUpPerTest() {

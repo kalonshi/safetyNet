@@ -7,56 +7,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-
-import com.spl.safetyNet.controller.PersonController;
 import com.spl.safetyNet.models.MedicalRecord;
+import com.spl.safetyNet.models.Person;
 
 @Service
-
+@CacheConfig(cacheNames = { "stations", "persons", "medicalRecords" })
 public class IMedicalRecordImpl implements IMedicalRecord {
 	@Autowired
 	private JsonFileData jSonFile;
+	@Autowired
+	private CacheManager cacheManager;
 	private static final Logger logger = LogManager.getLogger(IMedicalRecordImpl.class);
-
-	@Override
-	public MedicalRecord addMedicalRecord(List<String> medications, List<String> allergies) {
-		MedicalRecord newMedicalRecord = new MedicalRecord();
-		if (!medications.isEmpty() && !allergies.isEmpty()) {
-			newMedicalRecord = new MedicalRecord(medications, allergies);
-			try {
-				jSonFile.loadMedicalRecords().add(newMedicalRecord);
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return newMedicalRecord;
-	}
-
-	@Override
-	public boolean deleteMedicalRecord(String firstName, String lastName) {
-
-		if (firstName.isEmpty() && lastName.isEmpty()) {
-			return false;
-		}
-		if (getMedicalRecord(firstName, lastName).equals(null)) {
-			return false;
-		}
-		MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
-		try {
-			List<MedicalRecord> medicalRecords = jSonFile.loadJsonMedicalRecords();
-			medicalRecords.remove(medicalRecordSelected);
-			return true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-
-	}
 
 	@Override
 	public MedicalRecord getMedicalRecord(String firstName, String lastName) {
@@ -74,7 +38,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
@@ -82,27 +46,65 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 	}
 
 	@Override
+	public MedicalRecord addMedicalRecord(List<String> medications, List<String> allergies) {
+		MedicalRecord newMedicalRecord = new MedicalRecord();
+		if (!medications.isEmpty() && !allergies.isEmpty()) {
+			newMedicalRecord = new MedicalRecord(medications, allergies);
+
+			try {
+				jSonFile.loadMedicalRecords().add(newMedicalRecord);
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		}
+
+		return newMedicalRecord;
+	}
+
+	@Override
+	public boolean deleteMedicalRecord(String firstName, String lastName) {
+		boolean isDeleted = false;
+		if ((!firstName.isEmpty() && !lastName.isEmpty()) && (getMedicalRecord(firstName, lastName) != null)) {
+			MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
+
+			cacheManager.getCache("medicalRecord").evict(medicalRecordSelected);
+			isDeleted = true;
+		}
+		return isDeleted;
+
+	}
+
+	@Override
 	public MedicalRecord addMedicalRecordAllergie(String firstName, String lastName, String allergy) {
-		MedicalRecord MedicalRecordAllergyUpdate = new MedicalRecord();
+		MedicalRecord medicalRecordAllergyUpdate = new MedicalRecord();
 		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)
 				&& getMedicalRecord(firstName, lastName) != null) {
 
-			MedicalRecordAllergyUpdate = getMedicalRecord(firstName, lastName);
+			MedicalRecord medicalRecordSelected = getMedicalRecord(firstName, lastName);
+			medicalRecordAllergyUpdate = medicalRecordSelected;
+			medicalRecordAllergyUpdate.addAllergie(allergy);
 
-			MedicalRecordAllergyUpdate.addAllergie(allergy);
+			cacheManager.getCache("medicalRecords").put(medicalRecordSelected.getAllergies(), allergy);
+
 			logger.info("add allergy!!");
 
 		}
-		return MedicalRecordAllergyUpdate;
+		return medicalRecordAllergyUpdate;
 	}
 
 	@Override
 	public MedicalRecord addMedicalRecordMedication(String firstName, String lastName, String medication) {
 		MedicalRecord medicalRecordMedicationUpdate = new MedicalRecord();
+		/* Person personMedicalRecord=new Person(); */
 		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)
 				&& getMedicalRecord(firstName, lastName) != null) {
-			medicalRecordMedicationUpdate = getMedicalRecord(firstName, lastName);
+			/* personMedicalRecord=new Person(firstName, lastName); */
+			MedicalRecord medicalRecord = getMedicalRecord(firstName, lastName);
+			medicalRecordMedicationUpdate = medicalRecord;
 			medicalRecordMedicationUpdate.addMedication(medication);
+			cacheManager.getCache("medicalRecords").put(medicalRecord, medication);
 
 		}
 		return medicalRecordMedicationUpdate;
@@ -111,41 +113,44 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 	@Override
 	public boolean deleteMedicalRecordAllergy(String firstName, String lastName, String allergy) {
 
-		if (firstName.isEmpty() && lastName.isEmpty()) {
-			return false;
-		}
-		if (getMedicalRecord(firstName, lastName).equals(null)) {
-			return false;
-		}
-		List<String> allergies = getMedicalRecord(firstName, lastName).getAllergies();
-		for (String allergie : allergies) {
-			if (allergie.equals(allergy)) {
-				allergies.remove(allergie);
-				getMedicalRecord(firstName, lastName).getAllergies().remove(allergie);
-				return true;
-			}
+		Boolean isDeleteMedicalRecordAllergy=false;
+		if ((!firstName.isEmpty() && !lastName.isEmpty()) && getMedicalRecord(firstName, lastName)!= null) {
+			
+			List<String> allergies = getMedicalRecord(firstName, lastName).getAllergies();
+			for (String allergie : allergies) {
+				if (allergie.equals(allergy)) {
+					
+					isDeleteMedicalRecordAllergy=true;
+				}
 
+			}
+			if(isDeleteMedicalRecordAllergy) {
+				getMedicalRecord(firstName, lastName).getAllergies().remove(allergy);
+			}
 		}
-		return false;
+
+		
+		return isDeleteMedicalRecordAllergy;
 	}
 
 	@Override
 	public boolean deleteMedicalRecordMedication(String firstName, String lastName, String medication) {
-		if (firstName.isEmpty() && lastName.isEmpty()) {
-			return false;
-		}
-		if (getMedicalRecord(firstName, lastName).equals(null)) {
-			return false;
-		}
-		List<String> medications = getMedicalRecord(firstName, lastName).getMedications();
-		for (String medic : medications) {
-			if (medic.equals(medication)) {
-				medications.remove(medic);
+		Boolean isDeleteMedicalRecordMedication=false;
+		if ((!firstName.isEmpty() && !lastName.isEmpty()) && getMedicalRecord(firstName, lastName)!= null) {
+			List<String> medications = getMedicalRecord(firstName, lastName).getMedications();
+			for (String medic : medications) {
+				if (medic.equals(medication)) {
+					
+					
+					isDeleteMedicalRecordMedication= true;
+				 }
+			}
+			if(isDeleteMedicalRecordMedication) {
 				getMedicalRecord(firstName, lastName).getMedications().remove(medication);
-				return true;
 			}
 		}
-		return false;
+		
+		return isDeleteMedicalRecordMedication;
 	}
 
 	@Override
@@ -195,9 +200,26 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 					cpt++;
 				}
 			}
-			return medicalRecordAllergyUpdate;
+
 		}
-		return null;
+		return medicalRecordAllergyUpdate;
+	}
+
+	@Override
+	public MedicalRecord addMedicalRecordForPerson(String firstName, String lastName) {
+		MedicalRecord newMedicalRecord = new MedicalRecord();
+		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
+			Person medicalRecordForPerson = new Person(firstName, lastName);
+			newMedicalRecord = new MedicalRecord(medicalRecordForPerson);
+			try {
+				jSonFile.loadPersons().add(medicalRecordForPerson);
+				jSonFile.loadMedicalRecords().add(newMedicalRecord);
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		}
+		return newMedicalRecord;
 	}
 
 }

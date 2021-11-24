@@ -19,6 +19,12 @@ public class Person {
 
 	}
 
+	public Person(String firstName, String lastName) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
 	public Person(String firstName, String lastName, String phone, String zip, String address, String city,
 			String email, Date birthDate) {
 		super();
@@ -42,6 +48,13 @@ public class Person {
 		this.address = address;
 		this.city = city;
 		this.email = email;
+	}
+
+	public Person(String firstName, String lastName, Date birthDate) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.birthDate = birthDate;
 	}
 
 	public String getFirstName() {
@@ -136,7 +149,7 @@ public class Person {
 	public int age() {
 		int age = 0;
 
-		if (!this.birthDate.equals(null)) {
+		if (this.birthDate != null) {
 
 			Date inTime = new Date();
 			age = ((inTime.getYear()) - (this.birthDate.getYear()));

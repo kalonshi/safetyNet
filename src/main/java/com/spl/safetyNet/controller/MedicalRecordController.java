@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,9 +21,16 @@ public class MedicalRecordController {
 	@Autowired
 	private IMedicalRecordImpl iMedicalRecordImpl;
 
-	 private static final Logger logger = LogManager.getLogger(MedicalRecordController.class);
+	private static final Logger logger = LogManager.getLogger(MedicalRecordController.class);
 
-	
+	@GetMapping("/medicalRecord")
+	@ResponseBody
+	public MedicalRecord getMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {
+		logger.info("get MedicalRecord of " + firstName + " " + lastName);
+
+		return iMedicalRecordImpl.getMedicalRecord(firstName, lastName);
+	}
+
 	@PostMapping("/medicalRecord/delete")
 	@ResponseBody
 	public void deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {
