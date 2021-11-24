@@ -217,7 +217,7 @@ public class IMedicalRecordImpl implements IMedicalRecord {
 		if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
 			Person medicalRecordForPerson = new Person(firstName, lastName);
 			newMedicalRecord = new MedicalRecord(medicalRecordForPerson);
-			try {
+			try { 
 				jSonFile.loadPersons().add(medicalRecordForPerson);
 				jSonFile.loadMedicalRecords().add(newMedicalRecord);
 			} catch (IOException e) {

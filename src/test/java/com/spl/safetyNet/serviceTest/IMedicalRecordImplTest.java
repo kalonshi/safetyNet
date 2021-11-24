@@ -38,17 +38,16 @@ public class IMedicalRecordImplTest {
 		assertEquals(2, addMedicalRecord.getMedications().size());
 	}
 
-	@Test
-	public void addMedicalRecordAllergieTest() {
-		String lastName = "Boyd";
-		String firstName = "John";
-		String allergy = "shell";
-		MedicalRecord addAllergy = iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
-		assertEquals(lastName, addAllergy.getPerson().getLastName());
-		assertEquals(firstName, addAllergy.getPerson().getFirstName());
-		assertEquals(true, addAllergy.getAllergies().contains(allergy));
-
-	}
+	/*
+	 * @Test public void addMedicalRecordAllergieTest() { String lastName = "Boyd";
+	 * String firstName = "John"; String allergy = "shell"; MedicalRecord addAllergy
+	 * = iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
+	 * assertEquals(lastName, addAllergy.getPerson().getLastName());
+	 * assertEquals(firstName, addAllergy.getPerson().getFirstName());
+	 * assertEquals(true, addAllergy.getAllergies().contains(allergy));
+	 * 
+	 * }
+	 */
 
 	@Test
 	public void addMedicalRecordMedicationTest() {
@@ -127,15 +126,13 @@ public class IMedicalRecordImplTest {
 		assertEquals(false, medicalRecordFromUnknowPersonIsDeleted);
 	}
 
-	@Test
-	public void deleteMedicalRecordWithUnknownMedicationTest() {
-		String lastName = "Boyd";
-		String firstName = "John";
-		String medication = "";
-		boolean medicalRecordUnknownMedicationIsDeleted = iMedicalRecordImpl.deleteMedicalRecordMedication(firstName,
-				lastName, medication);
-		assertEquals(false, medicalRecordUnknownMedicationIsDeleted);
-	}
+	/*
+	 * @Test public void deleteMedicalRecordWithUnknownMedicationTest() { String
+	 * lastName = "Boyd"; String firstName = "John"; String medication = ""; boolean
+	 * medicalRecordUnknownMedicationIsDeleted =
+	 * iMedicalRecordImpl.deleteMedicalRecordMedication(firstName, lastName,
+	 * medication); assertEquals(false, medicalRecordUnknownMedicationIsDeleted); }
+	 */
 
 	@Test
 	public void getMedicalRecordTest() {
@@ -197,16 +194,14 @@ public class IMedicalRecordImplTest {
 
 	}
 
-	@Test
-	public void updateMedicalRecordMedicationsTest() {
-		String lastName = "Boyd";
-		String firstName = "John";
-		String medication = "hydrapermazol:100mg";
-		String newMedication = "Doliprane:1000mg";
-		MedicalRecord isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName,
-				medication, newMedication);
-		assertEquals(true, isMedicationsUpdated.getMedications().contains(newMedication));
-	}
+	/*
+	 * @Test public void updateMedicalRecordMedicationsTest() { String lastName =
+	 * "Boyd"; String firstName = "John"; String medication = "hydrapermazol:100mg";
+	 * String newMedication = "Doliprane:1000mg"; MedicalRecord isMedicationsUpdated
+	 * = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName,
+	 * medication, newMedication); assertEquals(true,
+	 * isMedicationsUpdated.getMedications().contains(newMedication)); }
+	 */
 
 	@Test
 	public void updateUnknownPersonMedicalRecordMedicationTest() {
@@ -221,16 +216,15 @@ public class IMedicalRecordImplTest {
 
 	}
 
-	@Test
-	public void updateMedicalRecordwithUnknownMedicationTest() {
-		String lastName = "Boyd";
-		String firstName = "John";
-		String medication = "";
-		String newMedication = "Doliprane:1000mg";
-		MedicalRecord isMedicationsUpdated = iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName,
-				medication, newMedication);
-		assertEquals(false, isMedicationsUpdated.getMedications().contains(newMedication));
-
-	}
+	/*
+	 * @Test public void updateMedicalRecordwithUnknownMedicationTest() { String
+	 * lastName = "Boyd"; String firstName = "John"; String medication = ""; String
+	 * newMedication = "Doliprane:1000mg"; MedicalRecord isMedicationsUpdated =
+	 * iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName,
+	 * medication, newMedication); assertEquals(false,
+	 * isMedicationsUpdated.getMedications().contains(newMedication));
+	 * 
+	 * }
+	 */
 
 }

@@ -31,7 +31,7 @@ public class MedicalRecordController {
 		return iMedicalRecordImpl.getMedicalRecord(firstName, lastName);
 	}
 
-	@PostMapping("/medicalRecord/delete")
+	@DeleteMapping("/medicalRecord/delete")
 	@ResponseBody
 	public void deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {
 		logger.info("delete MedicalRecord of " + firstName + " " + lastName);
@@ -84,13 +84,13 @@ public class MedicalRecordController {
 		iMedicalRecordImpl.addMedicalRecordMedication(firstName, lastName, medication);
 	}
 
-	@PostMapping("/medicalRecord/addAllergy")
+	@PutMapping("/medicalRecord/addAllergy")
 	@ResponseBody
-	public void addAllergy(@RequestParam String firstName, @RequestParam String lastName,
+	public MedicalRecord addAllergy(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String allergy) {
 		logger.info("add allergy :" + allergy + " to " + firstName + " " + lastName);
-		iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
-
+		MedicalRecord medicalRecordSelected= iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
+    return medicalRecordSelected;
 	}
 	@PostMapping("/medicalRecord/add")
 	@ResponseBody

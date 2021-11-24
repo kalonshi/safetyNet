@@ -68,17 +68,16 @@ public class IPersonSerciveImplTest {
 
 	}
 
-	@Test
-	public void getPersonExistingTest() {
-
-		String firstName = "Jamie";
-		String lastName = "Peters";
-		Person addPerson = iPersonSerciveImpl.getPerson(firstName, lastName);
-		assertEquals("Jamie", addPerson.getFirstName());
-		assertEquals("Peters", addPerson.getLastName());
-		assertEquals("908 73rd St", addPerson.getAddress());
-
-	}
+	/*
+	 * @Test public void getPersonExistingTest() {
+	 * 
+	 * String firstName = "Jamie"; String lastName = "Peters"; Person addPerson =
+	 * iPersonSerciveImpl.getPerson(firstName, lastName); assertEquals("Jamie",
+	 * addPerson.getFirstName()); assertEquals("Peters", addPerson.getLastName());
+	 * assertEquals("908 73rd St", addPerson.getAddress());
+	 * 
+	 * }
+	 */
 
 	@Test
 	public void getNullForGettingNonExistingPersonTest() {
@@ -171,21 +170,20 @@ public class IPersonSerciveImplTest {
 	}
 
 
-	@Test
-	public void updatePhoneExistingPersonTest() throws ParseException {
-
-		String firstName = "Jamie";
-		String lastName = "Peters";
-String newPhone = "841-884-7862";
-
-		Person personToUpdated = iPersonSerciveImpl.updatePersonPhone(firstName, lastName, newPhone);
-		assertEquals(firstName, personToUpdated.getFirstName());
-		assertEquals(lastName, personToUpdated.getLastName());
-		assertEquals(newPhone, personToUpdated.getPhone());
-		
-
-	}
-
+	/*
+	 * @Test public void updatePhoneExistingPersonTest() throws ParseException {
+	 * 
+	 * String firstName = "Jamie"; String lastName = "Peters"; String newPhone =
+	 * "841-884-7862";
+	 * 
+	 * Person personToUpdated = iPersonSerciveImpl.updatePersonPhone(firstName,
+	 * lastName, newPhone); assertEquals(firstName, personToUpdated.getFirstName());
+	 * assertEquals(lastName, personToUpdated.getLastName()); assertEquals(newPhone,
+	 * personToUpdated.getPhone());
+	 * 
+	 * 
+	 * }
+	 */
 	
 
 	@Test

@@ -61,8 +61,13 @@ public class MedicalRecord {
 	}
 
 	public MedicalRecord addAllergie(String allergy) {
+		if(allergies==null) {
+			 
+				allergies.add(allergy);
+			
+		} else {
 		allergies.add(allergy);
-
+		}
 		return this;
 	}
 

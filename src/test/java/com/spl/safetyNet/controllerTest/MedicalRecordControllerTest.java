@@ -56,7 +56,7 @@ class MedicalRecordControllerTest {
 		String firstName = "John";
 		String lastName = "Boyd";
 		String allergy = "peanuts";
-		mvc.perform(post(
+		mvc.perform(put(
 				"/medicalRecord/addAllergy?firstName=" + firstName + "&lastName=" + lastName + "&allergy=" + allergy))
 				.andExpect(status().isOk());
 
