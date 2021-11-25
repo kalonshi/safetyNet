@@ -136,12 +136,12 @@ public class IFirestationImpl implements IFirestation {
 			logger.info("fireStationSelected :" + fireStationSelected.getStationNumber());
 try {
 	jSonFile.loadStations().remove(fireStationSelected);
-} catch (IOException e) {
+	isDeleted = true;} catch (IOException e) {
 	// TODO Auto-generated catch block
 	e.printStackTrace();
 }
 			
-			isDeleted = true;
+			
 		}
 
 		return isDeleted;

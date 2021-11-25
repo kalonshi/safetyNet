@@ -39,59 +39,7 @@ public class MedicalRecordController {
 		iMedicalRecordImpl.deleteMedicalRecord(firstName, lastName);
 	}
 
-	@DeleteMapping("/medicalRecord/deleteMedication")
-	@ResponseBody
-	public void deleteMedication(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String medication) {
-		logger.info("delete medication :" + medication + " from medicalRecord of " + firstName + " " + lastName);
-
-		iMedicalRecordImpl.deleteMedicalRecordMedication(firstName, lastName, medication);
-	}
-
-	@DeleteMapping("/medicalRecord/deleteAllergy")
-	@ResponseBody
-	public void deleteAllergy(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String allergy) {
-		logger.info("delete allergy :" + allergy + " from medicalRecord of " + firstName + " " + lastName);
-
-		iMedicalRecordImpl.deleteMedicalRecordAllergy(firstName, lastName, allergy);
-	}
-
-	@PutMapping("/medicalRecord/updateMedication")
-	@ResponseBody
-	public void updateMedicalRecord(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String medication, @RequestParam String newMedication) {
-		logger.info("update medication :" + medication + " to " + firstName + " " + lastName);
-
-		iMedicalRecordImpl.updateMedicalRecordMedication(firstName, lastName, medication, newMedication);
-	}
-
-	@PutMapping("/medicalRecord/updateAllergy")
-	@ResponseBody
-	public void updateAllergy(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String allergy, @RequestParam String newAllergy) {
-		logger.info("update medication :" + allergy + " to " + firstName + " " + lastName);
-
-		iMedicalRecordImpl.updateMedicalRecordAllergy(firstName, lastName, allergy, newAllergy);
-
-	}
-
-	@PostMapping("/medicalRecord/addMedication")
-	@ResponseBody
-	public void addMedication(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String medication) {
-		logger.info("add medication :" + medication + " to " + firstName + " " + lastName);
-		iMedicalRecordImpl.addMedicalRecordMedication(firstName, lastName, medication);
-	}
-
-	@PutMapping("/medicalRecord/addAllergy")
-	@ResponseBody
-	public MedicalRecord addAllergy(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String allergy) {
-		logger.info("add allergy :" + allergy + " to " + firstName + " " + lastName);
-		MedicalRecord medicalRecordSelected= iMedicalRecordImpl.addMedicalRecordAllergie(firstName, lastName, allergy);
-    return medicalRecordSelected;
-	}
+	
 	@PostMapping("/medicalRecord/add")
 	@ResponseBody
 	public MedicalRecord addPersonMedicaleRecord(@RequestParam String firstName, @RequestParam String lastName) {

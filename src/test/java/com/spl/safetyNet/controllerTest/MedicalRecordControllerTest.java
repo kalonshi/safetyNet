@@ -19,66 +19,11 @@ class MedicalRecordControllerTest {
 	@MockBean
 	private IMedicalRecordImpl iMedicalRecordImpl;
 
-	@Test
-	public void updateMedicalRecordTest() throws Exception {
-		String firstName = "John";
-		String lastName = "Boyd";
-		String medication = "aznol:350mg";
-		String newMedication = "aspirin:200mg";
-		mvc.perform(put("/medicalRecord/updateMedication?firstName=" + firstName + "&lastName=" + lastName
-				+ "&medication=" + medication + "&newMedication=" + newMedication)).andExpect(status().isOk());
 
-	}
 
-	@Test
-	public void updateAllergyTest() throws Exception {
-		String firstName = "John";
-		String lastName = "Boyd";
-		String allergy = "nillacilan";
-		String newAllergy = "peanuts";
-		mvc.perform(put("/medicalRecord/updateAllergy?firstName=" + firstName + "&lastName=" + lastName + "&allergy="
-				+ allergy + "&newAllergy=" + newAllergy)).andExpect(status().isOk());
 
-	}
 
-	@Test
-	public void addMedicationTest() throws Exception {
-		String firstName = "John";
-		String lastName = "Boyd";
-		String medication = "newMedication:350mg";
-		mvc.perform(post("/medicalRecord/addMedication?firstName=" + firstName + "&lastName=" + lastName
-				+ "&medication=" + medication)).andExpect(status().isOk());
 
-	}
+	
 
-	@Test
-	public void addAllergyTest() throws Exception {
-		String firstName = "John";
-		String lastName = "Boyd";
-		String allergy = "peanuts";
-		mvc.perform(put(
-				"/medicalRecord/addAllergy?firstName=" + firstName + "&lastName=" + lastName + "&allergy=" + allergy))
-				.andExpect(status().isOk());
-
-	}
-
-	@Test
-	public void deleteMedicationTest() throws Exception {
-		String firstName = "John";
-		String lastName = "Boyd";
-		String medication = "aznol:350mg";
-		mvc.perform(delete("/medicalRecord/deleteMedication?firstName=" + firstName + "&lastName=" + lastName
-				+ "&medication=" + medication)).andExpect(status().isOk());
-
-	}
-
-	@Test
-	public void deleteAllergyTest() throws Exception {
-		String firstName = "John";
-		String lastName = "Boyd";
-		String allergy = "nillacilan";
-		mvc.perform(delete("/medicalRecord/deleteAllergy?firstName=" + firstName + "&lastName=" + lastName + "&allergy="
-				+ allergy)).andExpect(status().isOk());
-
-	}
 }

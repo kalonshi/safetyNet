@@ -62,7 +62,7 @@ class FireStationControllerTest {
 	@Test
 	public void deleteFireStationTest() throws Exception {
 		String fireStationNumber = "1";
-		mvc.perform(delete("/fireStation/delete?fireStationNumber=" + fireStationNumber)).andExpect(status().isOk());
+		mvc.perform(delete("/fireStation/delete?stationNumber=" + fireStationNumber)).andExpect(status().isOk());
 
 	}
 
