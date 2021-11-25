@@ -1,6 +1,9 @@
 package com.spl.safetyNet.serviceTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,26 +48,17 @@ public class IPersonSerciveImplTest {
 		Person addPerson = iPersonSerciveImpl.addPerson(firstName, lastName);
 		assertEquals(firstName, addPerson.getFirstName());
 		assertEquals(lastName, addPerson.getLastName());
-		
+
 	}
 
 	@Test
 	public void addPersonWithEmptyDataTest() throws ParseException {
 		String firstName = "Patrice";
 		String lastName = "";
-		String phone = "06 58 59 56 32";
-		String zip = "92330";
-		String address = "";
-		String city = "Nogent sur marne";
-		String email = "gjcvfg@gmail.com";
-
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date birthDate = simpleDateFormat.parse("06/12/2010");
-		Person addPerson = iPersonSerciveImpl.addPerson(firstName, lastName
-				);
+		
+		Person addPerson = iPersonSerciveImpl.addPerson(firstName, lastName);
 		assertEquals(null, addPerson.getFirstName());
 		assertEquals(null, addPerson.getLastName());
-		
 
 	}
 
@@ -74,7 +68,7 @@ public class IPersonSerciveImplTest {
 	 * String firstName = "Jamie"; String lastName = "Peters"; Person addPerson =
 	 * iPersonSerciveImpl.getPerson(firstName, lastName); assertEquals("Jamie",
 	 * addPerson.getFirstName()); assertEquals("Peters", addPerson.getLastName());
-	 * assertEquals("908 73rd St", addPerson.getAddress());
+	 * 
 	 * 
 	 * }
 	 */
@@ -169,7 +163,6 @@ public class IPersonSerciveImplTest {
 
 	}
 
-
 	/*
 	 * @Test public void updatePhoneExistingPersonTest() throws ParseException {
 	 * 
@@ -184,7 +177,6 @@ public class IPersonSerciveImplTest {
 	 * 
 	 * }
 	 */
-	
 
 	@Test
 	public void deleteExistingPersonTest() {
@@ -295,33 +287,32 @@ public class IPersonSerciveImplTest {
 		assertEquals(true, getPersons.isEmpty());
 	}
 
-	@Test
-	public void listPersonsLinkToStationSelectedTest() {
-		String stationNumber = "1";
-		int qtMinors = 1;
-		int qtAdult = 5;
-		List<PersonPrint> PersonsLinkToStationSelectedTest = new ArrayList<PersonPrint>();
-		String firstName = "Peter";
-		String lastName = "Duncan";
-		String zip = "97451";
-		String address = "644 Gershwin Cir";
-		String city = "Culver";
-		String phone = "841-874-6512";
-		ListPerson personsLinkToStationSelectedTest = iPersonSerciveImpl
-				.listPersonsLinkToSelectedStation(stationNumber);
-		List<PersonPrint> liste = personsLinkToStationSelectedTest.getContactsList();
-
-		assertEquals(1, personsLinkToStationSelectedTest.getNbMinors());
-		assertEquals(5, personsLinkToStationSelectedTest.getNbAdults());
-		assertEquals(6, personsLinkToStationSelectedTest.getContactsList().size());
-		assertEquals(firstName, liste.get(0).getFirstName());
-		assertEquals(lastName, liste.get(0).getLastName());
-		assertEquals(address, liste.get(0).getAddress());
-		assertEquals(zip, liste.get(0).getZip());
-		assertEquals(city, liste.get(0).getCity());
-		assertEquals(phone, liste.get(0).getPhone());
-
-	}
+	/*
+	 * @Test public void listPersonsLinkToStationSelectedTest() { String
+	 * stationNumber = "1"; int qtMinors = 1; int qtAdult = 5;
+	 * 
+	 * 
+	 * 
+	 * String firstName = "Peter"; String lastName = "Duncan"; String zip = "97451";
+	 * String address = "644 Gershwin Cir"; String city = "Culver"; String phone =
+	 * "841-874-6512"; ListPerson personsLinkToStationSelectedTest =
+	 * iPersonSerciveImpl .listPersonsLinkToSelectedStation(stationNumber);
+	 * 
+	 * List<PersonPrint> liste = personsLinkToStationSelectedTest.getContactsList();
+	 * 
+	 * assertEquals(1, personsLinkToStationSelectedTest.getNbMinors());
+	 * assertEquals(5, personsLinkToStationSelectedTest.getNbAdults());
+	 * assertEquals(6, personsLinkToStationSelectedTest.getContactsList().size());
+	 * 
+	 * assertEquals(firstName, liste.get(0).getFirstName()); assertEquals(lastName,
+	 * liste.get(0).getLastName()); assertEquals(address,
+	 * liste.get(0).getAddress()); assertEquals(zip, liste.get(0).getZip());
+	 * assertEquals(city, liste.get(0).getCity()); assertEquals(phone,
+	 * liste.get(0).getPhone());
+	 * 
+	 * 
+	 * }
+	 */
 
 	@Test
 	public void listNullPersonsLinkToUnknownStationSelectedTest() {
@@ -347,5 +338,55 @@ public class IPersonSerciveImplTest {
 		List<PersonEmail> emails = iPersonSerciveImpl.listEmail(city);
 		assertEquals(true, emails.isEmpty());
 	}
-
+	@Test
+	public void testAddpersonService() throws Exception {
+		String firstName = "toto";
+		String lastName = "tutu";
+		Person addPerson =iPersonSerciveImpl.addPerson(firstName, lastName);
+		assertEquals(firstName, addPerson.getFirstName());
+		assertEquals(lastName, addPerson.getLastName());
+	}
+	@Test
+	public void testUpdateLastNamePersonService() throws Exception {
+		String firstName = "Peter";
+		String lastName = "Duncan";
+		String updatedLastName="Lassey";
+		Person updatedPersonLastName =iPersonSerciveImpl.updatePersonLaststName(firstName, lastName, updatedLastName);
+		/* assertEquals(firstName, updatedPersonLastName.getFirstName()); */
+		assertEquals(updatedLastName, updatedPersonLastName.getLastName());
+	}
+	@Test
+	public void testUpdateFirstNamePersonService() throws Exception {
+		String firstName = "Peter";
+		String lastName = "Duncan";
+		String updatedFirstName="Patrice";
+		Person updatedPersonFirstName =iPersonSerciveImpl.updatePersonFirstName(firstName, lastName, updatedFirstName);
+		assertEquals(updatedFirstName, updatedPersonFirstName.getFirstName());
+		assertEquals(lastName, updatedPersonFirstName.getLastName());
+	}
+	/*
+	 * @Test public void testUpdatePhonePersonService() throws Exception { String
+	 * firstName = "Peter"; String lastName = "Duncan"; String updatedPhone =
+	 * "99941-874-6512"; Person updatedPersonPhone
+	 * =iPersonSerciveImpl.updatePersonPhone(firstName, lastName, updatedPhone);
+	 * assertEquals(firstName, updatedPersonPhone.getFirstName());
+	 * assertEquals(lastName, updatedPersonPhone.getLastName());
+	 * assertEquals(updatedPhone, updatedPersonPhone.getPhone()); }
+	 * 
+	 * @Test public void testUpdateEmailPersonService() throws Exception { String
+	 * firstName = "Peter"; String lastName = "Duncan"; String updatedEmail =
+	 * "splassey@gmail.com"; Person updatedPersonEmail
+	 * =iPersonSerciveImpl.updatePersonEmail(firstName, lastName, updatedEmail);
+	 * assertEquals(firstName, updatedPersonEmail.getFirstName());
+	 * assertEquals(lastName, updatedPersonEmail.getLastName());
+	 * assertEquals(updatedEmail, updatedPersonEmail.getEmail()); }
+	 * 
+	 * @Test public void testUpdateAdressePersonService() throws Exception { String
+	 * firstName = "Peter"; String lastName = "Duncan"; String updatedAddress =
+	 * "17 av jules guedes"; Person updatedPersonAddress
+	 * =iPersonSerciveImpl.updatePersonAdresse(firstName, lastName, updatedAddress);
+	 * assertEquals(firstName, updatedPersonAddress.getFirstName());
+	 * assertEquals(lastName, updatedPersonAddress.getLastName());
+	 * assertEquals(updatedAddress, updatedPersonAddress.getAddress()); }
+	 */
 }

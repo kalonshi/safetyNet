@@ -20,9 +20,19 @@ class MedicalRecordControllerTest {
 	private IMedicalRecordImpl iMedicalRecordImpl;
 
 
+	@Test
+	public void testAddMedicalRecord() throws Exception {
+		String firstName = "John";
+		String lastName = "Boyd";
+		mvc.perform(post("http://localhost:8080/medicalRecord/add?firstName=" + firstName + "&lastName=" + lastName)).andExpect(status().isOk());
+	}
 
-
-
+	@Test
+	public void testDeleteMedicalRecord() throws Exception {
+		String firstName = "John";
+		String lastName = "Boyd";
+		mvc.perform(delete("http://localhost:8080/medicalRecord/delete?firstName=" + firstName + "&lastName=" + lastName)).andExpect(status().isOk());
+	}
 
 	
 

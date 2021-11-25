@@ -20,7 +20,7 @@ class PersonTest {
 			date = simpleDateFormat.parse(dateBirth);
 			person = new Person("firstName", "lastName", " phone", "zip", "address", " city", " email", date);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
